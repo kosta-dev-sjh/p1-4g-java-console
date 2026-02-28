@@ -1,4 +1,4 @@
-# ava Console RPG
+# Java Console RPG
 
 ## 프로젝트 개요
 로그인 기반 사용자–캐릭터 분리 구조를 적용한  
