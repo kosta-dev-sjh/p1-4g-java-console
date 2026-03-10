@@ -1,16 +1,24 @@
-# Compiled class file
+############################
+# Java
+############################
+
+# Compiled class files
 *.class
 
-# Log file
+# Logs
 *.log
 
-# BlueJ files
+# BlueJ
 *.ctxt
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# JVM crash logs
+hs_err_pid*
+replay_pid*
 
-# Package Files #
+############################
+# Package Files
+############################
+
 *.jar
 *.war
 *.nar
@@ -19,23 +27,83 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+############################
+# Build output
+############################
 
+bin/
+target/
+build/
+out/
+
+############################
+# Maven
+############################
+
+target/
+
+############################
+# Gradle
+############################
+
+.gradle/
+build/
+
+############################
 # Eclipse
+############################
+
 .project
 .classpath
 .settings/
 
-# Build output
-bin/
+############################
+# IntelliJ
+############################
 
-# Maven
-target/
+.idea/
+*.iml
 
-# Gradle
-build/
+############################
+# VSCode
+############################
 
-# OS
+.vscode/
+
+############################
+# OS files
+############################
+
 .DS_Store
+Thumbs.db
+
+############################
+# Database
+############################
+
+*.db
+*.sqlite
+*.sqlite3
+
+############################
+# Environment / Secret
+############################
+
+.env
+.env.*
+
+############################
+# AWS / Credentials
+############################
+
+aws_credentials
+aws_config
+*.pem
+*.key
+
+############################
+# Temporary files
+############################
+
+*.tmp
+*.swp
