@@ -1,5 +1,8 @@
 package com.kosta.console_rpg.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MonsterDTO {
 	private int monsterId;			//몬스터 식별자
 	private String monsterName;		//몬스터명
@@ -8,25 +11,35 @@ public class MonsterDTO {
 	private int monsterAttack;		//공격력
 	private int monsterDefense;		//방어력
 	private int monsterRewardExp;	//보상 경험치
-	private int monsterReward;		//보상 골드
+	private int monsterRewardGem;	//보상 골드
 	private int skillId;			//스킬 식별자
 	private int monsterSkillProb;	//스킬 사용 확률
 	
-	public MonsterDTO(int monsterId, String monsterName, int monsterStage, int monsterHp, int monsterAttack,
-			int monsterDefense, int monsterRewardExp, int monsterReward, int skillId, int monsterSkillProb) {
-		super();
-		this.monsterId = monsterId;
-		this.monsterName = monsterName;
-		this.monsterStage = monsterStage;
-		this.monsterHp = monsterHp;
-		this.monsterAttack = monsterAttack;
-		this.monsterDefense = monsterDefense;
-		this.monsterRewardExp = monsterRewardExp;
-		this.monsterReward = monsterReward;
-		this.skillId = skillId;
-		this.monsterSkillProb = monsterSkillProb;
+	private List<SkillDTO> monsterSkillInfo = new ArrayList<SkillDTO>();
+	
+	public MonsterDTO() {
+		
 	}
 
+	public MonsterDTO(int monsterId, String monsterName, int monsterStage, int monsterHp, int monsterAttack,
+		int monsterDefense, int monsterRewardExp, int monsterRewardGem, int skillId, int monsterSkillProb,
+		List<SkillDTO> monsterSkillInfo) {
+	super();
+	this.monsterId = monsterId;
+	this.monsterName = monsterName;
+	this.monsterStage = monsterStage;
+	this.monsterHp = monsterHp;
+	this.monsterAttack = monsterAttack;
+	this.monsterDefense = monsterDefense;
+	this.monsterRewardExp = monsterRewardExp;
+	this.monsterRewardGem = monsterRewardGem;
+	this.skillId = skillId;
+	this.monsterSkillProb = monsterSkillProb;
+	this.monsterSkillInfo = monsterSkillInfo;
+}
+
+	
+	
 	public int getMonsterId() {
 		return monsterId;
 	}
@@ -83,12 +96,12 @@ public class MonsterDTO {
 		this.monsterRewardExp = monsterRewardExp;
 	}
 
-	public int getMonsterReward() {
-		return monsterReward;
+	public int getMonsterRewardGem() {
+		return monsterRewardGem;
 	}
 
-	public void setMonsterReward(int monsterReward) {
-		this.monsterReward = monsterReward;
+	public void setMonsterRewardGem(int monsterReward) {
+		this.monsterRewardGem = monsterReward;
 	}
 
 	public int getSkillId() {
@@ -105,14 +118,20 @@ public class MonsterDTO {
 
 	public void setMonsterSkillProb(int monsterSkillProb) {
 		this.monsterSkillProb = monsterSkillProb;
-	}
+	}	
 
+	public List<SkillDTO> getMonsterSkillInfo() {
+		return monsterSkillInfo;
+	}
+	public void setMonsterSkillInfo(List<SkillDTO> monsterSkillInfo) {
+		this.monsterSkillInfo = monsterSkillInfo;
+	}
 	@Override
 	public String toString() {
 		return "MonsterDTO [monsterId=" + monsterId + ", monsterName=" + monsterName + ", monsterStage=" + monsterStage
 				+ ", monsterHp=" + monsterHp + ", monsterAttack=" + monsterAttack + ", monsterDefense=" + monsterDefense
-				+ ", monsterRewardExp=" + monsterRewardExp + ", monsterReward=" + monsterReward + ", skillId=" + skillId
-				+ ", monsterSkillProb=" + monsterSkillProb + "]";
+				+ ", monsterRewardExp=" + monsterRewardExp + ", monsterRewardGem=" + monsterRewardGem + ", skillId="
+				+ skillId + ", monsterSkillProb=" + monsterSkillProb + ", monsterSkillInfo=" + monsterSkillInfo + "]";
 	}
 	
 	
