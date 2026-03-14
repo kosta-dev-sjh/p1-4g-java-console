@@ -1,13 +1,17 @@
 package com.kosta.console_rpg.model.dto;
 
+import java.time.LocalDateTime;
+
 public class UserDTO {
+	// ======= field =======
 	private int userId;				//사용자 고유 식별자
 	private String userLoginId;		//로그인 아이디
 	private String userPassword;	//암호화된 비밀번호
 	private String userName;		//게임 내 닉네임
-	private String userCreatedAt;	//사용자 계정 생성 일시
+	private LocalDateTime userCreatedAt;	//사용자 계정 생성 일시
 	
-	public UserDTO(int userId, String userLoginId, String userPassword, String userName, String userCreatedAt) {
+	// ======= constructor =======
+	public UserDTO(int userId, String userLoginId, String userPassword, String userName, LocalDateTime userCreatedAt) {
 		super();
 		this.userId = userId;
 		this.userLoginId = userLoginId;
@@ -16,6 +20,14 @@ public class UserDTO {
 		this.userCreatedAt = userCreatedAt;
 	}
 
+	public UserDTO(String userLoginId, String userPassword, String userName) {
+		super();
+		this.userLoginId = userLoginId;
+		this.userPassword = userPassword;
+		this.userName = userName;
+	}
+
+	// ======= getter / setter =======
 	public int getUserId() {
 		return userId;
 	}
@@ -48,14 +60,15 @@ public class UserDTO {
 		this.userName = userName;
 	}
 
-	public String getUserCreatedAt() {
+	public LocalDateTime getUserCreatedAt() {
 		return userCreatedAt;
 	}
 
-	public void setUserCreatedAt(String userCreatedAt) {
+	public void setUserCreatedAt(LocalDateTime userCreatedAt) {
 		this.userCreatedAt = userCreatedAt;
 	}
 
+	// ======= toString =======
 	@Override
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", userLoginId=" + userLoginId + ", userPassword=" + userPassword
