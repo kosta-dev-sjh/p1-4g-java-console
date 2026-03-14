@@ -61,7 +61,7 @@ public class DBManager {
 	/**
 	 * 닫기 (insert, update, delete = DML 전용)
 	 */
-	public static void dbClose(Connection con, Statement st) {
+	public static void close(Connection con, Statement st) {
 		try {
 			if(st!=null) st.close();
 			if(con!=null) con.close();
