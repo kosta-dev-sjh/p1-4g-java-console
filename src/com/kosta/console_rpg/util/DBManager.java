@@ -17,8 +17,7 @@ public class DBManager {
 	static {
 		try {
 			//외부 properteis파일 로딩하기
-			proFile.load(new FileInputStream("src/com/kosta/console_rpg/resources/db.properties"));
-			//proFile.load(new FileInputStream("board.properties"));
+			proFile.load(DBManager.class.getClassLoader().getResourceAsStream("db.properties"));
 			
 			Class.forName(proFile.getProperty("driverName"));
 

@@ -82,7 +82,7 @@ public class Test {
 
     public static void main(String[] args) {
     	SelectTest("나무 검");
-    	InsertTest(1,1,1,1,true);
+//    	InsertTest(1,1,1,1,true);
 
     }
 }
