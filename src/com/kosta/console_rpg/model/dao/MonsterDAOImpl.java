@@ -14,23 +14,24 @@ import com.kosta.console_rpg.util.DBManager;
 public class MonsterDAOImpl implements MonsterDAO{
 	
 	@Override
-	public MonsterDTO selectMonstersByStage(int stage) throws SQLException {
+	public MonsterDTO selectMonsterByStage(int stage) throws SQLException {
 		  Connection con=null;
 		  PreparedStatement ps=null;
 		  ResultSet rs=null;	
-		  MonsterDTO monsterDTO = new MonsterDTO();
-		  List<SkillDTO> monsterSkillInfo = new ArrayList<SkillDTO>();
+		  MonsterDTO monsterDTO = null;
+		  SkillDTO monsterSkillInfo = null;
 		 try {
 		   con = DBManager.getConnection();
 		   //ps= con.prepareStatement("select * from monster where monster_stage = ?");
-		   ps= con.prepareStatement("select monster_id, monster_name, monster_stage, monster_attack, monster_defense, monster_reward_exp, monster_reward_gem, fk_skill_id, monster_skill_prob, skill_name, skill_damage from monster join skill on monster.fk_skill_id = skill.skill_id where monster_stage = ?;");
+		   ps= con.prepareStatement("select monster_id, monster_name, monster_stage, monster_hp, monster_attack, monster_defense, monster_reward_exp, monster_reward_gem, fk_skill_id, monster_skill_prob, skill_name, skill_damage from monster join skill on monster.fk_skill_id = skill.skill_id where monster_stage = ?;");
 		   ps.setInt(1, stage);
 	       rs = ps.executeQuery(); 
 	        
 	        if(rs.next()) {
 	        	
-	        	SkillDTO skillInfo = new SkillDTO(rs.getInt("fk_skill_id"), rs.getString("skill_name"),rs.getInt("skill_damage"));
-	        	monsterSkillInfo.add(skillInfo);
+	        	monsterSkillInfo = new SkillDTO(rs.getInt("fk_skill_id"), rs.getString("skill_name"),rs.getInt("skill_damage"));
+	        	
+	        	monsterDTO = new MonsterDTO();
 	        	
 	        	monsterDTO.setMonsterId(rs.getInt("monster_id"));
 	        	monsterDTO.setMonsterName(rs.getString("monster_name"));
@@ -40,7 +41,7 @@ public class MonsterDAOImpl implements MonsterDAO{
 	        	monsterDTO.setMonsterDefense(rs.getInt("monster_defense"));
 	        	monsterDTO.setMonsterRewardExp(rs.getInt("monster_reward_exp"));
 	        	monsterDTO.setMonsterRewardGem(rs.getInt("monster_reward_gem"));	        	
-	        	monsterDTO.setMonsterId(rs.getInt("monster_skill_prob"));	        		        	
+	        	monsterDTO.setMonsterSkillProb(rs.getInt("monster_skill_prob"));	        		        	
 	        	monsterDTO.setMonsterSkillInfo(monsterSkillInfo);
 	        	
 	        }

@@ -12,10 +12,11 @@ import com.kosta.console_rpg.model.service.BattleService;
  * 최종 수정일 : 
  */
 public class BattleController {
-	static BattleService battleService = new BattleService();
-	public static void selectMonstersByStage(int stage) {
+	private BattleService battleService = new BattleService();
+	public void selectMonstersByStage(int stage) {
 		try {
 			MonsterDTO monster = battleService.selectMonstersByStage(stage);
+//			BattleView.showMonster(monster);
 			System.out.println(monster);
 		}catch (Exception e) {
 			e.printStackTrace();
