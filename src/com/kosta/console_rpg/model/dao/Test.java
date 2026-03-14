@@ -76,7 +76,7 @@ public class Test {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DBManager.dbClose(con, ps);
+            DBManager.close(con, ps);
         }
     }
 
