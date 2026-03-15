@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import com.kosta.console_rpg.exception.DuplicationException;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.exception.LoginFailException;
+import com.kosta.console_rpg.model.dao.HeroDAO;
+import com.kosta.console_rpg.model.dao.HeroDAOImpl;
 import com.kosta.console_rpg.model.dao.UserDAO;
 import com.kosta.console_rpg.model.dao.UserDAOImpl;
 import com.kosta.console_rpg.model.dto.HeroDTO;
@@ -22,6 +24,7 @@ import com.kosta.console_rpg.util.EncryptUtil;
 public class UserService {
 	// ======= field =======
 	private final UserDAO userDao = new UserDAOImpl();
+	private final HeroDAO heroDao = new HeroDAOImpl();
 	
 	// ======= public method =======
 	/**
@@ -46,27 +49,28 @@ public class UserService {
 			
 			LoginSession.getInstance().setCurrentUser(user);
 			
-//			HeroDTO hero = HeroDAO.selectHeroByUserId(user.getUserId());
 			
-//			LoginSession.getInstance().setCurrentHero(hero);
+			HeroDTO hero = heroDao.selectHeroByUserId(user.getUserId());
+			
+			LoginSession.getInstance().setCurrentHero(hero);
 			
 			// 임시 데이터 ============
-			HeroDTO tempHero = new HeroDTO(
-					0,
-					user.getUserId(),
-					"임시캐릭터",
-					1,
-					0,
-					100,
-					50,
-					10,
-					5,
-					0,
-					null,
-					0
-				); 
-			
-			LoginSession.getInstance().setCurrentHero(tempHero);
+//			HeroDTO tempHero = new HeroDTO(
+//					0,
+//					user.getUserId(),
+//					"임시캐릭터",
+//					1,
+//					0,
+//					100,
+//					50,
+//					10,
+//					5,
+//					0,
+//					null,
+//					0
+//				); 
+//			
+//			LoginSession.getInstance().setCurrentHero(tempHero);
 			// 임시 데이터 끝 ---------
 			
 			
