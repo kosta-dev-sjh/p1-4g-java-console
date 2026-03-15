@@ -237,7 +237,6 @@ public class TestUserFlow {
 	 */
 	public static void deleteHeroTest() {
 		heroController.deleteHero();
-		LoginSession.getInstance().clearHero();
 		System.out.println("캐릭터 삭제 완료");
 	}
 }
