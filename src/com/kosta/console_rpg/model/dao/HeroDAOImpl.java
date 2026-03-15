@@ -16,7 +16,7 @@ import com.kosta.console_rpg.util.DBManager;
  * 최종 수정일 : 
  */
 public class HeroDAOImpl implements HeroDAO {
-	
+
 	// ======= public method =======
 	@Override
 	public HeroDTO selectHeroByUserId(int userId) throws SQLException {
@@ -31,7 +31,7 @@ public class HeroDAOImpl implements HeroDAO {
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			
+
 			if(rs.next()) {
 				hero = new HeroDTO(
 						rs.getInt("hero_id"), 
@@ -60,22 +60,22 @@ public class HeroDAOImpl implements HeroDAO {
 		Connection 		  con    = null;
 		PreparedStatement ps     = null;
 		String 			  sql    = null; 
-		
+
 		try {
 			con = DBManager.getConnection();
-			
+
 			if(heroName == null || heroName.trim().isEmpty()) {	// [캐릭터 이름 미입력 시 DB 기본값 사용]
 				sql = "insert into hero(fk_user_id) values(?)";
 				ps = con.prepareStatement(sql);
 				ps.setInt(1, userId);
 			} else { // ------------------------------------------ [사용자가 입력한 캐릭터 이름 저장]
 				sql = "insert into hero(fk_user_id, hero_name) values(?, ?)";
-				
+
 				ps = con.prepareStatement(sql);
 				ps.setInt(1, userId);
 				ps.setString(2, heroName);
 			} // if문 끝
-			
+
 			result = ps.executeUpdate();
 		}finally {
 			DBManager.close(con, ps);
@@ -88,6 +88,17 @@ public class HeroDAOImpl implements HeroDAO {
 		int				  result = 0;
 		Connection 		  con    = null;
 		PreparedStatement ps     = null;
+		String 			  sql    = "delete from hero where hero_id=?";
+		
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, heroId);
+			
+			result = ps.executeUpdate();
+		}finally {
+			DBManager.close(con, ps);
+		}
 		return result;
 	}
 
@@ -96,6 +107,34 @@ public class HeroDAOImpl implements HeroDAO {
 		int				  result = 0;
 		Connection 		  con    = null;
 		PreparedStatement ps     = null;
+		String sql 				 = """
+									update hero 
+									set hero_level=?,
+									    hero_exp=?,
+									    hero_hp=?,
+									    hero_mp=?,
+									    hero_attack=?,
+									    hero_defense=? 
+									where hero_id=?
+									""";
+				
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+
+			ps.setInt(1, hero.getHeroLevel());
+			ps.setInt(2, hero.getHeroExp());
+			ps.setInt(3, hero.getHeroHp());
+			ps.setInt(4, hero.getHeroMp());
+			ps.setInt(5, hero.getHeroAttack());
+			ps.setInt(6, hero.getHeroDefense());
+			ps.setInt(7, hero.getHeroId());
+
+			result = ps.executeUpdate();
+
+		} finally {
+			DBManager.close(con, ps);
+		}
 		return result;
 	}
 
@@ -104,7 +143,21 @@ public class HeroDAOImpl implements HeroDAO {
 		int				  result = 0;
 		Connection 		  con    = null;
 		PreparedStatement ps     = null;
-		return 0;
+		String 			  sql    = "update hero set hero_max_clear_stage=? where hero_id=?";
+		
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+
+			ps.setInt(1, stage);
+			ps.setInt(2, heroId);
+
+			result = ps.executeUpdate();
+
+		} finally {
+			DBManager.close(con, ps);
+		}
+		return result;
 	}
 
 	@Override
@@ -112,8 +165,21 @@ public class HeroDAOImpl implements HeroDAO {
 		int				  result = 0;
 		Connection 		  con    = null;
 		PreparedStatement ps     = null;
-		
-		return 0;
+		String 			  sql    = "update hero set hero_gem=? where hero_id=?";
+
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+
+			ps.setInt(1, gem);
+			ps.setInt(2, heroId);
+
+			result = ps.executeUpdate();
+
+		} finally {
+			DBManager.close(con, ps);
+		}
+		return result;
 	}
 
 }
