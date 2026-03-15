@@ -54,26 +54,6 @@ public class UserService {
 			
 			LoginSession.getInstance().setCurrentHero(hero);
 			
-			// 임시 데이터 ============
-//			HeroDTO tempHero = new HeroDTO(
-//					0,
-//					user.getUserId(),
-//					"임시캐릭터",
-//					1,
-//					0,
-//					100,
-//					50,
-//					10,
-//					5,
-//					0,
-//					null,
-//					0
-//				); 
-//			
-//			LoginSession.getInstance().setCurrentHero(tempHero);
-			// 임시 데이터 끝 ---------
-			
-			
 			
 		} catch (SQLException e) {
 			throw new GameException("로그인 처리 중 오류가 발생했습니다.");
