@@ -12,12 +12,7 @@ public class BattleService {
 	
 	public MonsterDTO selectMonstersByStage(int stage) throws SQLException{
 		//monster 정보 반환 
-		MonsterDTO monster = monsterDao.selectMonstersByStage(stage);
-		
-		//세션에 몬스터 정보 저장
-		//Session session = new Session();				
-		//SessionSet sessionSet = SessionSet.getInstance();				
-		//sessionSet.add(session); //인증된사용자를 SessionSet에 저장한다.
+		MonsterDTO monster = monsterDao.selectMonsterByStage(stage);
 				
 		return monster;
 	}
