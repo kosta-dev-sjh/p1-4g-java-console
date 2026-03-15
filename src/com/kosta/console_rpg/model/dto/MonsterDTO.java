@@ -15,7 +15,8 @@ public class MonsterDTO {
 	private int skillId;			//스킬 식별자
 	private int monsterSkillProb;	//스킬 사용 확률
 	
-	private List<SkillDTO> monsterSkillInfo = new ArrayList<SkillDTO>();
+
+	private SkillDTO monsterSkillInfo;
 	
 	public MonsterDTO() {
 		
@@ -23,7 +24,7 @@ public class MonsterDTO {
 
 	public MonsterDTO(int monsterId, String monsterName, int monsterStage, int monsterHp, int monsterAttack,
 		int monsterDefense, int monsterRewardExp, int monsterRewardGem, int skillId, int monsterSkillProb,
-		List<SkillDTO> monsterSkillInfo) {
+		SkillDTO monsterSkillInfo) {
 	super();
 	this.monsterId = monsterId;
 	this.monsterName = monsterName;
@@ -120,10 +121,10 @@ public class MonsterDTO {
 		this.monsterSkillProb = monsterSkillProb;
 	}	
 
-	public List<SkillDTO> getMonsterSkillInfo() {
+	public SkillDTO getMonsterSkillInfo() {
 		return monsterSkillInfo;
 	}
-	public void setMonsterSkillInfo(List<SkillDTO> monsterSkillInfo) {
+	public void setMonsterSkillInfo(SkillDTO monsterSkillInfo) {
 		this.monsterSkillInfo = monsterSkillInfo;
 	}
 	@Override
