@@ -10,9 +10,16 @@ import java.util.List;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.util.DBManager;
-
+/**
+ *  Monster정보 db 서버에서 받아오는 DAO
+ *
+ * 작성자      : 김재민
+ * 생성일      : 2026.03.13
+ * 최종 수정자 :
+ * 최종 수정일 :
+ */
 public class MonsterDAOImpl implements MonsterDAO{
-	
+	//몬스터 관련 정보 select all
 	@Override
 	public MonsterDTO selectMonsterByStage(int stage) throws SQLException {
 		  Connection con=null;
