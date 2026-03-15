@@ -1,5 +1,7 @@
 package com.kosta.console_rpg.model.dto;
 
+import java.time.LocalDateTime;
+
 public class HeroDTO {
 	private int heroId;				//캐릭터 고유 식별자
 	private int userId; 			//사용자 고유 식별자(fk)
@@ -11,10 +13,10 @@ public class HeroDTO {
 	private int heroAttack;			//공격력
 	private int heroDefense;		//방어력
 	private int heroGem;			//젬 (소지금 / 인게임 재화)
-	private String heroCreatedAt;	//캐릭터 생성 일시
+	private LocalDateTime heroCreatedAt;	//캐릭터 생성 일시
 	private int heroMaxClearStage;	//현재까지 클리어한 최고 스테이지 번호
 	public HeroDTO(int heroId, int userId, String heroName, int heroLevel, int heroExp, int heroHp, int heroMp,
-			int heroAttack, int heroDefense, int heroGem, String heroCreatedAt, int heroMaxClearStage) {
+			int heroAttack, int heroDefense, int heroGem, LocalDateTime heroCreatedAt, int heroMaxClearStage) {
 		super();
 		this.heroId = heroId;
 		this.userId = userId;
@@ -90,10 +92,10 @@ public class HeroDTO {
 	public void setHeroGem(int heroGem) {
 		this.heroGem = heroGem;
 	}
-	public String getHeroCreatedAt() {
+	public LocalDateTime getHeroCreatedAt() {
 		return heroCreatedAt;
 	}
-	public void setHeroCreatedAt(String heroCreatedAt) {
+	public void setHeroCreatedAt(LocalDateTime heroCreatedAt) {
 		this.heroCreatedAt = heroCreatedAt;
 	}
 	public int getHeroMaxClearStage() {
