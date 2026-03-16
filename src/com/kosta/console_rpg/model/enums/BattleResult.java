@@ -8,7 +8,8 @@ package com.kosta.console_rpg.model.enums;
  * 최종 수정일 :
  */
 public enum BattleResult {
-	WIN,    // 승리
-	LOSE,   // 패배
-	ESCAPE  // 도주
+	CONTINUE, // 전투 지속
+	WIN,      // 승리
+	LOSE,     // 패배
+	ESCAPE    // 도주
 }

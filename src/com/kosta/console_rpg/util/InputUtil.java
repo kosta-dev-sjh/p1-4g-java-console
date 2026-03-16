@@ -17,7 +17,9 @@ import com.kosta.console_rpg.exception.GameException;
 public class InputUtil {
 	// ======= field =======
 	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+	
+	private InputUtil() {}
+	
 	// ======= public method =======
 	
 	/**

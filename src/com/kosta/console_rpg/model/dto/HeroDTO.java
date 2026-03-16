@@ -32,9 +32,18 @@ public class HeroDTO {
 		this.heroMaxClearStage = heroMaxClearStage;
 	}
 	
-	public HeroDTO(String heroName, int heroLevel, int heroExp, int heroHp, int heroMp, int heroAttack,
-			int heroDefense) {
-		super();
+	/**
+	 * 전투용 HeroDTO 생성자
+	 *
+	 * @param heroName 영웅 이름
+	 * @param heroLevel 영웅 레벨
+	 * @param heroExp 영웅 경험치
+	 * @param heroHp 영웅 체력
+	 * @param heroMp 영웅 마나
+	 * @param heroAttack 영웅 공격력
+	 * @param heroDefense 영웅 방어력
+	 */
+	public HeroDTO(String heroName, int heroLevel, int heroExp,int heroHp, int heroMp, int heroAttack, int heroDefense) {
 		this.heroName = heroName;
 		this.heroLevel = heroLevel;
 		this.heroExp = heroExp;
