@@ -15,6 +15,7 @@ public class HeroView {
         view.start();
     }
 
+
     public void start() {
         System.out.println(this);
     }
@@ -88,4 +89,17 @@ public class HeroView {
 	    return sb.toString();
 	}
 	
+
+	public static void createHeroView() {
+		
+	}
+	
+	public static void showHeroInfo() {
+
+    }
+	
+	public static void skillMenu() {
+		
+	}
+
 }
