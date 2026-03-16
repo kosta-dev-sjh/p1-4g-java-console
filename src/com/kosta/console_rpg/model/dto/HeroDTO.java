@@ -32,6 +32,18 @@ public class HeroDTO {
 		this.heroMaxClearStage = heroMaxClearStage;
 	}
 	
+	public HeroDTO(String heroName, int heroLevel, int heroExp, int heroHp, int heroMp, int heroAttack,
+			int heroDefense) {
+		super();
+		this.heroName = heroName;
+		this.heroLevel = heroLevel;
+		this.heroExp = heroExp;
+		this.heroHp = heroHp;
+		this.heroMp = heroMp;
+		this.heroAttack = heroAttack;
+		this.heroDefense = heroDefense;
+	}
+
 	public int getHeroId() {
 		return heroId;
 	}
