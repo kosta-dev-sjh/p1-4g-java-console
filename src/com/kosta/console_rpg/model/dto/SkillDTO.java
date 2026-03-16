@@ -9,16 +9,21 @@ public class SkillDTO {
 	private int skillRequiredHeroLevel;	//사용 가능한 캐릭터 레벨
 	private int skillUpgradeCost;		//스킬 강화 비용
 	
-	public SkillDTO(int skillId, String skillName, int skillDamage, int skillMpCost, int skillMaxLevel,
-			int skillRequiredHeroLevel, int skillUpgradeCost) {
-		super();
-		this.skillId = skillId;
-		this.skillName = skillName;
-		this.skillDamage = skillDamage;
-		this.skillMpCost = skillMpCost;
-		this.skillMaxLevel = skillMaxLevel;
-		this.skillRequiredHeroLevel = skillRequiredHeroLevel;
-		this.skillUpgradeCost = skillUpgradeCost;
+	public SkillDTO(int skillId, String skillName, int skillDamage) {
+	    super(); 
+	    this.skillId = skillId;
+	    this.skillName = skillName;
+	    this.skillDamage = skillDamage;
+	}
+
+	
+	public SkillDTO(int skillId, String skillName, int skillDamage, int skillMpCost, 
+	                int skillMaxLevel, int skillRequiredHeroLevel, int skillUpgradeCost) {
+	    this(skillId, skillName, skillDamage); 
+	    this.skillMpCost = skillMpCost;
+	    this.skillMaxLevel = skillMaxLevel;
+	    this.skillRequiredHeroLevel = skillRequiredHeroLevel;
+	    this.skillUpgradeCost = skillUpgradeCost;
 	}
 
 	public int getSkillId() {

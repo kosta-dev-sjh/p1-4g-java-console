@@ -74,7 +74,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
@@ -104,7 +104,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
@@ -164,7 +164,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
@@ -194,7 +194,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 	}
 }

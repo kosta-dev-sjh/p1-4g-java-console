@@ -33,7 +33,7 @@ public class HeroDAOImpl implements HeroDAO {
 	        rs = ps.executeQuery();
 			
 	        if(rs.next()) {
-	            throw new DuplicationException();
+	            throw new DuplicationException("아이디 중복");
 	        }
 			
 			ps = con.prepareStatement(insertsql);
@@ -51,41 +51,17 @@ public class HeroDAOImpl implements HeroDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
 	
 	@Override
 	public HeroDTO selectHeroByUserId(int userId) throws GameException {
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		HeroDTO heroDTO = null;
-		String sql="select * from hero where fk_user_id = ?";
-		try {
-			con = DBManager.getConnection();
-			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, userId);
-			
-			rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				heroDTO = new HeroDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), 
-						rs.getInt(7), rs.getInt(8), rs.getInt(9), rs.getInt(10), rs.getString(11), rs.getInt(12));
-			}
-			
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("히어로 정보를 가져오지 못했습니다.");
-			
-		}finally {
-			DBManager.close(con, ps, rs);
-		}			
+		
+		
 				
-		return heroDTO;
+		return null;
 	}
 	
 	@Override
@@ -111,7 +87,7 @@ public class HeroDAOImpl implements HeroDAO {
 			e.printStackTrace();
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 	}
 	
@@ -175,7 +151,7 @@ public class HeroDAOImpl implements HeroDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
@@ -205,7 +181,7 @@ public class HeroDAOImpl implements HeroDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 		
 	}
@@ -235,7 +211,7 @@ public class HeroDAOImpl implements HeroDAO {
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.dbClose(con, ps);
+			DBManager.close(con, ps);
 		}
 	}
 }
