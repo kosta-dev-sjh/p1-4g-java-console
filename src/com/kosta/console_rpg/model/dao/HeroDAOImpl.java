@@ -4,214 +4,166 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.kosta.console_rpg.exception.DuplicationException;
-import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
-import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.util.DBManager;
 
+/**
+ * HeroDAO 인터페이스를 구현하여 히어로 관련 DB 작업을 수행하는 DAO 구현 클래스
+ */
 public class HeroDAOImpl implements HeroDAO {
-	
+
 	@Override
-	public void insertHero(HeroDTO hero) throws DuplicationException, GameException {
-		Connection con=null;
-		PreparedStatement ps=null;
-		ResultSet rs = null;
-		
-		String checkSql = "select hero_id from hero where hero_name = ?";
-		String insertsql ="insert into hero(fk_user_id, hero_name) values(?,?)";
-		
-		try {
-			con = DBManager.getConnection();
-			
-			ps = con.prepareStatement(checkSql);
-	        ps.setString(1, hero.getHeroName());
-	        
-	        rs = ps.executeQuery();
-			
-	        if(rs.next()) {
-	            throw new DuplicationException("아이디 중복");
-	        }
-			
-			ps = con.prepareStatement(insertsql);
-			ps.setInt(1, hero.getUserId());
-			ps.setString(2,hero.getHeroName());
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-	            throw new GameException("히어로 생성 실패");
-	        }
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("DB 오류");
-			
-		} finally {
-			DBManager.close(con, ps);
-		}
-		
-	}
-	
-	@Override
-	public HeroDTO selectHeroByUserId(int userId) throws GameException {
-		
-		
-				
-		return null;
-	}
-	
-	@Override
-	public void resetHero(int heroId) throws GameException {
-		Connection con = null;
-		PreparedStatement ps = null;
-		
-		String sql="delete from hero where hero_id = ?";
-		
-		try {
-			con = DBManager.getConnection();
-			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, heroId);
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-			    throw new GameException("삭제할 히어로가 없습니다.");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			
-		} finally {
-			DBManager.close(con, ps);
-		}
-	}
-	
-	@Override
-	public List<HeroSkillDTO> selectHeroSkillsByHeroId(int heroId) throws GameException {
+	public HeroDTO selectHeroByUserId(int userId) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		List<HeroSkillDTO> list = new ArrayList<>();
-		
-		String sql="select * from hero_skill where fk_hero_id = ?";
+		HeroDTO hero = null;
+		String sql = "select * from hero where fk_user_id=?";
+
 		try {
 			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, heroId);
-			
+			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				HeroSkillDTO heroskill = new HeroSkillDTO
-						(rs.getInt(1), rs.getInt(2), rs.getInt(3));
-				
-				list.add(heroskill);
+
+			if (rs.next()) {
+				hero = new HeroDTO(
+						rs.getInt("hero_id"),
+						rs.getInt("fk_user_id"),
+						rs.getString("hero_name"),
+						rs.getInt("hero_level"),
+						rs.getInt("hero_exp"),
+						rs.getInt("hero_hp"),
+						rs.getInt("hero_mp"),
+						rs.getInt("hero_attack"),
+						rs.getInt("hero_defense"),
+						rs.getInt("hero_gem"),
+						rs.getTimestamp("hero_created_at").toLocalDateTime(),
+						rs.getInt("hero_max_clear_stage"));
 			}
-			
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("히어로 스킬 정보를 가져오지 못했습니다.");
-			
-		}finally {
+		} finally {
 			DBManager.close(con, ps, rs);
-		}			
-				
-		
-		return list;
+		}
+		return hero;
 	}
 
 	@Override
-	public void upgradeHeroSkill(HeroSkillDTO heroSkill) throws GameException {
-		Connection con=null;
-		PreparedStatement ps=null;
+	public int insertHero(int userId, String heroName) throws SQLException {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = null;
 
-		String sql ="update hero_skill set skill_level = skill_level + 1 where hero_skill_id = ? ";
-		
 		try {
 			con = DBManager.getConnection();
-			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, heroSkill.getSkillId());
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-	            throw new GameException("스킬 업그레이드 실패");
-	        }
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("DB 오류");
-			
+
+			if (heroName == null || heroName.trim().isEmpty()) {
+				sql = "insert into hero(fk_user_id) values(?)";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, userId);
+			} else {
+				sql = "insert into hero(fk_user_id, hero_name) values(?, ?)";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, userId);
+				ps.setString(2, heroName);
+			}
+
+			result = ps.executeUpdate();
 		} finally {
 			DBManager.close(con, ps);
 		}
-		
+		return result;
 	}
-	
-	@Override
-	public void updateClearStage(int heroId, int stage) throws GameException {
-		Connection con=null;
-		PreparedStatement ps=null;
 
-		String sql ="update hero set hero_max_clear_stage = ? where hero_id = ?";
-		
+	@Override
+	public int deleteHero(int heroId) throws SQLException {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "delete from hero where hero_id=?";
+
 		try {
 			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
-			
 			ps.setInt(1, heroId);
-			ps.setInt(2, stage);
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-	            throw new GameException("스테이지 업데이트 실패");
-	        }
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("DB 오류");
-			
+			result = ps.executeUpdate();
 		} finally {
 			DBManager.close(con, ps);
 		}
-		
+		return result;
 	}
-	
-	@Override
-	public void updateHeroGem(int heroId, int gem) throws GameException {
-		Connection con=null;
-		PreparedStatement ps=null;
 
-		String sql ="update hero set hero_gem = ? where hero_id = ?";
-		
+	@Override
+	public int updateHero(HeroDTO hero) throws SQLException {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = """
+				update hero 
+				set hero_level=?,
+				    hero_exp=?,
+				    hero_hp=?,
+				    hero_mp=?,
+				    hero_attack=?,
+				    hero_defense=? 
+				where hero_id=?
+				""";
+
 		try {
 			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, heroId);
-			ps.setInt(2, gem);
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-	            throw new GameException("젬 업데이트 실패");
-	        }
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new GameException("DB 오류");
-			
+
+			ps.setInt(1, hero.getHeroLevel());
+			ps.setInt(2, hero.getHeroExp());
+			ps.setInt(3, hero.getHeroHp());
+			ps.setInt(4, hero.getHeroMp());
+			ps.setInt(5, hero.getHeroAttack());
+			ps.setInt(6, hero.getHeroDefense());
+			ps.setInt(7, hero.getHeroId());
+
+			result = ps.executeUpdate();
 		} finally {
 			DBManager.close(con, ps);
 		}
+		return result;
+	}
+
+	@Override
+	public int updateClearStage(int heroId, int stage) throws SQLException {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "update hero set hero_max_clear_stage=? where hero_id=?";
+
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, stage);
+			ps.setInt(2, heroId);
+			result = ps.executeUpdate();
+		} finally {
+			DBManager.close(con, ps);
+		}
+		return result;
+	}
+
+	@Override
+	public int updateHeroGem(int heroId, int gem) throws SQLException {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "update hero set hero_gem=? where hero_id=?";
+
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, gem);
+			ps.setInt(2, heroId);
+			result = ps.executeUpdate();
+		} finally {
+			DBManager.close(con, ps);
+		}
+		return result;
 	}
 }
