@@ -12,17 +12,45 @@ public class QuestDTO {
 	public QuestDTO(){
 
 	}
+    public QuestDTO(int questId, String questName, String questInfo, int questTarget, String questType, boolean questIngComplete, int questIngProgress) {
+        this.questId = questId;
+        this.questName = questName;
+        this.questInfo = questInfo;
+        this.questTarget = questTarget;
+        this.questType = questType;
+        this.questIngComplete = questIngComplete;
+        this.questIngProgress = questIngProgress;
+    }
 
-	public QuestDTO(int questId, String questName, String questInfo, int questTarget, String questType, int heroId, boolean questIngComplete, int questIngProgress) {
-		this.questId = questId;
-		this.questName = questName;
-		this.questInfo = questInfo;
-		this.questTarget = questTarget;
-		this.questType = questType;
-		this.heroId = heroId;
-		this.questIngComplete = questIngComplete;
-		this.questIngProgress = questIngProgress;
-	}
+    // 생성자 2 (오버로딩)
+    public QuestDTO(int questId, String questName, String questInfo, int questTarget, String questType, int heroId, boolean questIngComplete, int questIngProgress) {
+        this(questId, questName, questInfo, questTarget, questType, questIngComplete, questIngProgress);
+        this.heroId = heroId;
+    }
+	
+	
+	
+//	//상세 퀘스트
+//	public QuestDTO(int questId,String questName, String questInfo, int questTarget, String questType, boolean questIngComplete, int questIngProgress) {		
+//		this.questId = questId;
+//		this.questName = questName;
+//		this.questInfo = questInfo;
+//		this.questTarget = questTarget;
+//		this.questType = questType;
+//		this.questIngComplete = questIngComplete;
+//		this.questIngProgress = questIngProgress;
+//	}
+//	public QuestDTO(int questId, String questName, String questInfo, int questTarget, String questType, int heroId, boolean questIngComplete, int questIngProgress) {
+//		this(questId,questName,questInfo,questIngComplete,questIngProgress);
+//		this.questId = questId;
+//		this.questName = questName;
+//		this.questInfo = questInfo;
+//		this.questTarget = questTarget;
+//		this.questType = questType;
+//		this.heroId = heroId;
+//		this.questIngComplete = questIngComplete;
+//		this.questIngProgress = questIngProgress;
+//	}
 
 	public int getQuestId() {
 		return questId;
