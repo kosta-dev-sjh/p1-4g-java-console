@@ -90,27 +90,27 @@ public class HeroView {
 	}
 	
 
-	public static void createHeroView() {
-		
-	}
-	
-	public static void showHeroInfo() {
-
-    }
-	
-	public static void skillMenu() {
-		
-	}
-
-	public static void createHeroView() {
-		
-	}
-	
-	public static void showHeroInfo() {
-
-    }
-	
-	public static void skillMenu() {
-		
-	}
+//	public static void createHeroView() {
+//		
+//	}
+//	
+//	public static void showHeroInfo() {
+//
+//    }
+//	
+//	public static void skillMenu() {
+//		
+//	}
+//
+//	public static void createHeroView() {
+//		
+//	}
+//	
+//	public static void showHeroInfo() {
+//
+//    }
+//	
+//	public static void skillMenu() {
+//		
+//	}
 }
