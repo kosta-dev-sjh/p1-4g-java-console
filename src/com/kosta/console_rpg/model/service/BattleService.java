@@ -114,8 +114,9 @@ public class BattleService {
 	}
 
 	/**
-	 * 방어력 조회 메서드
-	 * 방어 버프가 활성화된 경우, 일시적으로 방어력에 보너스를 적용한다.
+	 * 현재 전투 중 적용되는 방어력을 조회한다.
+	 * - 아이템 방어 버프가 활성화된 경우 추가 방어력을 반영한다.
+	 * - 방어 자세(guard)가 활성화된 경우 해당 턴 방어 보너스를 반영한다.
 	 *
 	 * @param hero 전투용 영웅 객체
 	 * @return int 최종 방어력
@@ -126,7 +127,9 @@ public class BattleService {
 		if (hero.isDefBuffActive()) {
 			defense += hero.getTempDefBonus();
 		}
-
+		if(hero.isGuardActive()) {
+			defense += hero.getGuardBonus();
+		}
 		return defense;
 	}
 
@@ -142,14 +145,12 @@ public class BattleService {
 	 * @param defense 상대 방어력
 	 * @return int 실제 적용된 데미지
 	 */
-	public int calculateAttackDamage(int attack, int defense) {
+	public int calculateAttackDamage(int attack, int defense, int dice) {
 		int baseDamage = attack - defense;
 
 		if (baseDamage <= 0) {
 			return 0; // 방어력이 공격력보다 높으면 데미지는 0
 		}
-
-		int dice = RandomUtil.diceRoll();
 
 		double multiplier = switch (dice) {
 			case 1 -> 0.7;
@@ -175,8 +176,8 @@ public class BattleService {
 	 * @param skillLevel  사용 스킬 레벨
 	 * @return int 실제 적용된 스킬 데미지
 	 */
-	public int useSkill(int attack, int skillDamage, int skillLevel, int defense) {
-		return calculateAttackDamage(attack, defense) + skillDamage + (skillLevel - 1) * 5; // 스킬 레벨당 추가 데미지
+	public int useSkill(int attack, int skillDamage, int skillLevel, int defense, int dice) {
+		return calculateAttackDamage(attack, defense, dice) + skillDamage + (skillLevel - 1) * 5; // 스킬 레벨당 추가 데미지
 	}
 
 	/**
@@ -191,8 +192,7 @@ public class BattleService {
 	 * @param defense 방어 주체의 방어력
 	 * @return int 적용된 방어 수치
 	 */
-	public int calculateDefense(int defense) {
-		int dice = RandomUtil.diceRoll();
+	public int calculateDefense(int defense, int dice) {
 
 		double multiplier = switch (dice) {
 			case 1 -> 0.7;

@@ -1,4 +1,5 @@
 package com.kosta.console_rpg.model.dto;
+
 /**
  * 전투용 영웅 정보를 담는 DTO 클래스
  */
@@ -10,16 +11,19 @@ public class BattleHeroDTO {
     private int heroMp;
     private int heroAttack;
     private int heroDefense;
-    
+
     private int tempAtkBonus;
     private int tempDefBonus;
     private boolean atkBuffActive;
     private boolean defBuffActive;
     private int atkBuffTurn;
     private int defBuffTurn;
-    
+    private int guardBonus;
+    private boolean guardActive;
+
     /**
      * BattleHeroDTO 생성자
+     * 
      * @param heroName
      * @param heroLevel
      * @param heroExp
@@ -29,7 +33,7 @@ public class BattleHeroDTO {
      * @param heroDefense
      */
     public BattleHeroDTO(String heroName, int heroLevel, int heroExp,
-                        int heroHp, int heroMp, int heroAttack, int heroDefense) {
+            int heroHp, int heroMp, int heroAttack, int heroDefense) {
         this.heroName = heroName;
         this.heroLevel = heroLevel;
         this.heroExp = heroExp;
@@ -44,49 +48,131 @@ public class BattleHeroDTO {
         this.defBuffActive = false;
         this.atkBuffTurn = 0;
         this.defBuffTurn = 0;
-
+        this.guardBonus = 0;
+        this.guardActive = false;
     }
-    
-    public String getHeroName() { return heroName; }
-    public void setHeroName(String heroName) { this.heroName = heroName; }
-    
-    public int getHeroLevel() { return heroLevel; }
-    public void setHeroLevel(int heroLevel) { this.heroLevel = heroLevel; }
-    
-    public int getHeroExp() { return heroExp; }
-    public void setHeroExp(int heroExp) { this.heroExp = heroExp; }
-    
-    public int getHeroHp() { return heroHp; }
-    public void setHeroHp(int heroHp) { this.heroHp = heroHp; }
-    
-    public int getHeroMp() { return heroMp; }
-    public void setHeroMp(int heroMp) { this.heroMp = heroMp; }
-    
-    public int getHeroAttack() { return heroAttack; }
-    public void setHeroAttack(int heroAttack) { this.heroAttack = heroAttack; }
-    
-    public int getHeroDefense() { return heroDefense; }
-    public void setHeroDefense(int heroDefense) { this.heroDefense = heroDefense; }
-    
-    public int getTempAtkBonus() { return tempAtkBonus; }
-    public void setTempAtkBonus(int tempAtkBonus) { this.tempAtkBonus = tempAtkBonus; }
-    
-    public int getTempDefBonus() { return tempDefBonus; }
-    public void setTempDefBonus(int tempDefBonus) { this.tempDefBonus = tempDefBonus; }
-    
-    public boolean isAtkBuffActive() { return atkBuffActive; }
-    public void setAtkBuffActive(boolean atkBuffActive) { this.atkBuffActive = atkBuffActive; }
-    
-    public boolean isDefBuffActive() { return defBuffActive; }
-    public void setDefBuffActive(boolean defBuffActive) { this.defBuffActive = defBuffActive; }
 
-    public int getAtkBuffTurn() { return atkBuffTurn; }
-    public void setAtkBuffTurn(int atkBuffTurn) { this.atkBuffTurn = atkBuffTurn; }
+    public String getHeroName() {
+        return heroName;
+    }
 
-    public int getDefBuffTurn() { return defBuffTurn; }
-    public void setDefBuffTurn(int defBuffTurn) { this.defBuffTurn = defBuffTurn; }
+    public void setHeroName(String heroName) {
+        this.heroName = heroName;
+    }
 
+    public int getHeroLevel() {
+        return heroLevel;
+    }
 
+    public void setHeroLevel(int heroLevel) {
+        this.heroLevel = heroLevel;
+    }
+
+    public int getHeroExp() {
+        return heroExp;
+    }
+
+    public void setHeroExp(int heroExp) {
+        this.heroExp = heroExp;
+    }
+
+    public int getHeroHp() {
+        return heroHp;
+    }
+
+    public void setHeroHp(int heroHp) {
+        this.heroHp = heroHp;
+    }
+
+    public int getHeroMp() {
+        return heroMp;
+    }
+
+    public void setHeroMp(int heroMp) {
+        this.heroMp = heroMp;
+    }
+
+    public int getHeroAttack() {
+        return heroAttack;
+    }
+
+    public void setHeroAttack(int heroAttack) {
+        this.heroAttack = heroAttack;
+    }
+
+    public int getHeroDefense() {
+        return heroDefense;
+    }
+
+    public void setHeroDefense(int heroDefense) {
+        this.heroDefense = heroDefense;
+    }
+
+    public int getTempAtkBonus() {
+        return tempAtkBonus;
+    }
+
+    public void setTempAtkBonus(int tempAtkBonus) {
+        this.tempAtkBonus = tempAtkBonus;
+    }
+
+    public int getTempDefBonus() {
+        return tempDefBonus;
+    }
+
+    public void setTempDefBonus(int tempDefBonus) {
+        this.tempDefBonus = tempDefBonus;
+    }
+
+    public boolean isAtkBuffActive() {
+        return atkBuffActive;
+    }
+
+    public void setAtkBuffActive(boolean atkBuffActive) {
+        this.atkBuffActive = atkBuffActive;
+    }
+
+    public boolean isDefBuffActive() {
+        return defBuffActive;
+    }
+
+    public void setDefBuffActive(boolean defBuffActive) {
+        this.defBuffActive = defBuffActive;
+    }
+
+    public int getAtkBuffTurn() {
+        return atkBuffTurn;
+    }
+
+    public void setAtkBuffTurn(int atkBuffTurn) {
+        this.atkBuffTurn = atkBuffTurn;
+    }
+
+    public int getDefBuffTurn() {
+        return defBuffTurn;
+    }
+
+    public void setDefBuffTurn(int defBuffTurn) {
+        this.defBuffTurn = defBuffTurn;
+    }
+
+    public int getGuardBonus() {
+        return guardBonus;
+    }
+
+    public void setGuardBonus(int guardBonus) {
+        this.guardBonus = guardBonus;
+    }
+
+    public boolean isGuardActive() {
+        return guardActive;
+    }
+
+    public void setGuardActive(boolean guardActive) {
+        this.guardActive = guardActive; 
+    }
+
+    
     /**
      * 공격 버프를 해제한다.
      */
@@ -95,6 +181,7 @@ public class BattleHeroDTO {
         this.atkBuffActive = false;
         this.atkBuffTurn = 0;
     }
+
     /**
      * 방어 버프를 해제한다.
      */
@@ -123,15 +210,23 @@ public class BattleHeroDTO {
         }
     }
 
+    /**
+     * 방어 상태를 해제한다.
+     */
+    public void clearGuard() {
+        this.guardBonus = 0;
+        this.guardActive = false;
+    }
+
     @Override
     public String toString() {
         return "BattleHeroDTO [heroName=" + heroName +
-            ", heroHp=" + heroHp +
-            ", heroMp=" + heroMp +
-            ", heroAttack=" + heroAttack +
-            ", heroDefense=" + heroDefense +
-            ", tempAtkBonus=" + tempAtkBonus +
-            ", tempDefBonus=" + tempDefBonus +
-            "]";
+                ", heroHp=" + heroHp +
+                ", heroMp=" + heroMp +
+                ", heroAttack=" + heroAttack +
+                ", heroDefense=" + heroDefense +
+                ", tempAtkBonus=" + tempAtkBonus +
+                ", tempDefBonus=" + tempDefBonus +
+                "]";
     }
 }

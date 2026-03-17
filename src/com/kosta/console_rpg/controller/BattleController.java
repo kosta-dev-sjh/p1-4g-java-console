@@ -1,11 +1,13 @@
 package com.kosta.console_rpg.controller;
 
 import com.kosta.console_rpg.exception.GameException;
+import com.kosta.console_rpg.model.dto.BattleActionResultDTO;
 import com.kosta.console_rpg.model.dto.BattleHeroDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.model.service.BattleService;
+import com.kosta.console_rpg.util.RandomUtil;
 import com.kosta.console_rpg.view.FailView;
 
 /**
@@ -62,17 +64,19 @@ public class BattleController {
 	 * @param monster 전투 대상 몬스터 객체
 	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
 	 */
-	public BattleResult attack(BattleHeroDTO hero, MonsterDTO monster) {
+	public BattleActionResultDTO attack(BattleHeroDTO hero, MonsterDTO monster) {
 		int attack = battleService.getCurrentAttack(hero);
-		int damage = battleService.calculateAttackDamage(attack, monster.getMonsterDefense());
+		
+		int dice = RandomUtil.diceRoll();
+		int damage = battleService.calculateAttackDamage(attack, monster.getMonsterDefense(), dice);
 
 		monster.setMonsterHp(Math.max(0, monster.getMonsterHp() - damage));
 
-		if (monster.getMonsterHp() <= 0) {
-			return BattleResult.WIN;
-		}
+		BattleResult result = monster.getMonsterHp() <= 0
+				? BattleResult.WIN
+				: BattleResult.CONTINUE;
 
-		return BattleResult.CONTINUE;
+		return new BattleActionResultDTO(result, damage, dice);
 	}
 
 	/**
@@ -85,17 +89,22 @@ public class BattleController {
 	 * @param monster 전투 대상 몬스터 객체
 	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
 	 */
-	public BattleResult monsterAttack(BattleHeroDTO hero, MonsterDTO monster) {
+	public BattleActionResultDTO monsterAttack(BattleHeroDTO hero, MonsterDTO monster) {
 		int defense = battleService.getCurrentDefense(hero);
-		int damage = battleService.calculateAttackDamage(monster.getMonsterAttack(), defense);
+		int dice = RandomUtil.diceRoll();
+		int damage = battleService.calculateAttackDamage(monster.getMonsterAttack(), defense, dice);
 
 		hero.setHeroHp(Math.max(0, hero.getHeroHp() - damage));
 
-		if (hero.getHeroHp() <= 0) {
-			return BattleResult.LOSE;
+		if (hero.isGuardActive()) {
+			hero.clearGuard();
 		}
 
-		return BattleResult.CONTINUE;
+		BattleResult result = hero.getHeroHp() <= 0
+				? BattleResult.LOSE
+				: BattleResult.CONTINUE;
+
+		return new BattleActionResultDTO(result, damage, dice);
 	}
 
 	/**
@@ -103,12 +112,17 @@ public class BattleController {
 	 * - 영웅이 방어 자세를 취하여 다음 몬스터 공격까지 일시적으로 방어력 증가 효과 적용
 	 * - 방어 효과는 다음 몬스터 공격이 끝난 후 사라진다.
 	 * 
-	 * @param hero    전투용 영웅 객체
-	 * @param monster 전투 대상 몬스터 객체
+	 * @param hero 전투용 영웅 객체
 	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
 	 */
-	public BattleResult defend(BattleHeroDTO hero, MonsterDTO monster) {
-		// TODO : 방어 시 일시적으로 방어력 증가 효과 적용 (예: 다음 몬스터 공격까지 방어력 증가)
+	public BattleResult defend(BattleHeroDTO hero) {
+
+		int baseDefense = battleService.getCurrentDefense(hero);
+		int dice = RandomUtil.diceRoll();
+		int defendValue = battleService.calculateDefense(baseDefense, dice);
+
+		hero.setGuardBonus(defendValue);
+		hero.setGuardActive(true);
 
 		return BattleResult.CONTINUE;
 	}
@@ -116,7 +130,7 @@ public class BattleController {
 	/**
 	 * 3번항목) 스킬 사용
 	 * - 영웅이 보유한 스킬 목록에서 선택한 스킬을 사용하여 몬스터에게 피해를 입힌다.
-	 *   - 스킬 사용 시 MP 소모는 별도의 로직에서 처리한다.
+	 * - 스킬 사용 시 MP 소모는 별도의 로직에서 처리한다.
 	 *
 	 * @param hero    전투용 영웅 객체
 	 * @param monster 전투 대상 몬스터 객체
