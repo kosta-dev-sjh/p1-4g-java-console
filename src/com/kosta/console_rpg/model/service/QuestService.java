@@ -6,7 +6,7 @@ import com.kosta.console_rpg.model.dao.QuestDAOImpl;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public class QuestService {
         //list의 값이 비어있으면 excpetion출력
         if(questList.isEmpty()) {
         	
-        	throw new GameException("완료한 퀘스트가 없습니다.");
+        	throw new GameException("진행중인 퀘스트가 없습니다.");
         }
 
         return questList;
@@ -66,6 +66,11 @@ public class QuestService {
     public void updateQuestProgress(QuestDTO questIng) throws SQLException {
     	
     	questDAO.updateQuestProgress(questIng);
+    }
+    //캐릭터 추가시 업적 init
+    public void insertQuestInit(int heroId) throws SQLException {
+
+        questDAO.insertQuestInit(heroId);
     }
 
 
