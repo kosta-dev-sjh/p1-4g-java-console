@@ -34,6 +34,10 @@ public class HeroService {
 				throw new GameException("캐릭터 생성 후 조회에 실패했습니다.");
 			}
 
+			//새로운 hero 업적 init
+			QuestService qs = new QuestService();
+			qs.insertQuestInit(createdHero.getHeroId());
+
 			LoginSession.getInstance().setCurrentHero(createdHero);
 
 		} catch (SQLException e) {
