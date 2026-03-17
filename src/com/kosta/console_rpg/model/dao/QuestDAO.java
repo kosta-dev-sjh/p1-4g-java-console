@@ -33,5 +33,8 @@ public interface QuestDAO {
     //db에서 trigger : trg_quest_complete
     //progress >= target값이 되는 경우 db에서 complete값을 1로 변경하는 trigger
     void updateQuestProgress(QuestDTO questIng) throws SQLException;
+    
+    //캐릭터 새로 생성시 기본 업적 내용 추가
+    void insertQuestInit(int heroId)throws SQLException;
 
 }
