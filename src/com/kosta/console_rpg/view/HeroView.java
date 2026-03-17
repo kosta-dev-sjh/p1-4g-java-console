@@ -1,5 +1,10 @@
 package com.kosta.console_rpg.view;
 
+import java.util.List;
+import java.util.Scanner;
+import com.kosta.console_rpg.controller.SkillController;
+import com.kosta.console_rpg.model.dto.HeroSkillDTO;
+
 /**
  * 게임 히어로 정보 뷰
  *
@@ -99,7 +104,56 @@ public class HeroView {
     }
 	
 	public static void skillMenu() {
-		
+		SkillController skillController = new SkillController();
+	    Scanner sc = new Scanner(System.in);
+
+	    while (true) {
+	        System.out.println("\n===== [ 스킬 메뉴 ] =====");
+
+	        List<HeroSkillDTO> skillList = skillController.selectHeroSkills();
+
+	        if (skillList == null || skillList.isEmpty()) {
+	            System.out.println("보유한 스킬이 없습니다.");
+	            return;
+	        }
+
+	        // 1️⃣ 스킬 목록 출력
+	        for (int i = 0; i < skillList.size(); i++) {
+	            HeroSkillDTO hs = skillList.get(i);
+
+	            System.out.printf("%d. %s (Lv.%d / Max:%d) [MP:%d]\n",
+	                    i + 1,
+	                    hs.getSkill().getSkillName(),
+	                    hs.getSkillLevel(),
+	                    hs.getSkill().getSkillMaxLevel(),
+	                    hs.getSkill().getSkillMpCost()
+	            );
+	        }
+
+	        System.out.println("0. 뒤로가기");
+	        System.out.print("선택 > ");
+
+	        int choice = sc.nextInt();
+
+	        // 2️⃣ 입력 처리
+	        if (choice == 0) {
+	            return;
+	        }
+
+	        if (choice < 1 || choice > skillList.size()) {
+	            System.out.println("잘못된 입력입니다.");
+	            continue;
+	        }
+
+	        // 3️⃣ 선택한 스킬
+	        HeroSkillDTO selected = skillList.get(choice - 1);
+	        int skillId = selected.getSkill().getSkillId();
+
+	        // 4️⃣ 강화 실행
+	        skillController.upgradeHeroSkill(skillId);
+
+	        System.out.println("스킬이 강화되었습니다.");
+	    }
 	}
 
 }
