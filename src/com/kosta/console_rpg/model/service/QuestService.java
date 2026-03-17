@@ -6,7 +6,7 @@ import com.kosta.console_rpg.model.dao.QuestDAOImpl;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**

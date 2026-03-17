@@ -2,8 +2,7 @@ package com.kosta.console_rpg.test;
 
 import java.sql.SQLException;
 
-import com.kosta.console_rpg.model.dto.QuestDTO;
-import com.kosta.console_rpg.model.service.QuestService;
+
 import com.kosta.console_rpg.view.QuestView;
 /**
  *  업적 관련 기능 테스트

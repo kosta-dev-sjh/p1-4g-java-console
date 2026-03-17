@@ -1,6 +1,6 @@
 package com.kosta.console_rpg.view;
 
-import java.sql.SQLException;
+
 
 import com.kosta.console_rpg.controller.QuestController;
 import com.kosta.console_rpg.model.dto.HeroDTO;
@@ -18,7 +18,7 @@ import com.kosta.console_rpg.session.LoginSession;
  */
 public class QuestView {
     static HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-    static QuestService service = new QuestService();
+
 
     public static void showQuestLists(int heroId){
         QuestController questController = new QuestController();

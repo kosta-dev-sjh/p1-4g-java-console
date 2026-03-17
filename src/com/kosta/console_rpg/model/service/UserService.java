@@ -5,10 +5,7 @@ import java.sql.SQLException;
 import com.kosta.console_rpg.exception.DuplicationException;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.exception.LoginFailException;
-import com.kosta.console_rpg.model.dao.HeroDAO;
-import com.kosta.console_rpg.model.dao.HeroDAOImpl;
-import com.kosta.console_rpg.model.dao.UserDAO;
-import com.kosta.console_rpg.model.dao.UserDAOImpl;
+import com.kosta.console_rpg.model.dao.*;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.UserDTO;
 import com.kosta.console_rpg.session.LoginSession;
@@ -80,6 +77,7 @@ public class UserService {
 			);
 
 			userDao.insertUser(registerUser);
+
 
 		} catch (SQLException e) {
 			throw new GameException("회원가입 처리 중 오류가 발생했습니다.");
