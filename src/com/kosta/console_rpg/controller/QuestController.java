@@ -18,6 +18,7 @@ import java.util.List;
 public class QuestController {
     private QuestService questService = new QuestService();
 
+
     public void selectQuestsByHeroId(int heroId) {
         try{
             List<QuestDTO> questList = questService.selectQuestsByHeroId(heroId);
@@ -35,16 +36,20 @@ public class QuestController {
         }
     }
     public void selectQuestIng(int heroId) {
+        System.out.println("-------in progress--------");
         try{
             List<QuestDTO> questList = questService.selectQuestIng(heroId);
             
             //업적 전부 출력
             //System.out.println(questList);
-            
-            //업적 이름만 출력
-            questList.stream()
-            .map(QuestDTO::getQuestName)
-            .forEach(System.out::println);
+
+
+
+            for (QuestDTO q: questList){
+                System.out.println(">"+q.getQuestName()+"("+q.getQuestIngProgress()+"/"+q.getQuestTarget()+")");
+
+            }
+
             
         } catch (SQLException | GameException e) {           
             FailView.errorMessage(e.getMessage());
@@ -53,11 +58,20 @@ public class QuestController {
     
     //완료된 업적
     public void selectQuestEnd(int heroId) {
+        System.out.println("-------complete--------");
         try{
             List<QuestDTO> questList = questService.selectQuestEnd(heroId);
-      
 
-            System.out.println(questList);
+            //업적 이름만 출력
+//            questList.stream()
+//                    .map(quest -> "> " + quest.getQuestName())
+//                    .forEach(System.out::println);
+
+            for (QuestDTO q: questList){
+                System.out.println(">"+q.getQuestName()+"("+q.getQuestIngProgress()+"/"+q.getQuestTarget()+")");
+
+            }
+
         } catch (SQLException | GameException e) {           
             FailView.errorMessage(e.getMessage());
         }
@@ -68,6 +82,15 @@ public class QuestController {
     	questService.updateQuestProgress(questIng);
     	}
     	catch (SQLException e) {           
+            FailView.errorMessage(e.getMessage());
+        }
+    }
+    //캐릭터 추가시 업적 init
+    public void insertQuestInit(int heroId) {
+        try {
+            questService.insertQuestInit(heroId);
+        }
+        catch (SQLException e) {
             FailView.errorMessage(e.getMessage());
         }
     }
