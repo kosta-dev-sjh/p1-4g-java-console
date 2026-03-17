@@ -11,7 +11,6 @@ import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.session.LoginSession;
-import com.kosta.console_rpg.util.RandomUtil;
 
 /**
  * 전투 관련 비즈니스 로직을 처리하는 Service 클래스
@@ -28,6 +27,8 @@ public class BattleService {
 
 	// ======= field =======
 	private final MonsterDAO monsterDao = new MonsterDAOImpl();
+	private final HeroService heroService = new HeroService();
+	private final static int LEVEL_UP_EXP_MULTIPLIER = 100; // 레벨업에 필요한 경험치 공식에서 곱해지는 값 (예시로 100 사용)
 
 	// ======= public method =======
 
@@ -127,7 +128,7 @@ public class BattleService {
 		if (hero.isDefBuffActive()) {
 			defense += hero.getTempDefBonus();
 		}
-		if(hero.isGuardActive()) {
+		if (hero.isGuardActive()) {
 			defense += hero.getGuardBonus();
 		}
 		return defense;
@@ -146,19 +147,17 @@ public class BattleService {
 	 * @return int 실제 적용된 데미지
 	 */
 	public int calculateAttackDamage(int attack, int defense, int dice) {
-		int baseDamage = attack - defense;
-
-		if (baseDamage <= 0) {
-			return 0; // 방어력이 공격력보다 높으면 데미지는 0
-		}
-
 		double multiplier = switch (dice) {
 			case 1 -> 0.7;
 			case 6 -> 1.5;
 			default -> 1.0;
 		};
+		int baseDamage = (int) (attack * multiplier);
 
-		int damage = (int) (baseDamage * multiplier);
+		int damage = baseDamage - defense;
+		if (damage <= 0) {
+			return 0; // 방어력이 공격력보다 높으면 데미지는 0
+		}
 
 		return damage;
 	}
@@ -256,5 +255,25 @@ public class BattleService {
 	 */
 	public BattleResult escape() {
 		return BattleResult.ESCAPE;
+	}
+
+	public void reward(MonsterDTO monster) throws GameException {
+
+		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+		hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
+		hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
+
+		// 레벨업 여부 계산
+		int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
+		boolean levelUp = hero.getHeroExp() >= expForNextLevel;
+
+		if (levelUp) {
+			hero.setHeroLevel(hero.getHeroLevel() + 1);
+			hero.setHeroExp(hero.getHeroExp() - expForNextLevel); // 레벨업 후 남은 경험치 계산
+		}
+
+		// 영웅 정보 업데이트
+		heroService.updateHero(hero);
+		LoginSession.getInstance().setCurrentHero(hero); // 세션 정보도 업데이트
 	}
 }

@@ -3,7 +3,6 @@ package com.kosta.console_rpg.test;
 import java.util.List;
 
 import com.kosta.console_rpg.controller.BattleController;
-import com.kosta.console_rpg.controller.HeroController;
 import com.kosta.console_rpg.controller.UserController;
 import com.kosta.console_rpg.model.dto.BattleActionResultDTO;
 import com.kosta.console_rpg.model.dto.BattleHeroDTO;
@@ -11,14 +10,12 @@ import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
-import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.FailView;
 
 public class BattleTest {
 
 	private static final BattleController battleController = new BattleController();
-	private static final HeroController heroController = new HeroController();
 
 	private static BattleHeroDTO battleHero;
 	private static MonsterDTO monster;
@@ -243,9 +240,15 @@ public class BattleTest {
 	public static void victory() {
 		System.out.println("TODO : 승리 보상 연결 예정");
 		System.out.println("🏆 승리!");
-		LoginSession.getInstance().getCurrentHero().setHeroExp(LoginSession.getInstance().getCurrentHero().getHeroExp() + monster.getMonsterRewardExp());
-		LoginSession.getInstance().getCurrentHero().setHeroGem(LoginSession.getInstance().getCurrentHero().getHeroGem() + monster.getMonsterRewardGem());
+		System.out.println("획득 경험치 : " + monster.getMonsterRewardExp());
+		System.out.println("획득 보석 : " + monster.getMonsterRewardGem());
+		System.out.println("------------------------------");
 		
-		heroController.updateHero();
+		boolean rewardResult = battleController.reward(monster);
+		if(rewardResult) {
+			System.out.println("보상 처리가 완료되었습니다.");
+		} else {
+			System.out.println("보상 처리에 실패했습니다.");
+		}
 	}
 }

@@ -93,7 +93,7 @@ public class BattleController {
 		int defense = battleService.getCurrentDefense(hero);
 		int dice = RandomUtil.diceRoll();
 		int damage = battleService.calculateAttackDamage(monster.getMonsterAttack(), defense, dice);
-
+		System.out.println("몬스터 공격력: " + damage + ", 영웅 방어력: " + defense + ", 주사위: " + dice + ", 계산된 데미지: " + damage);
 		hero.setHeroHp(Math.max(0, hero.getHeroHp() - damage));
 
 		if (hero.isGuardActive()) {
@@ -138,6 +138,7 @@ public class BattleController {
 	 */
 	public BattleResult useSkill(BattleHeroDTO hero, MonsterDTO monster) {
 		// TODO : SkillDTO 연동 후 구현 예정
+		// MP 소모 로직도 함께 구현 필요
 		return BattleResult.CONTINUE;
 	}
 
@@ -162,5 +163,24 @@ public class BattleController {
 	 */
 	public BattleResult escape() {
 		return battleService.escape();
+	}
+
+	/**
+	 * 승리 보상 처리
+	 * - 몬스터가 제공하는 경험치와 보석을 현재 로그인한 영웅에게 추가한다.
+	 * - 영웅 정보 업데이트는 HeroService의 updateHero 메서드를 통해 수행한다.
+	 * - 보상 처리 중 예외가 발생할 경우 FailView를 통해 오류 메시지를 출력한다.
+	 * @param monster 승리한 몬스터 객체 (보상 정보 포함)
+	 * @throws GameException 보상 처리 중 발생할 수 있는 예외
+	 * @return void
+	 */
+	public boolean reward(MonsterDTO monster) {
+		try {
+			battleService.reward(monster);
+			return true;
+		} catch (GameException e) {
+			FailView.errorMessage("보상 처리 중 오류가 발생했습니다: " + e.getMessage());		
+		}
+		return false;
 	}
 }
