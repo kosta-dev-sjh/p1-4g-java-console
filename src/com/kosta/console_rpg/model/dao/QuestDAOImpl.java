@@ -224,15 +224,31 @@ public class QuestDAOImpl implements QuestDAO {
         try {
             con = DBManager.getConnection();
             //캐릭터 초기 생성시 값 추가
-            ps= con.prepareStatement("INSERT INTO quest_ing (fk_hero_id, fk_quest_id, quest_ing_complete, quest_ing_progress)" +
-                    "VALUES" +
-                    "(?,1,0,0)," +
-                    "(?,2,0,0)," +
-                    "(?,3,0,0)" +
-                    "(?,4,0,0)");
+            ps= con.prepareStatement("INSERT INTO quest_ing (fk_hero_id, fk_quest_id, quest_ing_complete, quest_ing_progress)"+
+                    "VALUES (?,1,0,0), (?,2,0,0), (?,3,0,0), (?,4,0,0)");
             ps.setInt(1,heroId);
             ps.setInt(2,heroId);
             ps.setInt(3,heroId);
+            ps.setInt(4,heroId);
+
+            ps.executeUpdate();
+
+
+        }finally {
+            DBManager.close(con, ps);
+        }
+    }
+
+    @Override
+    public void deleteQuest(int heroId) throws SQLException {
+        Connection con=null;
+        PreparedStatement ps=null;
+
+        try {
+            con = DBManager.getConnection();
+            //캐릭터 초기 생성시 값 추가
+            ps= con.prepareStatement("DELETE FROM quest_ing WHERE fk_hero_id = ?");
+            ps.setInt(1,heroId);
 
             ps.executeUpdate();
 
