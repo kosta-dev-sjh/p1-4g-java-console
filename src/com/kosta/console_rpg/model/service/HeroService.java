@@ -48,6 +48,10 @@ public class HeroService {
 			}
 			// TODO: 초기 생성 시 기본 스킬 지급 로직 추가 예정 (SkillService 연동)
 
+			//새로운 hero 업적 init
+			QuestService qs = new QuestService();
+			qs.insertQuestInit(createdHero.getHeroId());
+
 			LoginSession.getInstance().setCurrentHero(createdHero);
 
 		} catch (SQLException e) {
