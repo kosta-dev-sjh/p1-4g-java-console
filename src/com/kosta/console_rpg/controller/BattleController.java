@@ -32,7 +32,6 @@ import com.kosta.console_rpg.view.FailView;
  */
 public class BattleController {
 	private final BattleService battleService = new BattleService();
-	
 
 	/**
 	 * 선택한 스테이지에 해당하는 몬스터 정보를 조회한다.
@@ -143,9 +142,9 @@ public class BattleController {
 				: BattleResult.CONTINUE;
 
 		if (usedSkill) {
-			resultDTO = new BattleActionResultDTO(result,damage,dice,skillName,BattleActionType.MONSTER_SKILL);
+			resultDTO = new BattleActionResultDTO(result, damage, dice, skillName, BattleActionType.MONSTER_SKILL);
 		} else {
-			resultDTO = new BattleActionResultDTO(result,damage,dice,BattleActionType.MONSTER_ATTACK);
+			resultDTO = new BattleActionResultDTO(result, damage, dice, BattleActionType.MONSTER_ATTACK);
 		}
 
 		return resultDTO;
@@ -287,5 +286,20 @@ public class BattleController {
 			FailView.errorMessage(e.getMessage());
 		}
 		return skills;
+	}
+
+	/**
+	 * 전투 패배 후 패널티를 적용한다.
+	 *
+	 * @return boolean 패널티 처리 성공 여부
+	 */
+	public boolean defeatPenalty() {
+		try {
+			battleService.defeatPenalty();
+			return true;
+		} catch (GameException e) {
+			FailView.errorMessage(e.getMessage());
+		}
+		return false;
 	}
 }

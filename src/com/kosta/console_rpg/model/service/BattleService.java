@@ -19,6 +19,7 @@ import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.DBManager;
 
 /**
  * 전투 관련 비즈니스 로직을 처리하는 Service 클래스
@@ -377,51 +378,47 @@ public class BattleService {
 		if (LoginSession.getInstance().getCurrentHero() == null) {
 			throw new GameException("로그인 정보가 없습니다.");
 		}
-		if (monster.getMonsterRewardExp() < 0 || monster.getMonsterRewardGem() < 0) {
-			throw new GameException("몬스터 보상 정보가 유효하지 않습니다.");
-		}
-		if (monster.getMonsterRewardExp() == 0 && monster.getMonsterRewardGem() == 0) {
-			throw new GameException("몬스터 보상이 존재하지 않습니다.");
-		}
-		if (monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
-			rewardResults.add(RewardResult.REWARD);
-			hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
-			hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
-		}
-		// 레벨업 여부 계산 ----------------------------------------
-		if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
-			hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
-			rewardResults.add(RewardResult.MAX_LEVEL);
-		} else {
-			int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
-			boolean levelUp = hero.getHeroExp() >= expForNextLevel;
 
-			if (levelUp) {
-				// 레벨업 후 남은 경험치 계산
-				hero.setHeroLevel(hero.getHeroLevel() + 1);
-				hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
-
-				// HP는 레벨 당 10씩 증가, MP는 레벨 당 5씩 증가
-				hero.setHeroHp(hero.getHeroHp() + LEVEL_UP_HP_BONUS);
-				hero.setHeroMp(hero.getHeroMp() + LEVEL_UP_MP_BONUS);
-
-				// 공격력 레벨 당 2씩 증가
-				hero.setHeroAttack(hero.getHeroAttack() + LEVEL_UP_ATTACK_BONUS);
-				// 방어력 레벨 당 1씩 증가
-				hero.setHeroDefense(hero.getHeroDefense() + LEVEL_UP_DEFENSE_BONUS);
-
-				rewardResults.add(RewardResult.LEVEL_UP);
-			}
-		}
-		// 영웅 정보 업데이트 ----------------------------------------
-		heroService.updateHero(con, hero);
-		heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
-
-		// 업적 진행도 증가 로직 ----------------------------------------
-		int stage = monster.getMonsterStage();
-		boolean questUpdated = false;
-
+		// =============== [트랜잭션] 보상 처리 및 레벨업, 업적 진행도 증가 로직 ===============
 		try {
+			con = DBManager.getConnection();
+			con.setAutoCommit(false);
+
+			if (monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
+				rewardResults.add(RewardResult.REWARD);
+				hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
+				hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
+			}
+
+			// 레벨업 여부 계산 ----------------------------------------
+			if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
+				hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
+				rewardResults.add(RewardResult.MAX_LEVEL);
+			} else {
+				int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER;
+				boolean levelUp = hero.getHeroExp() >= expForNextLevel;
+
+				if (levelUp) {
+					hero.setHeroLevel(hero.getHeroLevel() + 1);
+					hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
+
+					hero.setHeroHp(hero.getHeroHp() + LEVEL_UP_HP_BONUS);
+					hero.setHeroMp(hero.getHeroMp() + LEVEL_UP_MP_BONUS);
+					hero.setHeroAttack(hero.getHeroAttack() + LEVEL_UP_ATTACK_BONUS);
+					hero.setHeroDefense(hero.getHeroDefense() + LEVEL_UP_DEFENSE_BONUS);
+
+					rewardResults.add(RewardResult.LEVEL_UP);
+				}
+			}
+
+			// 영웅 정보 업데이트 ----------------------------------------
+			heroService.updateHero(con, hero);
+			heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
+
+			// 업적 진행도 증가 로직 ----------------------------------------
+			int stage = monster.getMonsterStage();
+			boolean questUpdated = false;
+
 			List<QuestDTO> questList = questService.selectQuestIng(hero.getHeroId());
 
 			for (QuestDTO quest : questList) {
@@ -444,12 +441,8 @@ public class BattleService {
 					updated = true;
 				}
 
-				if (quest.getQuestIngProgress() >= quest.getQuestTarget()) {
-					quest.setQuestIngComplete(true);
-				}
-
 				if (updated) {
-					questService.updateQuestProgress(quest);
+					questService.updateQuestProgress(con, quest);
 					questUpdated = true;
 				}
 			}
@@ -457,18 +450,37 @@ public class BattleService {
 			if (questUpdated) {
 				rewardResults.add(RewardResult.QUEST_PROGRESS);
 			}
-		} catch (SQLException e) {
-			throw new GameException("퀘스트 반영 중 오류가 발생했습니다.");
+
+			// 현재 진행중인 스테이지보다 높은 스테이지 클리어 시 최대 클리어 스테이지 갱신 ----------------
+			if (stage > hero.getHeroMaxClearStage() && stage <= MAX_CLEAR_STAGE) {
+				hero.setHeroMaxClearStage(stage);
+				heroService.updateClearStage(con, hero.getHeroId(), stage);
+			}
+
+			con.commit();
+			LoginSession.getInstance().setCurrentHero(hero);
+
+		} catch (Exception e) {
+			try {
+				if (con != null) {
+					con.rollback();
+				}
+			} catch (SQLException rollbackEx) {
+				rollbackEx.printStackTrace();
+			}
+			throw new GameException("보상 처리 중 오류가 발생했습니다.");
+		} finally {
+			try {
+				if (con != null) {
+					con.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			DBManager.close(con);
 		}
+		// =============== [트랜잭션] 종료 ===============
 
-		// 현재 진행중인 스테이지보다 높은 스테이지 클리어 시 최대 클리어 스테이지 갱신 ----------------------------------------
-		if (stage > hero.getHeroMaxClearStage() && stage <= MAX_CLEAR_STAGE) {
-			hero.setHeroMaxClearStage(stage);
-			heroService.updateClearStage(con, hero.getHeroId(), stage);
-		}
-
-
-		LoginSession.getInstance().setCurrentHero(hero); // 세션 정보도 업데이트
 		return rewardResults;
 	} // reward 메서드 끝
 
@@ -508,4 +520,56 @@ public class BattleService {
 		};
 	}
 
+	/**
+	 * 전투 패배 후 패널티를 적용한다.
+	 * - 현재 경험치의 10%와 현재 젬의 10%를 차감한다.
+	 * - 경험치와 젬은 0 미만으로 내려가지 않는다.
+	 * - 패널티 적용 후 영웅 정보를 갱신한다.
+	 *
+	 * @throws GameException 패널티 적용 중 오류가 발생한 경우
+	 */
+	public void defeatPenalty() throws GameException {
+		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+		Connection con = null;
+
+		if (hero == null) {
+			throw new GameException("로그인 정보가 없습니다.");
+		}
+
+		try {
+			con = DBManager.getConnection();
+			con.setAutoCommit(false);
+
+			int penaltyExp = hero.getHeroExp() / 10;
+			int penaltyGem = hero.getHeroGem() / 10;
+
+			hero.setHeroExp(Math.max(0, hero.getHeroExp() - penaltyExp));
+			hero.setHeroGem(Math.max(0, hero.getHeroGem() - penaltyGem));
+
+			heroService.updateHero(con, hero);
+			heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
+
+			con.commit();
+			LoginSession.getInstance().setCurrentHero(hero);
+
+		} catch (Exception e) {
+			try {
+				if (con != null) {
+					con.rollback();
+				}
+			} catch (SQLException rollbackEx) {
+				rollbackEx.printStackTrace();
+			}
+			throw new GameException("패배 패널티 적용 중 오류가 발생했습니다.");
+		} finally {
+			try {
+				if (con != null) {
+					con.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			DBManager.close(con);
+		}
+	}
 }

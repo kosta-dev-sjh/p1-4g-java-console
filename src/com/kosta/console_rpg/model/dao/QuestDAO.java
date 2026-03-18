@@ -3,7 +3,7 @@ package com.kosta.console_rpg.model.dao;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 
-
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,6 +34,9 @@ public interface QuestDAO {
     //progress >= target값이 되는 경우 db에서 complete값을 1로 변경하는 trigger
     void updateQuestProgress(QuestDTO questIng) throws SQLException;
     
+    //트랜잭션 처리용 진행 중인 퀘스트 상태 변경
+    void updateQuestProgress(Connection con, QuestDTO questIng) throws SQLException;
+
     //캐릭터 새로 생성시 기본 업적 내용 추가
     void insertQuestInit(int heroId)throws SQLException;
 

@@ -390,8 +390,8 @@ public class BattleTest {
 
 		switch (result) {
 			case WIN -> victory();
-			case LOSE -> System.out.println("💀 패배...");
-			case ESCAPE -> System.out.println("🏃 도망쳤습니다.");
+			case LOSE -> defeat();
+			case ESCAPE -> escape();
 			default -> System.out.println("종료");
 		}
 
@@ -409,9 +409,37 @@ public class BattleTest {
 		boolean rewardResult = battleController.reward(monster);
 
 		if (rewardResult) {
-			System.out.println("보상 처리 완료");
+			System.out.println("보상 및 성장 정보가 반영되었습니다.\n자세한 정보는 캐릭터 정보에서 확인해주세요.");
 		} else {
 			System.out.println("보상 처리 실패");
+		}
+	}
+
+	/**
+	 * 패배
+	 */
+	public static void defeat() {
+		System.out.println("💀 패배...");
+		applyDefeatPenalty();
+	}
+	/**
+	 * 도망
+	 */
+	public static void escape() {
+		System.out.println("🏃 도망쳤습니다.");
+		applyDefeatPenalty();
+	}
+
+	/**
+	 * 패널티 부여
+	 */
+	public static void applyDefeatPenalty() {
+		boolean penaltyResult = battleController.defeatPenalty();
+
+		if (penaltyResult) {
+			System.out.println("경험치와 젬이 일부 감소했습니다.");
+		} else {
+			System.out.println("패널티 적용 실패");
 		}
 	}
 }
