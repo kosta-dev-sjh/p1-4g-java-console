@@ -3,6 +3,7 @@ package com.kosta.console_rpg.util;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,10 +47,10 @@ public class DBManager {
 	/**
 	 * 닫기 (select 전용)
 	 */
-	public static void close(Connection con, Statement st, ResultSet rs) {
+	public static void close(Connection con, PreparedStatement ps, ResultSet rs) {
 		try {
 			if(rs != null) rs.close();
-			if(st != null) st.close();
+			if(ps != null) ps.close();
 			if(con != null) con.close();
 		}
 		catch(Exception e) {
@@ -61,9 +62,37 @@ public class DBManager {
 	/**
 	 * 닫기 (insert, update, delete = DML 전용)
 	 */
-	public static void close(Connection con, Statement st) {
+	public static void close(Connection con, PreparedStatement ps) {
 		try {
-			if(st!=null) st.close();
+			if(ps!=null) ps.close();
+			if(con!=null) con.close();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/*
+	 * 닫기 (트랜잭션 전용 ps) 
+	 */
+	
+	public static void close(PreparedStatement ps) {
+		try {
+			if(ps!=null) ps.close();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/*
+	 * 닫기 (트랜잭션 전용 con) 
+	 */
+	
+	public static void close(Connection con) {
+		try {
 			if(con!=null) con.close();
 			
 		} catch(SQLException e) {

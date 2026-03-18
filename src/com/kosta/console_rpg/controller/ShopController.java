@@ -1,27 +1,44 @@
 package com.kosta.console_rpg.controller;
 
+import java.util.List;
+
 import com.kosta.console_rpg.exception.GameException;
+import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.service.ShopService;
 
 public class ShopController {
 	
 	private ShopService shopService = new ShopService();
 	
-	public void showShop() {
+	public List<ItemDTO> showShop() {
 		
 		try {
-			shopService.showShop();
+			List<ItemDTO> list = shopService.showShop();
+			
+			return list;
+			
+		} catch (GameException e) {
+			
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public void buyItem(int itemId) {
+		try {
+			shopService.buyItem(itemId);
 		} catch (GameException e) {
 			
 			e.printStackTrace();
 		}
 	}
 	
-	void buyItem(int itemId) {
-		
-	}
+	public void sellItem(int itemId) {
+		try {
+			shopService.sellItem(itemId);
+		} catch (GameException e) {
 	
-	void sellItem(int itemId) {
-		
+			e.printStackTrace();
+		}
 	}
 }
