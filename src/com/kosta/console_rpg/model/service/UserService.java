@@ -38,7 +38,7 @@ public class UserService {
 				throw new LoginFailException("아이디 또는 비밀번호가 올바르지 않습니다.");
 			}
 			
-			String encryptPwd = EncryptUtil.md5(pwd);
+			String encryptPwd = EncryptUtil.sha256(pwd);
 			
 			if(!encryptPwd.equals(user.getUserPassword())) {
 				throw new LoginFailException("아이디 또는 비밀번호가 올바르지 않습니다.");
@@ -73,7 +73,7 @@ public class UserService {
 			}
 
 			registerUser.setUserPassword(
-				EncryptUtil.md5(registerUser.getUserPassword())
+				EncryptUtil.sha256(registerUser.getUserPassword())
 			);
 
 			userDao.insertUser(registerUser);

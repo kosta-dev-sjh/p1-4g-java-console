@@ -16,7 +16,6 @@ public class SkillDTO {
 	    this.skillDamage = skillDamage;
 	}
 
-	
 	public SkillDTO(int skillId, String skillName, int skillDamage, int skillMpCost, 
 	                int skillMaxLevel, int skillRequiredHeroLevel, int skillUpgradeCost) {
 	    this(skillId, skillName, skillDamage); 
@@ -26,6 +25,7 @@ public class SkillDTO {
 	    this.skillUpgradeCost = skillUpgradeCost;
 	}
 
+	
 	public int getSkillId() {
 		return skillId;
 	}

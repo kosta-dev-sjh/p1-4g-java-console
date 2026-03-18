@@ -63,8 +63,15 @@ public class BattleActionResultDTO {
 		this.actionName = actionName;
 		this.action = action;
 	}
+	/**
+	 * 도망
+	 * @return
+	 */
+	public BattleActionResultDTO(BattleResult battleResult, BattleActionType action) {
+		this.battleResult = battleResult;
+		this.action = action;
+	}	
 
-	
 
 
 	public String getActionName() {
