@@ -19,6 +19,9 @@ replay_pid*
 # Package Files
 ############################
 
+# lib 전체 무시
+lib/*
+
 *.jar
 !lib/*.jar
 
