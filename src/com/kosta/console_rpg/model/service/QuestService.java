@@ -41,7 +41,7 @@ public class QuestService {
         List<QuestDTO> questList = questDAO.selectQuestIng(heroId);
         //list의 값이 비어있으면 excpetion출력
         if(questList.isEmpty()) {
-        	
+
         	throw new GameException("진행중인 퀘스트가 없습니다.");
         }
 
@@ -54,7 +54,7 @@ public class QuestService {
         List<QuestDTO> questList = questDAO.selectQuestEnd(heroId);
         //list의 값이 비어있으면 excpetion출력
         if(questList.isEmpty()) {
-        	
+            System.out.println("──────────────── COMPLETE QUEST ──────────────────");
         	throw new GameException("완료한 퀘스트가 없습니다.");
         	
         	

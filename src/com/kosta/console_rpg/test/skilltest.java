@@ -1,13 +1,14 @@
 package com.kosta.console_rpg.test;
 
 import com.kosta.console_rpg.controller.HeroController;
+import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.controller.UserController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
+import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.model.dto.UserDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
-import com.kosta.console_rpg.view.InventoryView;
 import com.kosta.console_rpg.view.ShopView;
 
 /**
@@ -18,7 +19,7 @@ import com.kosta.console_rpg.view.ShopView;
  * 최종 수정자 : 송정현
  * 최종 수정일 : 2026.03.16
  */
-public class TestUserFlow {
+public class skilltest {
 
 	private static final UserController userController = new UserController();
 	private static final HeroController heroController = new HeroController();
@@ -189,40 +190,14 @@ public class TestUserFlow {
 		
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
-		if (hero != null) {
-			System.out.println("===== HERO SESSION =====");
-			System.out.println("캐릭터 번호 : " + hero.getHeroId());
-			System.out.println("캐릭터 이름 : " + hero.getHeroName());
-			System.out.println("레벨 : " + hero.getHeroLevel());
-			System.out.println("경험치 : " + hero.getHeroExp());
-			System.out.println("HP : " + hero.getHeroHp());
-			System.out.println("MP : " + hero.getHeroMp());
-			System.out.println("공격력 : " + hero.getHeroAttack());
-			System.out.println("방어력 : " + hero.getHeroDefense());
-			System.out.println("젬 : " + hero.getHeroGem());
-			System.out.println("최대 클리어 스테이지 : " + hero.getHeroMaxClearStage());
-		} else {
-			System.out.println("캐릭터 없음");
+		SkillController skillController = new SkillController();
+		if(hero.getHeroGem() > 100) {
+
+			skillController.upgradeHeroSkill(1);
+
 		}
-		
-//		System.out.println("인벤토리 테스트");
-//		InventoryView.showInventory();
-//		System.out.println();
-//		
-//		System.out.println("포션 테스트");
-//		InventoryView.potionMenu(5);
-//		System.out.println();
-//		
-//		System.out.println("장착 테스트");
-//		InventoryView.equipMenu(2);
-//		System.out.println();
-		
-//		System.out.println("상점 테스트");
-//		ShopView.showShop();
-		
-		System.out.println("인벤토리 테스트");
-		InventoryView.start();
-		
+
+
 	}
 
 	/**

@@ -19,12 +19,12 @@ import com.kosta.console_rpg.session.LoginSession;
  * 최종 수정일 :
  */
 public class HeroService {
-	// ======= field =======
+
 	private HeroDAO heroDao = new HeroDAOImpl();
+
 	private final QuestService questService = new QuestService();
 	private final SkillController skillController = new SkillController();
 
-	// ======= public method =======
 	/**
 	 * 신규 히어로를 생성하고 로그인 세션에 저장한다.
 	 *
@@ -33,19 +33,20 @@ public class HeroService {
 	 * @throws GameException
 	 */
 	public void createHero(int userId, String heroName) throws GameException {
+	public void createHero(int userId, String heroName) throws GameException {
 		try {
-			// 기존 캐릭터 존재 여부 확인
 			HeroDTO hero = heroDao.selectHeroByUserId(userId);
 
+			if (hero != null) {
 			if (hero != null) {
 				throw new GameException("이미 생성된 캐릭터가 존재합니다.");
 			}
 
-			// 캐릭터 생성
 			heroDao.insertHero(userId, heroName);
 
 			HeroDTO createdHero = heroDao.selectHeroByUserId(userId);
 
+			if (createdHero == null) {
 			if (createdHero == null) {
 				throw new GameException("캐릭터 생성 후 조회에 실패했습니다.");
 			}
@@ -61,10 +62,7 @@ public class HeroService {
 	}
 
 	/**
-	 * 캐릭터를 삭제한다.
-	 *
-	 * @param heroId 캐릭터 번호
-	 * @throws GameException
+	 * 캐릭터 삭제
 	 */
 	public void deleteHero(int heroId) throws GameException {
 		try {
@@ -77,15 +75,13 @@ public class HeroService {
 			}
 
 		} catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new GameException("캐릭터 삭제 중 오류가 발생했습니다.");
 		}
 	}
 
 	/**
-	 * 캐릭터 기본 정보를 수정한다.
-	 *
-	 * @param hero 수정할 캐릭터 정보
-	 * @throws GameException
+	 * 캐릭터 정보 수정
 	 */
 	public void updateHero(HeroDTO hero) throws GameException {
 		try {
@@ -136,7 +132,7 @@ public class HeroService {
 			}
 
 		} catch (SQLException e) {
-			throw new GameException("젬 갱신 중 오류가 발생했습니다.");
+				throw new GameException("젬 갱신 중 오류가 발생했습니다.");
 		}
 	}
 

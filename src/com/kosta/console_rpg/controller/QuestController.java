@@ -1,8 +1,10 @@
 package com.kosta.console_rpg.controller;
 
 import com.kosta.console_rpg.exception.GameException;
+import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
+import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.view.FailView;
 import com.kosta.console_rpg.view.QuestView;
 
@@ -37,7 +39,7 @@ public class QuestController {
         }
     }
     public void selectQuestIng(int heroId) {
-        System.out.println("-------in progress--------");
+
         try{
             List<QuestDTO> questList = questService.selectQuestIng(heroId);
 

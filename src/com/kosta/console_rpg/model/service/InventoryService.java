@@ -56,7 +56,7 @@ public class InventoryService {
 	    String type = target.getItem().getItemType();
 
 	    // 장착 가능한 타입인지 검사 
-	    if (!type.equals("weapon") || type.equals("armor")) {
+	    if (!type.equals("weapon") && !type.equals("armor")) {
 	        throw new GameException("장착할 수 없는 아이템입니다.");
 	    }
 

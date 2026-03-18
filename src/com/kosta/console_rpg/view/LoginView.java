@@ -18,17 +18,18 @@ public class LoginView {
      * @throws GameException 입력 또는 처리 중 오류 발생 시
      */
     public static void register() throws GameException {
-        System.out.print("아이디 입력 : ");
+        System.out.println("────────────────[ SIGN UP ]─────────────────");
+        System.out.print("▸ ID : ");
         String loginId = InputUtil.inputString();
         InputUtil.checkBlank(loginId);
         InputUtil.checkStringLength(loginId, 1, 30);
 
-        System.out.print("비밀번호 입력 : ");
+        System.out.print("▸ PW : ");
         String pwd = InputUtil.inputString();
         InputUtil.checkBlank(pwd);
         InputUtil.checkStringLength(pwd, 1, 20);
 
-        System.out.print("이름 입력 : ");
+        System.out.print("▸ NAME : ");
         String userName = InputUtil.inputString();
         InputUtil.checkBlank(userName);
         InputUtil.checkStringLength(userName, 1, 10);
@@ -37,7 +38,8 @@ public class LoginView {
 
         userController.register(registerUser);
 
-        System.out.println("회원가입 완료");
+        System.out.println("회원가입 완료\n");
+        System.out.println("──────────────────────────────────────────\n\n");
     }
 
     /**
@@ -46,10 +48,12 @@ public class LoginView {
      * @throws GameException 입력 또는 처리 중 오류 발생 시
      */
     public static void login() throws GameException {
-        System.out.print("아이디 입력 : ");
+        System.out.println("─────────────────[ LOGIN ]──────────────────");
+
+        System.out.print("▸ ID : ");
         String loginId = InputUtil.inputString();
 
-        System.out.print("비밀번호 입력 : ");
+        System.out.print("▸ PW : ");
         String pwd = InputUtil.inputString();
 
         userController.login(loginId, pwd);
@@ -64,6 +68,8 @@ public class LoginView {
         }
 
         System.out.println("현재 로그인 유저 : " + LoginSession.getInstance().getCurrentUser().getUserName());
+
+        System.out.println("──────────────────────────────────────────\n\n");
     }
 
     /**
@@ -72,7 +78,8 @@ public class LoginView {
      * @throws GameException 입력 또는 처리 중 오류 발생 시
      */
     public static void createHeroTest() throws GameException {
-        System.out.print("캐릭터 이름 입력 (엔터만 입력 시 기본값 적용): ");
+        System.out.println("─────────────────[ CREATE HERO ]──────────────────");
+        System.out.print("Hero 이름을 만들어주세요 (엔터만 입력 시 기본값 적용): ");
         String heroName = InputUtil.inputString();
 
         if (!heroName.isBlank()) {
@@ -84,6 +91,7 @@ public class LoginView {
         HeroDTO createdHero = LoginSession.getInstance().getCurrentHero();
 
         System.out.println("생성 완료 : " + createdHero.getHeroName());
+        System.out.println("──────────────────────────────────────────\n\n");
     }
 
     /**
