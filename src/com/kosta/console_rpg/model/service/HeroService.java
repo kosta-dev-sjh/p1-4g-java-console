@@ -2,6 +2,7 @@ package com.kosta.console_rpg.model.service;
 
 import java.sql.SQLException;
 
+import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dao.HeroDAO;
 import com.kosta.console_rpg.model.dao.HeroDAOImpl;
@@ -16,6 +17,7 @@ public class HeroService {
 	private HeroDAO heroDao = new HeroDAOImpl();
 
 	private final QuestService questService = new QuestService();
+	private final SkillController skillController = new SkillController();
 
 	/**
 	 * 신규 히어로를 생성하고 로그인 세션에 저장한다.
@@ -37,6 +39,7 @@ public class HeroService {
 			}
 
 			LoginSession.getInstance().setCurrentHero(createdHero);
+			skillController.insertDefaultSkills();
 			//새로운 hero 업적 추가 init
 			questService.insertQuestInit(LoginSession.getInstance().getCurrentHero().getHeroId());
 

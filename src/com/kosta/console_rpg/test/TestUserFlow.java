@@ -184,7 +184,9 @@ public class TestUserFlow {
 	 */
 	public static void showSession() {
 		System.out.println("현재 로그인 유저 : " + LoginSession.getInstance().getCurrentUser().getUserName());
-
+		System.out.println("현재 로그인 된 유저 정보 : " + LoginSession.getInstance().getCurrentUser().getUserId());
+		
+		
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
 		if (hero != null) {
