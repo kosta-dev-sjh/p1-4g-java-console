@@ -11,7 +11,7 @@ public class HeroSkillDTO {
 		this.skill = skill;
 		this.skillLevel = skillLevel;
 	}
-
+	
 	public int getHeroId() {
 		return heroId;
 	}

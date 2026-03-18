@@ -56,4 +56,14 @@ public interface SkillDAO {
 	 * @throws SQLException 데이터베이스 처리 중 오류 발생 시
 	 */
 	public int insertDefaultSkills(int heroId) throws SQLException;
+
+	/**
+	 * 캐릭터 스킬 삭제 메소드
+	 * 캐릭터가 삭제될 시 스킬도 함께 삭제한다.
+	 * 
+	 * @param heroId 캐릭터 고유 번호
+	 * @return 삭제된 행 수
+	 * @throws SQLException 데이터베이스 처리 중 오류 발생 시
+	 */
+	public int deleteHeroSkills(int heroId) throws SQLException;
 }
