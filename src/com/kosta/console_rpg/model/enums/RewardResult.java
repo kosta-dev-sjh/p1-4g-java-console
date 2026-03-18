@@ -1,8 +1,8 @@
 package com.kosta.console_rpg.model.enums;
 
-public enum ReqardResult {
+public enum RewardResult {
     REWARD,
     LEVEL_UP,
     MAX_LEVEL,
-    ACHIEVEMENT
+    QUEST_PROGRESS
 }

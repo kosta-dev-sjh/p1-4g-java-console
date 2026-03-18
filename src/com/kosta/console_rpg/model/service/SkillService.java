@@ -34,17 +34,21 @@ public class SkillService {
 	// ======= public method =======
 	/**
      * 전체 스킬 조회
-	 * @throws SQLException 
+     * 
+     * @throws SQLException
      */
-    public List<HeroSkillDTO> selectHeroSkills(int heroId) throws GameException, SQLException {
-    	List<HeroSkillDTO> skills = skillDao.selectHeroSkills(heroId);
-    	
-    	if(skills.isEmpty()) {
-            throw new GameException("스킬 조회 중 오류가 발생했습니다.");
-        }
-    	return skills;
-    }
+    public List<HeroSkillDTO> selectHeroSkills(int heroId) throws GameException {
+        try {
+            List<HeroSkillDTO> skills = skillDao.selectHeroSkills(heroId);
 
+            if (skills.isEmpty()) {
+                throw new GameException("스킬 조회 중 오류가 발생했습니다.");
+            }
+            return skills; 
+        } catch (SQLException e) {
+            throw new GameException("스킬 조회 중 오류가 발생했습니다.");
+        } 
+    }
 
     /**
      * 초기 스킬 지급
@@ -61,7 +65,7 @@ public class SkillService {
             throw new GameException("기본 스킬 지급 중 오류가 발생했습니다.");
         }
     }
-    
+
     /**
      * 스킬 강화 조건 체크 + 강화 실행
      */

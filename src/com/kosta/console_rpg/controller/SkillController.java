@@ -31,7 +31,7 @@ public class SkillController {
             int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
             return skillService.selectHeroSkills(heroId);
 
-        } catch (SQLException | GameException e) {
+        } catch (GameException e) {
             FailView.errorMessage(e.getMessage());
             return null;
         }

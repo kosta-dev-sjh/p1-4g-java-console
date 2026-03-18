@@ -103,21 +103,22 @@ public class ShopDAOImpl implements ShopDAO {
 	}
 
 	
-	public void buyShopItem(Connection con, int heroId, int itemId) throws GameException {
+	public void buyShopItem(Connection con, int heroId, int itemId, int quantity) throws GameException {
 
 	    PreparedStatement ps = null;
 
 	    try {
 	        String updateSql = """
 	                update inventory
-	                set inventory_quantity = inventory_quantity + 1
+	                set inventory_quantity = inventory_quantity + ?
 	                where fk_hero_id = ?
 	                and fk_item_id = ?
 	                """;
 
 	        ps = con.prepareStatement(updateSql);
-	        ps.setInt(1, heroId);
-	        ps.setInt(2, itemId);
+	        ps.setInt(1, quantity);
+	        ps.setInt(2, heroId);
+	        ps.setInt(3, itemId);
 
 	        int result = ps.executeUpdate();
 	        
@@ -125,12 +126,13 @@ public class ShopDAOImpl implements ShopDAO {
 
 	            String insertSql = """
 	                    insert into inventory(fk_hero_id, fk_item_id, inventory_quantity)
-	                    values (?, ?, 1)
+	                    values (?, ?, ?)
 	                    """;
 
 	            ps = con.prepareStatement(insertSql);
 	            ps.setInt(1, heroId);
 	            ps.setInt(2, itemId);
+	            ps.setInt(3, quantity);
 
 	            ps.executeUpdate();
 	        }
@@ -147,12 +149,12 @@ public class ShopDAOImpl implements ShopDAO {
 	}
 	
 	@Override
-	public void buyShopItem(int heroId, int itemId) throws GameException {
+	public void buyShopItem(int heroId, int itemId, int quantity) throws GameException {
 		Connection con=null;
 		
 		try {
 			con = DBManager.getConnection();
-			buyShopItem(con, heroId, itemId);
+			buyShopItem(con, heroId, itemId, quantity);
 			
 			
 		} catch (SQLException e) {

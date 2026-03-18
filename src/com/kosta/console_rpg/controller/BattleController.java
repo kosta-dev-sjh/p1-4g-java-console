@@ -1,20 +1,30 @@
 package com.kosta.console_rpg.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.BattleActionResultDTO;
 import com.kosta.console_rpg.model.dto.BattleHeroDTO;
+import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.dto.SkillDTO;
+import com.kosta.console_rpg.model.enums.BattleActionType;
 import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.model.service.BattleService;
+import com.kosta.console_rpg.util.RandomUtil;
+import com.kosta.console_rpg.view.FailView;
 import com.kosta.console_rpg.util.RandomUtil;
 import com.kosta.console_rpg.view.FailView;
 
 /**
  * 게임 전투 흐름과 전투 관련 사용자 요청을 제어하는 컨트롤러
  *
+ * 작성자 : 김재민
+ * 생성일 : 2026-03-13
+ * 최종 수정자 : 송정현
+ * 최종 수정일 : 2026-03-16
  * 작성자 : 김재민
  * 생성일 : 2026-03-13
  * 최종 수정자 : 송정현
@@ -64,7 +74,7 @@ public class BattleController {
 	 *
 	 * @param hero    전투용 영웅 객체
 	 * @param monster 전투 대상 몬스터 객체
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @return BattleActionResultDTO 공격 결과 정보 (전투 결과, 피해량, 주사위 결과 등)
 	 */
 	public BattleActionResultDTO attack(BattleHeroDTO hero, MonsterDTO monster) {
 		int attack = battleService.getCurrentAttack(hero);
@@ -78,23 +88,49 @@ public class BattleController {
 				? BattleResult.WIN
 				: BattleResult.CONTINUE;
 
-		return new BattleActionResultDTO(result, damage, dice);
+		return new BattleActionResultDTO(result, damage, dice, BattleActionType.HERO_ATTACK);
 	}
 
 	/**
 	 * 몬스터가 영웅을 공격한다.
 	 * - 몬스터의 공격력과 영웅의 현재 방어력을 기반으로 피해량 계산
+	 * - 확률적으로 몬스터는 스킬을 사용한다.
 	 * - 영웅의 HP에서 피해량만큼 감소
 	 * - 영웅의 HP가 0 이하가 되면 패배, 그렇지 않으면 전투 지속
 	 *
 	 * @param hero    전투용 영웅 객체
 	 * @param monster 전투 대상 몬스터 객체
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @return BattleActionResultDTO 몬스터 공격 결과 정보 (전투 결과, 피해량, 주사위 결과 등)
 	 */
 	public BattleActionResultDTO monsterAttack(BattleHeroDTO hero, MonsterDTO monster) {
 		int defense = battleService.getCurrentDefense(hero);
 		int dice = RandomUtil.diceRoll();
-		int damage = battleService.calculateAttackDamage(monster.getMonsterAttack(), defense, dice);
+		int damage = 0;
+		BattleActionResultDTO resultDTO = null;
+		boolean usedSkill = false;
+		String skillName = null;
+		try {
+			if (RandomUtil.probabilityCheck(monster.getMonsterSkillProb())) {
+				SkillDTO monsterSkill = monster.getMonsterSkillInfo();
+				damage = battleService.calculateSkillDamage(
+						monster.getMonsterAttack(),
+						monsterSkill.getSkillDamage(),
+						1, // 몬스터 스킬 레벨은 1로 고정
+						defense,
+						dice);
+
+				usedSkill = true;
+				skillName = monsterSkill.getSkillName();
+
+			} else {
+				// 일반 공격 로직
+				damage = battleService.calculateAttackDamage(monster.getMonsterAttack(), defense, dice);
+
+			}
+		} catch (GameException e) {
+			FailView.errorMessage(e.getMessage());
+		}
+
 		hero.setHeroHp(Math.max(0, hero.getHeroHp() - damage));
 
 		if (hero.isGuardActive()) {
@@ -105,7 +141,13 @@ public class BattleController {
 				? BattleResult.LOSE
 				: BattleResult.CONTINUE;
 
-		return new BattleActionResultDTO(result, damage, dice);
+		if (usedSkill) {
+			resultDTO = new BattleActionResultDTO(result, damage, dice, skillName, BattleActionType.MONSTER_SKILL);
+		} else {
+			resultDTO = new BattleActionResultDTO(result, damage, dice, BattleActionType.MONSTER_ATTACK);
+		}
+
+		return resultDTO;
 	}
 
 	/**
@@ -114,9 +156,9 @@ public class BattleController {
 	 * - 방어 효과는 다음 몬스터 공격이 끝난 후 사라진다.
 	 * 
 	 * @param hero 전투용 영웅 객체
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @return BattleActionResultDTO 방어 결과 정보 (성공 여부, 방어력 증가량, 주사위 결과 등)
 	 */
-	public BattleResult defend(BattleHeroDTO hero) {
+	public BattleActionResultDTO defend(BattleHeroDTO hero) {
 
 		int baseDefense = battleService.getCurrentDefense(hero);
 		int dice = RandomUtil.diceRoll();
@@ -125,7 +167,7 @@ public class BattleController {
 		hero.setGuardBonus(defendValue);
 		hero.setGuardActive(true);
 
-		return BattleResult.CONTINUE;
+		return new BattleActionResultDTO(BattleResult.CONTINUE, defendValue, dice, BattleActionType.DEFEND);
 	}
 
 	/**
@@ -133,21 +175,27 @@ public class BattleController {
 	 * - 영웅이 보유한 스킬 목록에서 선택한 스킬을 사용하여 몬스터에게 피해를 입힌다.
 	 * - 스킬 사용 시 MP 소모는 별도의 로직에서 처리한다.
 	 *
-	 * @param hero    전투용 영웅 객체
-	 * @param monster 전투 대상 몬스터 객체
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @param hero      전투용 영웅 객체
+	 * @param monster   전투 대상 몬스터 객체
+	 * @param heroSkill 사용한 스킬 객체
+	 * @return BattleActionResultDTO 사용 결과 정보 (성공 여부, 피해량, 주사위 결과 등)
 	 */
 	public BattleActionResultDTO useSkill(BattleHeroDTO hero, MonsterDTO monster, HeroSkillDTO heroSkill) {
 		int dice = RandomUtil.diceRoll();
 		SkillDTO skill = heroSkill.getSkill();
+
+		if (battleService.canUseSkill(hero, heroSkill)) {
+			battleService.consumeSkillMp(hero, heroSkill);
+		} else {
+			return new BattleActionResultDTO(BattleResult.CONTINUE);
+		}
 
 		int damage = battleService.calculateSkillDamage(
 				hero.getHeroAttack(),
 				skill.getSkillDamage(),
 				heroSkill.getSkillLevel(),
 				monster.getMonsterDefense(),
-				dice
-			);
+				dice);
 
 		monster.setMonsterHp(Math.max(0, monster.getMonsterHp() - damage));
 
@@ -155,22 +203,41 @@ public class BattleController {
 				? BattleResult.WIN
 				: BattleResult.CONTINUE;
 
-		return new BattleActionResultDTO(result, damage, dice);
-
+		return new BattleActionResultDTO(result, damage, dice, skill.getSkillName(), BattleActionType.HERO_SKILL);
 	}
 
 	/**
 	 * 4번항목) 아이템 사용
 	 * 
-	 * @param hero    전투용 영웅 객체
-	 * @param monster 전투 대상 몬스터 객체
-	 * @param item    사용한 아이템 객체
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @param hero   전투용 영웅 객체
+	 * @param potion 사용한 포션 객체
+	 * @return BattleActionResultDTO 사용 성공 시 효과 정보 반환
 	 */
-	public BattleResult useItem(BattleHeroDTO hero, MonsterDTO monster, ItemDTO item) {
-		battleService.useItem(hero, item);
+	public BattleActionResultDTO useItem(BattleHeroDTO hero, BattlePotionDTO potion) {
+		Map<String, Integer> effectMap = null;
 
-		return BattleResult.CONTINUE;
+		try {
+			effectMap = battleService.useItem(hero, potion);
+
+		} catch (GameException e) {
+			FailView.errorMessage(e.getMessage());
+			return new BattleActionResultDTO(BattleResult.INVALID_ACTION);
+		}
+
+		if (effectMap.isEmpty()) {
+			FailView.errorMessage("포션 사용 실패... 이미 최대치입니다. 행동을 다시 선택해주세요.");
+			return new BattleActionResultDTO(BattleResult.INVALID_ACTION);
+		}
+
+		String potionType = effectMap.keySet().iterator().next();
+		int resultValue = effectMap.get(potionType);
+
+		return new BattleActionResultDTO(
+				BattleResult.CONTINUE,
+				resultValue,
+				potionType,
+				potion.getItemName(),
+				BattleActionType.HERO_ITEM);
 	}
 
 	/**
@@ -197,7 +264,41 @@ public class BattleController {
 			battleService.reward(monster);
 			return true;
 		} catch (GameException e) {
-			FailView.errorMessage("보상 처리 중 오류가 발생했습니다: " + e.getMessage());
+			FailView.errorMessage(e.getMessage());
+		}
+		return false;
+	}
+
+	/**
+	 * 영웅이 보유한 스킬 목록을 조회한다.
+	 * 
+	 * @return List<HeroSkillDTO> 영웅이 보유한 스킬 목록
+	 * @throws GameException 스킬 조회 중 발생할 수 있는 예외
+	 */
+	public List<HeroSkillDTO> getHeroSkills() {
+		List<HeroSkillDTO> skills = null;
+		try {
+			skills = battleService.getHeroSkills();
+			if (skills == null || skills.isEmpty()) {
+				FailView.errorMessage("보유한 스킬이 없습니다.");
+			}
+		} catch (GameException e) {
+			FailView.errorMessage(e.getMessage());
+		}
+		return skills;
+	}
+
+	/**
+	 * 전투 패배 후 패널티를 적용한다.
+	 *
+	 * @return boolean 패널티 처리 성공 여부
+	 */
+	public boolean defeatPenalty() {
+		try {
+			battleService.defeatPenalty();
+			return true;
+		} catch (GameException e) {
+			FailView.errorMessage(e.getMessage());
 		}
 		return false;
 	}
