@@ -69,7 +69,7 @@ public class InventoryView {
 	    sb.append(String.format(" [1] %s\n", skill1));
 	    sb.append("선택 ▶ ");
 
-	    return sb.toString();
+	    return sb.toString();	
 	}
     
 }

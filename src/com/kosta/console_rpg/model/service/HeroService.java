@@ -15,6 +15,8 @@ public class HeroService {
 
 	private HeroDAO heroDao = new HeroDAOImpl();
 
+	private final QuestService questService = new QuestService();
+
 	/**
 	 * 신규 히어로를 생성하고 로그인 세션에 저장한다.
 	 */
@@ -34,11 +36,9 @@ public class HeroService {
 				throw new GameException("캐릭터 생성 후 조회에 실패했습니다.");
 			}
 
-			//새로운 hero 업적 init
-			QuestService qs = new QuestService();
-			qs.insertQuestInit(createdHero.getHeroId());
-
 			LoginSession.getInstance().setCurrentHero(createdHero);
+			//새로운 hero 업적 추가 init
+			questService.insertQuestInit(LoginSession.getInstance().getCurrentHero().getHeroId());
 
 		} catch (SQLException e) {
 			throw new GameException("캐릭터 생성 중 오류가 발생했습니다.");
@@ -50,6 +50,9 @@ public class HeroService {
 	 */
 	public void deleteHero(int heroId) throws GameException {
 		try {
+			//삭제를 위한 업적 삭제(삭제하지 않으면 종속 되있어서 삭제 불가)
+			questService.deleteQuest(heroId);
+
 			int result = heroDao.deleteHero(heroId);
 
 			if (result == 0) {

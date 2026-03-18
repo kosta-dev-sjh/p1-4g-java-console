@@ -1,6 +1,8 @@
 package com.kosta.console_rpg.model.dao;
 
 import com.kosta.console_rpg.model.dto.HeroDTO;
+
+import java.sql.Connection;
 import java.sql.SQLException;
 
 
@@ -66,5 +68,11 @@ public interface HeroDAO {
 	 * @throws SQLException DB 처리 중 오류 발생 시
 	 */
 	public int updateHeroGem(int heroId, int gem) throws SQLException;
+	
+	
+	/*
+	 * 캐릭터의 보유 잼을 수정 트랜잭션 처리용
+	 */
+	public int updateHeroGem(Connection con, int heroId, int gem) throws SQLException;
     
 }

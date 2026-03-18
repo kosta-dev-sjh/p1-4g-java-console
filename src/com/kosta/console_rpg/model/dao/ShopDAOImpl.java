@@ -57,17 +57,125 @@ public class ShopDAOImpl implements ShopDAO {
 		
 		return list;
 	}
+	
+	public ItemDTO selectItemById(Connection con, int itemId) throws GameException {
 
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    ItemDTO itemDTO = null;
+
+	    String sql = "select * from item where item_id = ?";
+
+	    try {
+	        con = DBManager.getConnection();
+	        ps = con.prepareStatement(sql);
+
+	        ps.setInt(1, itemId);
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+
+	            itemDTO = new ItemDTO(
+	                    rs.getInt("item_id"),
+	                    rs.getString("item_name"),
+	                    rs.getString("item_type"),
+	                    rs.getInt("item_price_buy"),
+	                    rs.getInt("item_price_sell"),
+	                    rs.getInt("item_effect_hp"),
+	                    rs.getInt("item_effect_mp"),
+	                    rs.getInt("item_atk_bonus"),
+	                    rs.getInt("item_def_bonus"),
+	                    rs.getString("item_grade")
+	            );
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new GameException("아이템 정보를 가져오지 못했습니다.");
+
+	    } finally {
+	        DBManager.close(null, ps, rs);
+	    }
+
+	    return itemDTO;
+	}
+
+	
+	public void buyShopItem(Connection con, int heroId, int itemId) throws GameException {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String updateSql = """
+	                update inventory
+	                set inventory_quantity = inventory_quantity + 1
+	                where fk_hero_id = ?
+	                and fk_item_id = ?
+	                """;
+
+	        ps = con.prepareStatement(updateSql);
+	        ps.setInt(1, heroId);
+	        ps.setInt(2, itemId);
+
+	        int result = ps.executeUpdate();
+	        
+	        if (result == 0) {
+
+	            String insertSql = """
+	                    insert into inventory(fk_hero_id, fk_item_id, inventory_quantity)
+	                    values (?, ?, 1)
+	                    """;
+
+	            ps = con.prepareStatement(insertSql);
+	            ps.setInt(1, heroId);
+	            ps.setInt(2, itemId);
+
+	            ps.executeUpdate();
+	        }
+
+	        System.out.println("아이템 구매 완료");
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new GameException("아이템 구매 DB 오류");
+
+	    } finally {
+	        DBManager.close(ps);
+	    }
+	}
+	
 	@Override
 	public void buyShopItem(int heroId, int itemId) throws GameException {
 		Connection con=null;
-		PreparedStatement ps=null;
-
-		String sql = "insert into inventory(fk_hero_id, fk_item_id) values (?, ?)";
 		
 		try {
 			con = DBManager.getConnection();
-			ps = con.prepareStatement(sql);
+			buyShopItem(con, heroId, itemId);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new GameException("DB 오류");
+			
+		} finally {
+			DBManager.close(con);
+		}
+		
+	}
+	
+	
+	@Override
+	public void sellShopItem(Connection con, int heroId, int itemId) throws GameException {
+		PreparedStatement ps=null;
+		
+		String updateSql =
+		        "update inventory set inventory_quantity = inventory_quantity - 1 "
+		      + "where fk_hero_id = ? and fk_item_id = ? and inventory_quantity > 0";
+		
+		try {
+			ps = con.prepareStatement(updateSql);
 			
 			ps.setInt(1, heroId);
 			ps.setInt(2, itemId);
@@ -75,47 +183,43 @@ public class ShopDAOImpl implements ShopDAO {
 			int result = ps.executeUpdate();
 			
 			if(result == 0) {
-	            throw new GameException("아이템 구매 불가");
+	            throw new GameException("아이템 판매 불가");
+	        } else {
+	        	System.out.println("아이템 판매 완료");
 	        }
 			
+			String deleteSql = "delete from inventory where fk_hero_id = ? and fk_item_id = ? and inventory_quantity = 0";
+			
+			ps = con.prepareStatement(deleteSql);
+		    ps.setInt(1, heroId);
+		    ps.setInt(2, itemId);
+
+		    ps.executeUpdate();
+		    
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.close(con, ps);
+			DBManager.close(ps);
 		}
-		
 	}
 
 
 	@Override
 	public void sellShopItem(int heroId, int itemId) throws GameException {
 		Connection con=null;
-		PreparedStatement ps=null;
-
-		String sql = "delete from inventory where fk_hero_id = ? and fk_item_id = ?";
-		
 		
 		try {
 			con = DBManager.getConnection();
-			ps = con.prepareStatement(sql);
-			
-			ps.setInt(1, heroId);
-			ps.setInt(2, itemId);
-			
-			int result = ps.executeUpdate();
-			
-			if(result == 0) {
-	            throw new GameException("아이템 구매 불가");
-	        }
+			sellShopItem(con, heroId, itemId);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new GameException("DB 오류");
 			
 		} finally {
-			DBManager.close(con, ps);
+			DBManager.close(con);
 		}
 	}
 

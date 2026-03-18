@@ -150,19 +150,30 @@ public class HeroDAOImpl implements HeroDAO {
 
 	@Override
 	public int updateHeroGem(int heroId, int gem) throws SQLException {
-		int result = 0;
 		Connection con = null;
+
+		try {
+			con = DBManager.getConnection();
+			 return updateHeroGem(con, heroId, gem);
+			 
+		} finally {
+			DBManager.close(con);
+		}
+	}
+	
+	
+	public int updateHeroGem(Connection con, int heroId, int gem) throws SQLException {
+		int result = 0;
 		PreparedStatement ps = null;
 		String sql = "update hero set hero_gem=? where hero_id=?";
 
 		try {
-			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, gem);
 			ps.setInt(2, heroId);
 			result = ps.executeUpdate();
 		} finally {
-			DBManager.close(con, ps);
+			DBManager.close(ps);
 		}
 		return result;
 	}
