@@ -7,6 +7,7 @@ import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.service.InventoryService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.view.FailView;
 
 /**
  * 인벤토리 내 아이템 조회, 장착/해제, 사용 기능 흐름을 제어하는 컨트롤러
@@ -31,7 +32,7 @@ public class InventoryController {
 			return list;
 
 		} catch (GameException e) {
-			e.printStackTrace();
+			FailView.errorMessage(e.getMessage());
 			return null;
 		}
 	}
@@ -43,8 +44,7 @@ public class InventoryController {
 		try {
 			inventoryService.equipItem(heroId, itemId);
 		} catch (GameException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			FailView.errorMessage(e.getMessage());
 		}
 	}
 
@@ -55,7 +55,7 @@ public class InventoryController {
 			List<BattlePotionDTO> potionList = inventoryService.showPotionItems(heroId);
 			return potionList;
 		} catch (GameException e) {
-			e.printStackTrace();
+			FailView.errorMessage(e.getMessage());
 			return null;
 		}
 	}
