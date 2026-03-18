@@ -1,9 +1,17 @@
 package com.kosta.console_rpg.model.dao;
 
-import com.kosta.console_rpg.model.dto.HeroDTO;
 import java.sql.SQLException;
 
+import com.kosta.console_rpg.model.dto.HeroDTO;
 
+/**
+ * 히어로 조회, 생성, 성장 등 캐릭터 관련 요청을 제어하는 dao
+ *
+ * 작성자      : 송정현
+ * 생성일      : 2026-03-15
+ * 최종 수정자 : 
+ * 최종 수정일 : 
+ */
 public interface HeroDAO {
 	
 	/**
@@ -66,5 +74,6 @@ public interface HeroDAO {
 	 * @throws SQLException DB 처리 중 오류 발생 시
 	 */
 	public int updateHeroGem(int heroId, int gem) throws SQLException;
+    
     
 }
