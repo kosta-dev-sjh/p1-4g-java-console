@@ -17,7 +17,8 @@ public class DBManager {
 	static {
 		try {
 			//외부 properteis파일 로딩하기
-			proFile.load(DBManager.class.getClassLoader().getResourceAsStream("db.properties"));
+			proFile.load(new FileInputStream("src/com/kosta/console_rpg/resources/db.properties"));
+			//proFile.load(new FileInputStream("board.properties"));
 			
 			Class.forName(proFile.getProperty("driverName"));
 
@@ -61,7 +62,7 @@ public class DBManager {
 	/**
 	 * 닫기 (insert, update, delete = DML 전용)
 	 */
-	public static void close(Connection con, Statement st) {
+	public static void dbClose(Connection con, Statement st) {
 		try {
 			if(st!=null) st.close();
 			if(con!=null) con.close();
