@@ -217,8 +217,12 @@ public class TestUserFlow {
 //		InventoryView.equipMenu(2);
 //		System.out.println();
 		
-		System.out.println("상점 테스트");
-		ShopView.showShop();
+//		System.out.println("상점 테스트");
+//		ShopView.showShop();
+		
+		System.out.println("인벤토리 테스트");
+		InventoryView.start();
+		
 	}
 
 	/**

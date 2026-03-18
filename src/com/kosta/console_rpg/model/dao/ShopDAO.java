@@ -28,10 +28,10 @@ public interface ShopDAO {
 	 * 맞다면 가격만큼 보유 젬 차감 
 	 * 인벤토리에 아이템 insert
 	 */
-	void buyShopItem(int heroId, int itemId) throws GameException;
+	void buyShopItem(int heroId, int itemId, int quantity) throws GameException;
 	
 	
-	void buyShopItem(Connection con, int heroId, int itemId) throws GameException;
+	void buyShopItem(Connection con, int heroId, int itemId, int quantity) throws GameException;
 	
 	
 	/*
