@@ -119,6 +119,23 @@ public class InputUtil {
 	        throw new GameException(min + " ~ " + max + " 사이 값만 입력 가능합니다.");
 	    }
 	}
+	/**
+	 * 메뉴로 뒤로가기 처리
+	 * "0" 입력 시 아무것도 하지 않고 종료, 기타 입력 시 에러 메시지 출력
+	 */
+	public static void backToMenu() {
+		try {
+			String menu = InputUtil.inputString();
+			switch (menu) {
+				case "0" -> {  // 뒤로가기: 아무것도 안하고 종료
+					break;
+				}
+				default -> System.out.println("잘못된 입력입니다.");
+			}
+		} catch (GameException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	
 	
 }
