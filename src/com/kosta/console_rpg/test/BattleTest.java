@@ -32,7 +32,7 @@ public class BattleTest {
 
 	public static void main(String[] args) {
 		UserController userController = new UserController();
-		userController.login("test", "test");
+		userController.login("1234", "1234");
 
 		startBattle();
 	}
@@ -55,25 +55,24 @@ public class BattleTest {
 
 					nowStage = InputUtil.inputInt();
 					nowDifficulty = "★".repeat(nowStage);
-
+					
 					battleHero = battleController.createBattleHero();
 					monster = battleController.selectMonsterByStage(nowStage);
-					heroSkillList = battleController.getHeroSkills();
-					potionList = inventoryController.showPotionItems();
 
 					if (battleHero == null || monster == null) {
 						FailView.errorMessage("전투 시작에 필요한 정보가 부족합니다.");
 						continue;
 					}
 
+					heroSkillList = battleController.getHeroSkills();
 					if (heroSkillList == null || heroSkillList.isEmpty()) {
 						FailView.errorMessage("보유한 스킬이 없습니다.");
 						continue;
 					}
 
+					potionList = inventoryController.showPotionItems();
 					if (potionList == null || potionList.isEmpty()) {
-						FailView.errorMessage("사용 가능한 포션이 없습니다.");
-						continue;
+						System.out.println("보유한 포션 없이 전투를 진행합니다.");
 					}
 
 					nowTurn = 1;
@@ -193,7 +192,7 @@ public class BattleTest {
 		BattleActionResultDTO result = battleController.attack(battleHero, monster);
 
 		System.out.println();
-		System.out.println(result.getAction().getMessage());
+		System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 		System.out.println("주사위 : 🎲 " + result.getDice());
 		System.out.println("데미지 : -" + result.getResultValue());
 		
@@ -207,7 +206,7 @@ public class BattleTest {
 		BattleActionResultDTO result = battleController.defend(battleHero);
 
 		System.out.println();
-		System.out.println(result.getAction().getMessage());
+		System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 		System.out.println("주사위 : 🎲 " + result.getDice());
 		System.out.println("추가 방어력 : +" + result.getResultValue());
 
@@ -220,13 +219,14 @@ public class BattleTest {
 	public static BattleResult skillTurn() {
 		try {
 			for (int i = 0; i < heroSkillList.size(); i++) {
-	System.out.println("[" + (i + 1) + "] " + heroSkillList.get(i).toBattleString());
-}
+				System.out.println("[" + (i + 1) + "] " + heroSkillList.get(i).toBattleString());
+			}
 
 			System.out.print("사용할 스킬 번호 입력 > ");
 
 			int choice = InputUtil.inputInt();
 			InputUtil.checkRange(choice, 1, heroSkillList.size());
+
 
 			BattleActionResultDTO result = battleController.useSkill(
 					battleHero,
@@ -234,11 +234,12 @@ public class BattleTest {
 					heroSkillList.get(choice - 1));
 
 			if (result.getBattleResult() == BattleResult.INVALID_ACTION) {
+				FailView.errorMessage("MP가 부족하여 스킬을 사용할 수 없습니다.");
 				return BattleResult.INVALID_ACTION;
 			}
 
 			System.out.println();
-			System.out.println(result.getAction().getMessage());
+			System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 			System.out.println("스킬명 : " + result.getActionName());
 			System.out.println("주사위 : 🎲 " + result.getDice());
 			System.out.println("데미지 : -" + result.getResultValue());
@@ -255,6 +256,10 @@ public class BattleTest {
 	 * 아이템 사용
 	 */
 	public static BattleResult itemTurn() {
+		if (potionList.isEmpty()) {
+			System.out.println("사용 가능한 포션이 없습니다.");
+			return BattleResult.INVALID_ACTION;
+		}
 		try {
 			for (int i = 0; i < potionList.size(); i++) {
 				System.out.println("[" + (i + 1) + "] " + potionList.get(i));
@@ -273,7 +278,7 @@ public class BattleTest {
 			}
 
 			System.out.println();
-			System.out.println(result.getAction().getMessage());
+			System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 			System.out.println("아이템명 : " + result.getActionName());
 
 			switch (result.getPotionType()) {
@@ -304,13 +309,11 @@ public class BattleTest {
 
 		System.out.println();
 		if (result.getAction() == BattleActionType.MONSTER_SKILL) {
-			System.out.println();
-			System.out.println("몬스터가 스킬을 사용했다!");
+			System.out.println(monster.getMonsterName() + result.getAction().getMessage());
 			System.out.println("스킬명 : " + result.getActionName());
 		} else {
-			System.out.println("몬스터가 공격했다!");
+			System.out.println(monster.getMonsterName() + result.getAction().getMessage());
 		}
-		System.out.println(result.getAction().getMessage());
 		System.out.println("주사위 : 🎲 " + result.getDice());
 		System.out.println("데미지 : -" + result.getResultValue());
 
@@ -325,13 +328,13 @@ public class BattleTest {
 	 * 도망
 	 */
 	public static BattleResult escapeTurn() {
-		BattleResult result = battleController.escape();
+		BattleActionResultDTO result = battleController.escape();
 
-		if (result == BattleResult.ESCAPE) {
-			System.out.println("Hero가 도망쳤다!");
+		if (result.getBattleResult() == BattleResult.ESCAPE) {
+			System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 		}
 
-		return result;
+		return result.getBattleResult();
 	}
 
 	/**
