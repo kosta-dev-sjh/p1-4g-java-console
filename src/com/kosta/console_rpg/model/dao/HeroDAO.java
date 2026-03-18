@@ -47,6 +47,12 @@ public interface HeroDAO {
 	 */
 	public int updateHero(HeroDTO hero) throws SQLException;
 	
+	/*
+	 * gem, 최고 클리어 스테이지는 제외하고 주요 능력치만 수정 트랜잭션 처리용
+	 */
+	public int updateHero(Connection con, HeroDTO hero) throws SQLException;
+
+
 	/**
 	 * 캐릭터의 최고 클리어 스테이지를 수정한다.
 	 * 전투 승리 후 최고 스테이지 갱신 시 사용한다.
@@ -58,6 +64,12 @@ public interface HeroDAO {
 	 */
 	public int updateClearStage(int heroId, int stage) throws SQLException;
     
+	/*
+	 * 캐릭터의 최고 클리어 스테이지를 수정 트랜잭션 처리용
+	 */
+	public int updateClearStage(Connection con, int heroId, int stage) throws SQLException;
+
+
 	/**
 	 * 캐릭터의 보유 젬을 수정한다.
 	 * 상점 구매, 판매, 전투 보상 지급 시 사용한다.

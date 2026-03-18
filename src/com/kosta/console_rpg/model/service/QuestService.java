@@ -1,21 +1,21 @@
 package com.kosta.console_rpg.model.service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dao.QuestDAO;
 import com.kosta.console_rpg.model.dao.QuestDAOImpl;
 import com.kosta.console_rpg.model.dto.QuestDTO;
-
-import java.sql.SQLException;
-
-import java.util.List;
 
 /**
  *  업적 관련 기능 구현 service
  *
  * 작성자      : 김재민
  * 생성일      : 2026.03.13
- * 최종 수정자 :
- * 최종 수정일 : 2026.03.16
+ * 최종 수정자 : 송정현
+ * 최종 수정일 : 2026.03.18
  */
 public class QuestService {
     QuestDAO questDAO = new QuestDAOImpl();
@@ -67,6 +67,13 @@ public class QuestService {
     	
     	questDAO.updateQuestProgress(questIng);
     }
+
+    // 트랜잭션용 업적 정보 수정
+    public void updateQuestProgress(Connection con, QuestDTO questIng) throws SQLException {
+    	
+    	questDAO.updateQuestProgress(con, questIng);
+    }
+    
     //캐릭터 추가시 업적 init
     public void insertQuestInit(int heroId) throws SQLException {
 

@@ -12,30 +12,34 @@ import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 /**
  * 히어로 스킬 업그레이드를 요청하는 서비스
  *
- * 작성자      : 이진주
- * 생성일      : 2026.03.17
- * 최종 수정자 : 
- * 최종 수정일 : 
+ * 작성자 : 이진주
+ * 생성일 : 2026.03.17
+ * 최종 수정자 :
+ * 최종 수정일 :
  */
 public class SkillService {
-	// ======= field =======
-	private SkillDAO skillDao = new SkillDAOImpl();
-	//private HeroDAO heroDao = new HeroDAOImpl();
-	
-	// ======= public method =======
-	/**
-     * 전체 스킬 조회
-	 * @throws SQLException 
-     */
-    public List<HeroSkillDTO> selectHeroSkills(int heroId) throws GameException, SQLException {
-    	List<HeroSkillDTO> skills = skillDao.selectHeroSkills(heroId);
-    	
-    	if(skills.isEmpty()) {
-            throw new GameException("스킬 조회 중 오류가 발생했습니다.");
-        }
-    	return skills;
-    }
+    // ======= field =======
+    private SkillDAO skillDao = new SkillDAOImpl();
+    // private HeroDAO heroDao = new HeroDAOImpl();
 
+    // ======= public method =======
+    /**
+     * 전체 스킬 조회
+     * 
+     * @throws SQLException
+     */
+    public List<HeroSkillDTO> selectHeroSkills(int heroId) throws GameException {
+        try {
+            List<HeroSkillDTO> skills = skillDao.selectHeroSkills(heroId);
+
+            if (skills.isEmpty()) {
+                throw new GameException("스킬 조회 중 오류가 발생했습니다.");
+            }
+            return skills; 
+        } catch (SQLException e) {
+            throw new GameException("스킬 조회 중 오류가 발생했습니다.");
+        } 
+    }
 
     /**
      * 초기 스킬 지급
@@ -52,7 +56,7 @@ public class SkillService {
             throw new GameException("기본 스킬 지급 중 오류가 발생했습니다.");
         }
     }
-    
+
     /**
      * 스킬 강화
      */
@@ -80,5 +84,4 @@ public class SkillService {
         }
     }
 
-	
 }

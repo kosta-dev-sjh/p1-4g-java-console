@@ -1,11 +1,10 @@
 package com.kosta.console_rpg.model.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import com.kosta.console_rpg.exception.GameException;
+import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
-import com.kosta.console_rpg.model.dto.ItemDTO;
 
 public interface InventoryDAO {
 	
@@ -32,13 +31,17 @@ public interface InventoryDAO {
 	 * 아이템 장착 여부
 	 */
 	boolean equipStatus(int heroId, int itemId) throws GameException;
-	
+
+	/**
+	 * 포션 아이템 리스트만 조회
+	 */
+	List<BattlePotionDTO> selectBattlePotionList(int heroId) throws GameException;
+
 	/*
 	 * 포션 사용 업데이트
 	 */
 	void updateUsedPotion(int heroId, int inventoryId) throws GameException;
-	
-	
+
 	/*
 	 * 아이템 수량 업데이트 
 	 */
