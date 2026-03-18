@@ -7,6 +7,7 @@ import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.InputUtil;
 
 import java.util.List;
 
@@ -30,16 +31,16 @@ public class QuestView {
         System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
     }
     public static void selectQuestIng(List<QuestDTO> questList){
-        System.out.println("-------in progress--------");
+        System.out.println("──────────────── IN PROGRESS QUEST ─────────────────");
         for (QuestDTO q : questList) {
-            System.out.println(">" + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
+            System.out.println("▸ " + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
         }
     }
     public static void selectQuestEnd(List<QuestDTO> questList){
-        System.out.println("-------complete--------");
+        System.out.println("──────────────── COMPLETE QUEST ──────────────────");
         //업적 이름만 출력
             questList.stream()
-                    .map(quest -> "> " + quest.getQuestName())
+                    .map(quest -> "□ " + quest.getQuestName())
                     .forEach(System.out::println);
     }
     public static void updateQuestProgress(QuestDTO quest) {
@@ -52,10 +53,14 @@ public class QuestView {
     }
 
     public static void printQuest(){
-        System.out.println(hero.getHeroId());
-        //selectQuestEnd(hero.getHeroId());
-        //selectQuestIng(hero.getHeroId());
+        System.out.println("____________________________┌ Quest ┐_______________________________\n");
 
 
+    }
+    public static void printBackToMenu(){
+        System.out.println("────────────────── MENU ──────────────────\n");
+        System.out.println(" [0] 뒤로가기\n");
+        System.out.print("선택 ▶ ");
+        InputUtil.backToMenu();
     }
 }
