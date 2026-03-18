@@ -1,6 +1,8 @@
 package com.kosta.console_rpg.view;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.kosta.console_rpg.controller.InventoryController;
@@ -12,10 +14,10 @@ import com.kosta.console_rpg.session.LoginSession;
 /**
  * 게임 샵 정보 뷰
  *
- * 작성자     : 이진주
+ * 작성자     : 이진주 
  * 생성일     : 2026.03.16
- * 최종 수정자 : 
- * 최종 수정일 : 
+ * 최종 수정자 : 홍준화
+ * 최종 수정일 : 2026.03.18
  */
 public class ShopView {
 	private static ShopController shopController = new ShopController();
@@ -23,19 +25,10 @@ public class ShopView {
 	
 	public static void showShop() {
 		 Scanner sc = new Scanner(System.in);
-		 
-		 // 보유 젬 가져오기 
-		 int gem = LoginSession.getInstance().getCurrentHero().getHeroGem();
+		 ShopView view = new ShopView();
 		 
 		    while (true) {
-		    	System.out.println("보유 Gem : " + gem);
-		        System.out.println("_________________________________┌ ITEM SHOP ┐_________________________________\n");
-		        System.out.println("    [1] 아이템 구매");
-		        System.out.println("    [2] 아이템 판매");
-		        System.out.println("    [3] 소지 Gem 확인");
-		        System.out.println("    [0] 상점 나가기");
-		        System.out.print("\n선택 ▶ ");
-
+		    	System.out.print(view); 
 		        int menu = sc.nextInt();
 
 		        switch (menu) {
@@ -44,9 +37,6 @@ public class ShopView {
 		                break;
 		            case 2:
 		                sellMenu();
-		                break;
-		            case 3:
-		                System.out.println("보유 Gem : 128");
 		                break;
 		            case 0:
 		                System.out.println("상점을 나갑니다.");
@@ -62,58 +52,259 @@ public class ShopView {
 
 	    Scanner sc = new Scanner(System.in);
 
+	    int gem = LoginSession.getInstance()
+	            .getCurrentHero()
+	            .getHeroGem();
+
+	    System.out.println("\n__________________________┌ SHOP BUY ┐__________________________\n");
+	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
+
+	    System.out.println("──────────────────────── POTION ────────────────────────\n");
+	    System.out.println("[1] 포션");
+
+	    System.out.println("\n─────────────────────── EQUIPMENT ───────────────────────\n");
+	    System.out.println("[2] 장비");
+	    System.out.println(" - 무기");
+	    System.out.println(" - 갑옷");
+
+	    System.out.println("\n─────────────────────────────────────────────────────────");
+	    System.out.println("[0] 뒤로가기");
+	    System.out.print("선택 ▶ ");
+
+	    int select = sc.nextInt();
+
+	    switch(select) {
+
+	        case 1:
+	            potionMenu();
+	            break;
+
+	        case 2:
+	            equipmentMenu();
+	            break;
+
+	        case 0:
+	            return;
+	    }
+	}
+	
+	public static void potionMenu() {
+
+	    Scanner sc = new Scanner(System.in);
+
 	    List<ItemDTO> items = shopController.showShop();
 
-	    if (items == null || items.isEmpty()) {
-	        System.out.println("구매 가능한 아이템이 없습니다.");
+	    Map<Integer, ItemDTO> menuMap = new HashMap<>();
+	    int no = 1;
+
+	    System.out.println("\n──────────── POTION ────────────\n");
+
+	    for(ItemDTO item : items) {
+
+	        if(item.getItemType().equals("potion")) {
+
+	            System.out.println("[" + no + "] " + item.getItemName());
+	            System.out.println("효과 : HP +" + item.getItemEffectHp());
+	            System.out.println("효과 : MP +" + item.getItemEffectMp());
+	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+
+	            menuMap.put(no, item);
+	            no++;
+	        }
+	    }
+
+	    System.out.print("선택 ▶ ");
+	    int select = sc.nextInt();
+
+	    ItemDTO item = menuMap.get(select);
+	    if(item == null) return;
+	    
+	    System.out.print("구매 수량 ▶ ");
+	    int qty = sc.nextInt();
+
+	    if(qty <= 0){
+	        System.out.println("수량 입력 오류");
 	        return;
 	    }
 
-	    System.out.println("\n=========== 구매 가능 아이템 ===========");
+	    System.out.println("\n▶ " + item.getItemName()
+	            + qty +"개를 " + (item.getItemPriceBuy() * qty)
+	            + " Gem에 구매하시겠습니까?");
+	    System.out.print("[Y] YES   [N] NO ▶ ");
 
-	    for (ItemDTO item : items) {
-	        System.out.println(item.getItemId() + ". "
-	                + item.getItemName()
-	                + " (가격 : " + item.getItemPriceBuy() + ")");
+	    String yn = sc.next();
+
+	    if(yn.equalsIgnoreCase("Y")) {
+
+	        shopController.buyItem(item.getItemId(), qty);
+
+	        int gem = LoginSession.getInstance()
+	                .getCurrentHero()
+	                .getHeroGem();
+
+	        System.out.println("\n아이템 구매 완료");
+	        System.out.println("현재 보유 Gem : " + gem);
+	    }
+	}
+	
+	public static void equipmentMenu() {
+
+	    Scanner sc = new Scanner(System.in);
+
+	    List<ItemDTO> items = shopController.showShop();
+
+	    Map<Integer, ItemDTO> menuMap = new HashMap<>();
+	    int no = 1;
+
+	    System.out.println("\n──────────── WEAPON ────────────\n");
+
+	    for(ItemDTO item : items) {
+
+	        if(item.getItemType().equals("weapon")) {
+
+	            System.out.println("[" + no + "] " + item.getItemName());
+	            System.out.println("공격력 : +" + item.getItemAtkBonus());
+	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+
+	            menuMap.put(no, item);
+	            no++;
+	        }
 	    }
 
-	    System.out.println("0. 뒤로가기");
-	    System.out.print("구매할 아이템 선택 ▶ ");
+	    System.out.println("\n──────────── ARMOR ─────────────\n");
 
-	    int itemId = sc.nextInt();
+	    for(ItemDTO item : items) {
 
-	    if (itemId == 0) return;
+	        if(item.getItemType().equals("armor")) {
+
+	            System.out.println("[" + no + "] " + item.getItemName());
+	            System.out.println("방어력 : +" + item.getItemDefBonus());
+	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+
+	            menuMap.put(no, item);
+	            no++;
+	        }
+	    }
+
+	    System.out.print("선택 ▶ ");
+	    int select = sc.nextInt();
+
+	    ItemDTO item = menuMap.get(select);
+	    if(item == null) return;
 	    
-	    shopController.buyItem(itemId);
+	    System.out.print("구매 수량 ▶ ");
+	    int qty = sc.nextInt();
+
+	    if(qty <= 0){
+	        System.out.println("수량 입력 오류");
+	        return;
+	    }
+
+	    System.out.println("\n▶ " + item.getItemName()
+        	+ qty +"개를 " + (item.getItemPriceBuy() * qty)
+        	+ " Gem에 구매하시겠습니까?");
+	    System.out.print("[Y] YES   [N] NO ▶ ");
+
+	    String yn = sc.next();
+
+	    if(yn.equalsIgnoreCase("Y")) {
+
+	        shopController.buyItem(item.getItemId(), qty);
+
+	        int gem = LoginSession.getInstance()
+	                .getCurrentHero()
+	                .getHeroGem();
+
+	        System.out.println("\n아이템 구매 완료");
+	        System.out.println("현재 보유 Gem : " + gem);
+	    }
 	}
 	
 	public static void sellMenu() {
-		 Scanner sc = new Scanner(System.in);
 
-		 	List<InventoryDTO> items = inventoryController.showInventory();
+	    Scanner sc = new Scanner(System.in);
 
-		    if (items == null || items.isEmpty()) {
-		        System.out.println("판매 가능한 아이템이 없습니다.");
-		        return;
-		    }
+	    List<InventoryDTO> items = inventoryController.showInventory();
 
-		    System.out.println("\n=========== 판매 가능 아이템 ===========");
+	    if (items == null || items.isEmpty()) {
+	        System.out.println("판매 가능한 아이템이 없습니다.");
+	        return;
+	    }
 
-		    for (InventoryDTO item : items) {
-		        System.out.println(item.getItemId() + ". "
-		                + item.getItem().getItemName()
-		                + " (가격 : " + item.getItem().getItemPirceSell() + ")"
-		        		+ " (수량 : " + item.getInventoryQuantity() + ")");	
-		    }
+	    int gem = LoginSession.getInstance()
+	            .getCurrentHero()
+	            .getHeroGem();
 
-		    System.out.println("0. 뒤로가기");
-		    System.out.print("판매할 아이템 선택 ▶ ");
+	    System.out.println("\n__________________________┌ SHOP SELL ┐__________________________\n");
+	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
-		    int itemId = sc.nextInt();
+	    System.out.println("──────────────────────── INVENTORY ───────────────────────\n");
 
-		    if (itemId == 0) return;
-		    
-		    shopController.sellItem(itemId);
+	    Map<Integer, InventoryDTO> menuMap = new HashMap<>();
+	    int no = 1;
+
+	    for (InventoryDTO inv : items) {
+
+	        ItemDTO item = inv.getItem();
+
+	        System.out.println("[ " + no + " ] " + item.getItemName() 
+	        + "  (보유 : " + inv.getInventoryQuantity() + ")");
+
+	        if(item.getItemType().equals("POTION")) {
+	            System.out.println(" ▸ 타입 : 소모품");
+	            System.out.println(" ▸ 효과 : HP +" + item.getItemEffectHp());
+	        }
+	        else if(item.getItemType().equals("WEAPON")) {
+	            System.out.println(" ▸ 타입 : 무기");
+	            System.out.println(" ▸ 효과 : 공격력 +" + item.getItemAtkBonus());
+	        }
+	        else if(item.getItemType().equals("ARMOR")) {
+	            System.out.println(" ▸ 타입 : 갑옷");
+	            System.out.println(" ▸ 효과 : 방어력 +" + item.getItemDefBonus());
+	        }
+
+	        System.out.println(" ▸ 판매가 : "
+	                + item.getItemPriceSell()
+	                + " Gem [판매]");
+	        System.out.println();
+
+	        menuMap.put(no, inv);
+	        no++;
+	    }
+
+	    System.out.println("─────────────────────────────────────────────────────────");
+	    System.out.println("[0] 뒤로가기");
+	    System.out.print("선택 ▶ ");
+
+	    int select = sc.nextInt();
+
+	    if(select == 0) return;
+
+	    InventoryDTO inv = menuMap.get(select);
+	    if(inv == null) return;
+
+	    ItemDTO item = inv.getItem();
+
+	    System.out.println("\n▶ "
+	            + item.getItemName()
+	            + "(을)를 "
+	            + item.getItemPriceSell()
+	            + " Gem에 판매하시겠습니까?");
+	    System.out.print("[Y] YES   [N] NO ▶ ");
+
+	    String yn = sc.next();
+
+	    if(yn.equalsIgnoreCase("Y")) {
+
+	        shopController.sellItem(item.getItemId());
+
+	        int afterGem = LoginSession.getInstance()
+	                .getCurrentHero()
+	                .getHeroGem();
+
+	        System.out.println("\n아이템 판매 완료");
+	        System.out.println("현재 보유 Gem : " + afterGem);
+	    }
 	}
 	
 	public static void main(String[] args) {
@@ -137,30 +328,31 @@ public class ShopView {
         return " ".repeat(left) + text + " ".repeat(right);
     }
     
-//	@Override
-//	public String toString() {
-//
-//	    StringBuilder sb = new StringBuilder();
-//
-//	    int gem = 128; // 실제로는 필드나 DTO에서 가져오면 된다.
-//
-//	    sb.append("_________________________________┌ ITEM SHOP ┐_________________________________\n\n");
-//
-//	    sb.append(String.format(" ◈ 보유 Gem(%d) ◈\n\n", gem));
-//
-//        sb.append(String.format("\n", center("┌─────────── MENU ───────────┐", WIDTH - 2)));
-//        
-//	    sb.append("┌─────────── MENU ───────────┐\n\n");
-//
-//	    sb.append("    [1] 아이템 구매\n");
-//	    sb.append("    [2] 아이템 판매\n");
-//	    sb.append("    [3] 소지 Gem 확인\n");
-//	    sb.append("    [0] 상점 나가기\n\n");
-//
-//	    sb.append("└────────────────────────────┘\n\n");
-//
-//	    sb.append("선택 ▶ ");
-//
-//	    return sb.toString();
-//	}
+	@Override
+	public String toString() {
+
+	    StringBuilder sb = new StringBuilder();
+
+        int gem = LoginSession.getInstance()
+                .getCurrentHero()
+                .getHeroGem();
+
+	    sb.append("_________________________________┌ ITEM SHOP ┐_________________________________\n\n");
+
+	    sb.append(String.format(" ◈ 보유 Gem(%d) ◈\n\n", gem));
+
+        sb.append(String.format("\n", center("┌─────────── MENU ───────────┐", WIDTH - 2)));
+        
+	    sb.append("┌─────────── MENU ───────────┐\n\n");
+
+	    sb.append("    [1] 아이템 구매\n");
+	    sb.append("    [2] 아이템 판매\n");
+	    sb.append("    [0] 상점 나가기\n\n");
+
+	    sb.append("└────────────────────────────┘\n\n");
+
+	    sb.append("선택 ▶ ");
+
+	    return sb.toString();
+	}
 }

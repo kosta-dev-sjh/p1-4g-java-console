@@ -5,7 +5,7 @@ public class ItemDTO {
 	private String itemName;	//아이템명
 	private String itemType;	//아이템 타입
 	private int itemPriceBuy;	//구매가
-	private int itemPirceSell;	//판매가
+	private int itemPriceSell;	//판매가
 	private int itemEffectHp;	//소비 효과
 	private int itemEffectMp;	//소비 효과
 	private int itemAtkBonus;	//장비 보너스
@@ -18,7 +18,7 @@ public class ItemDTO {
 		this.itemName = itemName;
 		this.itemType = itemType;
 		this.itemPriceBuy = itemPriceBuy;
-		this.itemPirceSell = itemPirceSell;
+		this.itemPriceSell = itemPirceSell;
 		this.itemEffectHp = itemEffectHp;
 		this.itemEffectMp = itemEffectMp;
 		this.itemAtkBonus = itemAtkBonus;
@@ -49,11 +49,11 @@ public class ItemDTO {
 	public void setItemPriceBuy(int itemPriceBuy) {
 		this.itemPriceBuy = itemPriceBuy;
 	}
-	public int getItemPirceSell() {
-		return itemPirceSell;
+	public int getItemPriceSell() {
+		return itemPriceSell;
 	}
 	public void setItemPirceSell(int itemPirceSell) {
-		this.itemPirceSell = itemPirceSell;
+		this.itemPriceSell = itemPirceSell;
 	}
 	public int getItemEffectHp() {
 		return itemEffectHp;
@@ -88,7 +88,7 @@ public class ItemDTO {
 	@Override
 	public String toString() {
 		return "ItemDTO [itemId=" + itemId + ", itemName=" + itemName + ", itemType=" + itemType + ", itemPriceBuy="
-				+ itemPriceBuy + ", itemPirceSell=" + itemPirceSell + ", itemEffectHp=" + itemEffectHp
+				+ itemPriceBuy + ", itemPirceSell=" + itemPriceSell + ", itemEffectHp=" + itemEffectHp
 				+ ", itemEffectMp=" + itemEffectMp + ", itemAtkBonus=" + itemAtkBonus + ", itemDefBonus=" + itemDefBonus
 				+ ", itemGrade=" + itemGrade + "]";
 	}

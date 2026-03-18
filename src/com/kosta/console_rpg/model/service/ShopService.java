@@ -25,7 +25,7 @@ public class ShopService {
 		
 	}
 	
-	public void buyItem(int itemId) throws GameException {
+	public void buyItem(int itemId, int quantity) throws GameException {
 		
 		int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
 		
@@ -42,7 +42,7 @@ public class ShopService {
 	            throw new GameException("존재하지 않는 아이템입니다.");
 	        }
 
-	        int price = item.getItemPriceBuy();
+	        int price = item.getItemPriceBuy() * quantity;
 
 	        //️ 현재 Gem 조회
 	        int gem = LoginSession.getInstance().getCurrentHero().getHeroGem();
@@ -53,7 +53,7 @@ public class ShopService {
 	        }
 	        
 	        // 인벤토리 추가
-	        shopDAO.buyShopItem(con, heroId, itemId);
+	        shopDAO.buyShopItem(con, heroId, itemId, quantity);
 
 	        // Gem 감소
 	        heroDAO.updateHeroGem(con, heroId, gem - price);
@@ -91,7 +91,7 @@ public class ShopService {
 	            throw new GameException("존재하지 않는 아이템입니다.");
 	        }
 
-	        int price = item.getItemPirceSell();
+	        int price = item.getItemPriceSell();
 
 	        //️ 현재 Gem 조회
 	        int gem = LoginSession.getInstance().getCurrentHero().getHeroGem();
