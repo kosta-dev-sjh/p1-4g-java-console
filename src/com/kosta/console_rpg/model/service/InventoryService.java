@@ -1,6 +1,7 @@
 package com.kosta.console_rpg.model.service;
 
 import com.kosta.console_rpg.model.dao.InventoryDAOImpl;
+import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 
@@ -111,5 +112,15 @@ public class InventoryService {
 		}
 		
 		
+	}
+
+	public List<BattlePotionDTO> showPotionItems(int heroId) throws GameException {
+		List<BattlePotionDTO> potionList = inventoryDAO.selectBattlePotionList(heroId);
+		
+		if (potionList == null || potionList.isEmpty()) {
+			throw new GameException("포션 아이템이 없습니다.");
+		}
+		
+		return potionList;	
 	}
 }
