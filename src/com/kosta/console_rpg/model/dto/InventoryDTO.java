@@ -55,6 +55,17 @@ public class InventoryDTO {
 	public void setInventoryIsEquipped(int inventoryIsEquipped) {
 		this.inventoryIsEquipped = inventoryIsEquipped;
 	}
+	
+	private ItemDTO item;
+
+
+	public ItemDTO getItem() {
+		return item;
+	}
+
+	public void setItem(ItemDTO item) {
+		this.item = item;
+	}
 
 	@Override
 	public String toString() {

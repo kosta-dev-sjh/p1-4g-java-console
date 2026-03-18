@@ -73,3 +73,80 @@ public class InventoryView {
 	}
     
 }
+
+//import java.util.List;
+//import java.util.Scanner;
+//
+//import com.kosta.console_rpg.controller.InventoryController;
+//import com.kosta.console_rpg.model.dto.InventoryDTO;
+//import com.kosta.console_rpg.model.dto.ItemDTO;
+//
+//public class InventoryView {
+//	
+//	private static	InventoryController inventoryController = new InventoryController();
+//	
+//	public static void showInventory() {
+//		
+//		List<InventoryDTO> list = inventoryController.showInventory();
+//		
+//		for(InventoryDTO inv : list) {
+//			System.out.println("-------------------");
+//		    System.out.println("인벤토리ID: " + inv.getInventoryId());
+//		    System.out.println("아이템이름: " + inv.getItem().getItemName());
+//		    System.out.println("아이템타입: " + inv.getItem().getItemType());
+//		    System.out.println("아이템등급: " + inv.getItem().getItemGrade());
+//		    System.out.println("수량: " + inv.getInventoryQuantity());
+//		    System.out.println("-------------------");
+//		}
+//		
+//	}
+//	
+//	public static void equipMenu(int itemId) {
+//		/*
+//		 * 사용자가 인벤토리에서 아이템 목록을 보고 장착할 아이템 번호 입력
+//		 * 그 아이템 번호에 해당하는 아이템 아이디 받아오기
+//		 */
+//		inventoryController.equipItem(itemId);
+//		
+//		List<InventoryDTO> list = inventoryController.showInventory();
+//		
+//		for(InventoryDTO inv : list) {
+//			System.out.println("-------------------");
+//		    System.out.println("아이템ID: " + inv.getItemId());
+//		    System.out.println("아이템이름: " + inv.getItem().getItemName());
+//		    System.out.println("아이템타입: " + inv.getItem().getItemType());
+//		    System.out.println("아이템등급: " + inv.getItem().getItemGrade());
+//		    System.out.println("장착 여부: " + inv.getInventoryIsEquipped());
+//		    System.out.println("-------------------");
+//		}
+//		
+//
+//		
+//	}
+//	
+//	public static void potionMenu(int inventoryId) {
+//		/*
+//		 * 사용할 포션 번호를 입력 받아서 그 포션 아이템의 inventory_id 값 받아와야함
+//		 */
+//		List<InventoryDTO> list = inventoryController.showInventory();
+//		
+//		for(InventoryDTO inv : list) {
+//			if (inv.getItem().getItemType().equals("potion")) {
+//				
+//			
+//				System.out.println("-------------------");
+//			    System.out.println("인벤토리ID: " + inv.getInventoryId());
+//			    System.out.println("아이템이름: " + inv.getItem().getItemName());
+//			    System.out.println("아이템타입: " + inv.getItem().getItemType());
+//			    System.out.println("체력회복: " + inv.getItem().getItemEffectHp());
+//			    System.out.println("마나회복: " + inv.getItem().getItemEffectMp());
+//			    System.out.println("수량: " + inv.getInventoryQuantity());
+//			    System.out.println("-------------------");
+//			}
+//		}
+//		
+//		inventoryController.usePotion(inventoryId);
+//
+//       
+//	}
+//}
