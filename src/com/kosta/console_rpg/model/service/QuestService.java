@@ -72,6 +72,10 @@ public class QuestService {
 
         questDAO.insertQuestInit(heroId);
     }
+    public void deleteQuest(int heroId) throws SQLException {
+
+        questDAO.deleteQuest(heroId);
+    }
 
 
 }

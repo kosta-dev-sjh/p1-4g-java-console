@@ -172,4 +172,26 @@ public class SkillDAOImpl implements SkillDAO {
 
 		return result;
 	}
+	
+	@Override
+	public int deleteHeroSkills(int heroId) throws SQLException {
+
+		int 			  result = 0;
+		Connection 		  con    = null;
+		PreparedStatement ps     = null;
+		String sql = "delete from hero_skill where fk_hero_id=?";
+		
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, heroId);
+			
+			result = ps.executeUpdate();
+		} finally {
+			DBManager.close(con, ps);
+		}
+		
+		return result;
+
+	}
 }

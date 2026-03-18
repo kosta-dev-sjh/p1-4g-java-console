@@ -80,5 +80,19 @@ public class SkillService {
         }
     }
 
-	
+	/**
+	 * 스킬 삭제
+	 */
+    public void deleteHeroSkills(int heroId) throws GameException {
+    	try {
+			int result = skillDao.deleteHeroSkills(heroId);
+
+			if (result == 0) {
+				throw new GameException("스킬 삭제에 실패했습니다.");
+			}
+
+		} catch (SQLException e) {
+			throw new GameException("스킬 삭제 중 오류가 발생했습니다.");
+		}
+    }
 }

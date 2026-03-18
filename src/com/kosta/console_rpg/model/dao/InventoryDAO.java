@@ -1,9 +1,11 @@
 package com.kosta.console_rpg.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
+import com.kosta.console_rpg.model.dto.ItemDTO;
 
 public interface InventoryDAO {
 	
@@ -12,6 +14,8 @@ public interface InventoryDAO {
 	 */
 	List<InventoryDTO> selectInventoryByHeroId(int heroId) throws GameException;
 	
+	
+	InventoryDTO selectInventoryById(int inventoryId) throws GameException;
 	
 	/*
 	 * 아이템 장착 inventory_is_equipped = true == 1
@@ -24,9 +28,13 @@ public interface InventoryDAO {
 	 */
 	void unequipItem(int heroId, int itemId) throws GameException;
 	
+	/*
+	 * 아이템 장착 여부
+	 */
+	boolean equipStatus(int heroId, int itemId) throws GameException;
 	
 	/*
-	 * 포션 사용 업데이트???
+	 * 포션 사용 업데이트
 	 */
 	void updateUsedPotion(int heroId, int inventoryId) throws GameException;
 	

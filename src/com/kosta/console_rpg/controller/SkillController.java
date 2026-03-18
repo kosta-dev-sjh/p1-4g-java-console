@@ -63,5 +63,19 @@ public class SkillController {
 			FailView.errorMessage(e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * 히어로가 삭제될 때 스킬 삭제하는 메소드
+	 * 
+	 */
+	public void deleteHeroSkills() {
+		try {
+			int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
+			skillService.deleteHeroSkills(heroId);
+			LoginSession.getInstance().clearHero();
+		} catch(GameException e) {
+            FailView.errorMessage(e.getMessage());
+		}
+	}
+	
 }
