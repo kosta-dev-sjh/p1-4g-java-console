@@ -33,11 +33,9 @@ public class HeroService {
 	 * @throws GameException
 	 */
 	public void createHero(int userId, String heroName) throws GameException {
-	public void createHero(int userId, String heroName) throws GameException {
 		try {
 			HeroDTO hero = heroDao.selectHeroByUserId(userId);
-
-			if (hero != null) {
+			
 			if (hero != null) {
 				throw new GameException("이미 생성된 캐릭터가 존재합니다.");
 			}
@@ -46,7 +44,6 @@ public class HeroService {
 
 			HeroDTO createdHero = heroDao.selectHeroByUserId(userId);
 
-			if (createdHero == null) {
 			if (createdHero == null) {
 				throw new GameException("캐릭터 생성 후 조회에 실패했습니다.");
 			}
@@ -74,8 +71,7 @@ public class HeroService {
 				throw new GameException("캐릭터 삭제에 실패했습니다.");
 			}
 
-		} catch (SQLException e) {
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			throw new GameException("캐릭터 삭제 중 오류가 발생했습니다.");
 		}
 	}
