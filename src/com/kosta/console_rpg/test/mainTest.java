@@ -70,7 +70,7 @@ public class mainTest {
                         case 1 -> StageView.showStage();      //스테이지 진입
                         case 2 -> ShopView.showShop();    //상점 구현
                         case 3 -> heroView.start();  //히어로 정보
-                        //case 4 -> inventoty();  //인벤토리 정보
+                        case 4 -> InventoryView.start();  //인벤토리 정보
                         //
                         //업적
                         case 5 -> {
