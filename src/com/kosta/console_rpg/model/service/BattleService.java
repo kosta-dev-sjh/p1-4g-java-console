@@ -1,15 +1,19 @@
 package com.kosta.console_rpg.model.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dao.MonsterDAO;
 import com.kosta.console_rpg.model.dao.MonsterDAOImpl;
 import com.kosta.console_rpg.model.dto.BattleHeroDTO;
 import com.kosta.console_rpg.model.dto.HeroDTO;
+import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
+import com.kosta.console_rpg.model.enums.ReqardResult;
 import com.kosta.console_rpg.session.LoginSession;
 
 /**
@@ -28,7 +32,9 @@ public class BattleService {
 	// ======= field =======
 	private final MonsterDAO monsterDao = new MonsterDAOImpl();
 	private final HeroService heroService = new HeroService();
-	private final static int LEVEL_UP_EXP_MULTIPLIER = 100; // 레벨업에 필요한 경험치 공식에서 곱해지는 값 (예시로 100 사용)
+	private final static int LEVEL_UP_EXP_MULTIPLIER = 100; // 레벨업에 필요한 경험치 공식에서 곱해지는 값
+	private final static int SKILL_BONUS = 5; // 스킬 레벨당 추가 데미지
+	private final static int HERO_MAX_LEVEL = 10; // 히어로 최대 레벨
 
 	// ======= public method =======
 
@@ -155,6 +161,9 @@ public class BattleService {
 		int baseDamage = (int) (attack * multiplier);
 
 		int damage = baseDamage - defense;
+
+		// System.out.println("공격력: " + baseDamage + ", 방어력: " + defense + ", 주사위: " +
+		// dice + ", 계산된 데미지: " + damage); // --- IGNORE ---
 		if (damage <= 0) {
 			return 0; // 방어력이 공격력보다 높으면 데미지는 0
 		}
@@ -164,10 +173,10 @@ public class BattleService {
 
 	/**
 	 * 스킬 공격 데미지를 계산한다.
-	 * 스킬 데미지 계산 공식: [(공격력 - 상대 방어력) × 주사위 보정] + 스킬 기본 데미지 + (스킬 레벨 - 1) * 5
+	 * 스킬 데미지 계산 공식: [(공격력 - 상대 방어력) × 주사위 보정] + 스킬 기본 데미지 + (스킬 레벨 - 1) *
+	 * SKILL_BONUS
 	 * - 스킬 레벨이 높을수록 추가 데미지가 증가한다.
 	 * - 주사위 결과에 따른 데미지 보정은 일반 공격과 동일하게 적용된다.
-	 * - 스킬 사용 시 MP 소모는 별도의 로직에서 처리한다.
 	 *
 	 * @param attack      공격 주체의 공격력
 	 * @param skillDamage 공격 주체의 사용 스킬 데미지
@@ -175,8 +184,32 @@ public class BattleService {
 	 * @param skillLevel  사용 스킬 레벨
 	 * @return int 실제 적용된 스킬 데미지
 	 */
-	public int useSkill(int attack, int skillDamage, int skillLevel, int defense, int dice) {
-		return calculateAttackDamage(attack, defense, dice) + skillDamage + (skillLevel - 1) * 5; // 스킬 레벨당 추가 데미지
+	public int calculateSkillDamage(int attack, int skillDamage, int skillLevel, int defense, int dice) {
+		return calculateAttackDamage(attack, defense, dice) + skillDamage + (skillLevel - 1) * SKILL_BONUS; // 스킬 레벨당 추가
+	}
+
+	/**
+	 * 스킬 사용 시 MP 소모량이 충분한지 확인한다.
+	 *
+	 * @param hero    전투용 영웅 객체
+	 * @param heroSkill 사용하려는 스킬 정보
+	 * @return boolean MP가 충분하면 true, 그렇지 않으면 false
+	 */
+	public boolean canUseSkill(BattleHeroDTO hero, HeroSkillDTO heroSkill) {
+		int requiredMp = heroSkill.getSkill().getSkillMpCost();
+		return hero.getHeroMp() >= requiredMp;
+	}
+
+	/**
+	 * 스킬 사용 시 MP를 소모한다.
+	 *
+	 * @param hero    전투용 영웅 객체
+	 * @param heroSkill 사용하려는 스킬 정보
+	 */	
+	
+	public void consumeSkillMp(BattleHeroDTO hero, HeroSkillDTO heroSkill) {
+		int requiredMp = heroSkill.getSkill().getSkillMpCost();
+		hero.setHeroMp(hero.getHeroMp() - requiredMp);
 	}
 
 	/**
@@ -257,23 +290,72 @@ public class BattleService {
 		return BattleResult.ESCAPE;
 	}
 
-	public void reward(MonsterDTO monster) throws GameException {
+	/**
+	 * 전투 종료 후 보상 지급 로직을 처리한다.
+	 * - 몬스터가 제공하는 경험치와 젬을 영웅에게 지급한다.
+	 * - 영웅이 경험치를 획득하여 레벨업이 필요한 경우, 레벨업 처리를 수행한다.
+	 * - 레벨업 시 영웅의 최대 HP, 최대 MP, 공격력, 방어력이 증가한다.
+	 * - 레벨업 시 경험치가 초기화되고, 최대 레벨에 도달한 경우에는 경험치 초기화 및 레벨업 불가 처리를 한다.
+	 * - 보상 지급 과정에서 문제가 발생한 경우 예외를 발생시킨다.
+	 * - 보상 지급과 레벨업 처리 후, 업적 진행도 증가 로직도 함께 처리한다.
+	 * - 레벨업과 업적 진행도 증가 여부에 따라 반환값이 달라질 수 있다.
+	 * - 레벨업과 업적 진행도 증가가 동시에 발생할 수도 있다.
+	 * 
+	 * @param monster
+	 * @return
+	 * @throws GameException
+	 */
+	public List<ReqardResult> reward(MonsterDTO monster) throws GameException {
 
+		List<ReqardResult> rewardResults = new ArrayList<>();
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-		hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
-		hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
 
-		// 레벨업 여부 계산
-		int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
-		boolean levelUp = hero.getHeroExp() >= expForNextLevel;
-
-		if (levelUp) {
-			hero.setHeroLevel(hero.getHeroLevel() + 1);
-			hero.setHeroExp(hero.getHeroExp() - expForNextLevel); // 레벨업 후 남은 경험치 계산
+		// 보상 처리 전 기본적인 유효성 검사
+		if (monster == null) {
+			throw new GameException("보상 처리할 몬스터 정보가 없습니다.");
 		}
+		if (LoginSession.getInstance().getCurrentHero() == null) {
+			throw new GameException("로그인 정보가 없습니다.");
+		}
+		if(monster.getMonsterRewardExp() < 0 || monster.getMonsterRewardGem() < 0) {
+			throw new GameException("몬스터 보상 정보가 유효하지 않습니다.");
+		}
+		if(monster.getMonsterRewardExp() == 0 && monster.getMonsterRewardGem() == 0) {
+			throw new GameException("몬스터 보상이 존재하지 않습니다.");
+		}
+		if(monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
+			rewardResults.add(ReqardResult.REWARD);
+			hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
+			hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
+		}
+		
+		// 레벨업 여부 계산
+		if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
+			hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
+			rewardResults.add(ReqardResult.MAX_LEVEL);
+		} else {
+			int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
+			boolean levelUp = hero.getHeroExp() >= expForNextLevel;
 
+			if (levelUp) {
+				// 레벨업 후 남은 경험치 계산
+				hero.setHeroLevel(hero.getHeroLevel() + 1);
+				hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
+
+				// HP는 레벨 당 10씩 증가, MP는 레벨 당 5씩 증가
+				hero.setHeroHp(hero.getHeroHp() + 10);
+				hero.setHeroMp(hero.getHeroMp() + 5);
+
+				// 공격력 방어력은 레벨 당 2씩 증가
+				hero.setHeroAttack(hero.getHeroAttack() + 2);
+				hero.setHeroDefense(hero.getHeroDefense() + 2);
+			}
+		}
 		// 영웅 정보 업데이트
 		heroService.updateHero(hero);
 		LoginSession.getInstance().setCurrentHero(hero); // 세션 정보도 업데이트
+
+		// To do : 업적 진행도 증가
+		return rewardResults;
 	}
 }
