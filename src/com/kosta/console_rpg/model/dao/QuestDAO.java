@@ -37,4 +37,7 @@ public interface QuestDAO {
     //캐릭터 새로 생성시 기본 업적 내용 추가
     void insertQuestInit(int heroId)throws SQLException;
 
+    //캐릭터 삭제시 업적 삭제
+    void deleteQuest(int heroId)throws SQLException;
+
 }
