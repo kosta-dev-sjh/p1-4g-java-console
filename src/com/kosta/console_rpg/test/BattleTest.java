@@ -196,7 +196,7 @@ public class BattleTest {
 		System.out.println(result.getAction().getMessage());
 		System.out.println("주사위 : 🎲 " + result.getDice());
 		System.out.println("데미지 : -" + result.getResultValue());
-
+		
 		return result.getBattleResult();
 	}
 

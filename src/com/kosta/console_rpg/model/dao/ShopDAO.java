@@ -1,5 +1,6 @@
 package com.kosta.console_rpg.model.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.kosta.console_rpg.exception.GameException;
@@ -11,6 +12,13 @@ public interface ShopDAO {
 	 * 상점에서 구매, 판매 가능한 아이템 목록 보기
 	 */
 	List<ItemDTO> selectShopItems() throws GameException;
+	
+	
+	
+	/*
+	 * 아이템 아이디로 아이템 정보 가져오기
+	 */
+	ItemDTO selectItemById(Connection con, int itemId) throws GameException;
 
 	
 	/*
@@ -23,6 +31,9 @@ public interface ShopDAO {
 	void buyShopItem(int heroId, int itemId) throws GameException;
 	
 	
+	void buyShopItem(Connection con, int heroId, int itemId) throws GameException;
+	
+	
 	/*
 	 * 아이템 판매
 	 * 보유 아이템 수량 확인
@@ -30,5 +41,8 @@ public interface ShopDAO {
 	 * 인벤토리에서 아이템 delete 
 	 */
 	void sellShopItem(int heroId, int itemId) throws GameException;
+	
+	
+	void sellShopItem(Connection con, int heroId, int itemId) throws GameException;
 	
 }

@@ -15,10 +15,16 @@ import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.model.service.BattleService;
 import com.kosta.console_rpg.util.RandomUtil;
 import com.kosta.console_rpg.view.FailView;
+import com.kosta.console_rpg.util.RandomUtil;
+import com.kosta.console_rpg.view.FailView;
 
 /**
  * 게임 전투 흐름과 전투 관련 사용자 요청을 제어하는 컨트롤러
  *
+ * 작성자 : 김재민
+ * 생성일 : 2026-03-13
+ * 최종 수정자 : 송정현
+ * 최종 수정일 : 2026-03-16
  * 작성자 : 김재민
  * 생성일 : 2026-03-13
  * 최종 수정자 : 송정현

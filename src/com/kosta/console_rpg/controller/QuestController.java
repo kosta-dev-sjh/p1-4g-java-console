@@ -4,6 +4,7 @@ import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
 import com.kosta.console_rpg.view.FailView;
+import com.kosta.console_rpg.view.QuestView;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,7 +23,7 @@ public class QuestController {
     public void selectQuestsByHeroId(int heroId) {
         try{
             List<QuestDTO> questList = questService.selectQuestsByHeroId(heroId);
-            System.out.println(questList);
+            //System.out.println(questList);
         } catch (SQLException e) {           
             FailView.errorMessage(e.getMessage());
         }
@@ -30,7 +31,7 @@ public class QuestController {
     public void selectQuestById(int heroId,int questId) {
         try{
             QuestDTO quest = questService.selectQuestById(heroId, questId);
-            System.out.println(quest);
+            QuestView.selectQuestById(quest);
         } catch (SQLException e) {           
             FailView.errorMessage(e.getMessage());
         }
@@ -39,16 +40,9 @@ public class QuestController {
         System.out.println("-------in progress--------");
         try{
             List<QuestDTO> questList = questService.selectQuestIng(heroId);
-            
-            //업적 전부 출력
-            //System.out.println(questList);
 
-
-
-            for (QuestDTO q: questList){
-                System.out.println(">"+q.getQuestName()+"("+q.getQuestIngProgress()+"/"+q.getQuestTarget()+")");
-
-            }
+            //view
+            QuestView.selectQuestIng(questList);
 
             
         } catch (SQLException | GameException e) {           
@@ -58,19 +52,12 @@ public class QuestController {
     
     //완료된 업적
     public void selectQuestEnd(int heroId) {
-        System.out.println("-------complete--------");
+
         try{
             List<QuestDTO> questList = questService.selectQuestEnd(heroId);
 
-            //업적 이름만 출력
-//            questList.stream()
-//                    .map(quest -> "> " + quest.getQuestName())
-//                    .forEach(System.out::println);
-
-            for (QuestDTO q: questList){
-                System.out.println(">"+q.getQuestName()+"("+q.getQuestIngProgress()+"/"+q.getQuestTarget()+")");
-
-            }
+            //view
+            QuestView.selectQuestEnd(questList);
 
         } catch (SQLException | GameException e) {           
             FailView.errorMessage(e.getMessage());

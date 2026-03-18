@@ -8,6 +8,7 @@ import com.kosta.console_rpg.model.dto.UserDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.InventoryView;
+import com.kosta.console_rpg.view.ShopView;
 
 /**
  * 로그인 및 회원가입에 대한 플로우 추적용 테스트 뷰
@@ -215,6 +216,9 @@ public class TestUserFlow {
 //		System.out.println("장착 테스트");
 //		InventoryView.equipMenu(2);
 //		System.out.println();
+		
+		System.out.println("상점 테스트");
+		ShopView.showShop();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.kosta.console_rpg.model.service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +15,9 @@ import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
+import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
-import com.kosta.console_rpg.model.enums.ReqardResult;
+import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.session.LoginSession;
 
 /**
@@ -35,10 +37,16 @@ public class BattleService {
 	private final MonsterDAO monsterDao = new MonsterDAOImpl();
 	private final HeroService heroService = new HeroService();
 	private final SkillService skillService = new SkillService();
+	private final QuestService questService = new QuestService();
 	private final InventoryService inventoryService = new InventoryService();
 	private final static int LEVEL_UP_EXP_MULTIPLIER = 100; // 레벨업에 필요한 경험치 공식에서 곱해지는 값
 	private final static int SKILL_BONUS = 5; // 스킬 레벨당 추가 데미지
 	private final static int HERO_MAX_LEVEL = 10; // 히어로 최대 레벨
+	private static final int LEVEL_UP_HP_BONUS = 10; // 레벨업 시 HP 증가량
+	private static final int LEVEL_UP_MP_BONUS = 5; // 레벨업 시 MP 증가량
+	private static final int LEVEL_UP_ATTACK_BONUS = 2; // 레벨업 시 공격력 증가량
+	private static final int LEVEL_UP_DEFENSE_BONUS = 1; // 레벨업 시 방어력 증가량
+	private final static int MAX_CLEAR_STAGE = 3; // 클리어 가능한 최대 스테이지
 
 	// ======= public method =======
 
@@ -224,7 +232,7 @@ public class BattleService {
 	public int calculateDefense(int defense, int dice) {
 
 		double multiplier = getDiceMultiplier(dice);
-		
+
 		int effectiveDefense = (int) (defense * multiplier);
 
 		return effectiveDefense;
@@ -356,12 +364,13 @@ public class BattleService {
 	 * @return
 	 * @throws GameException
 	 */
-	public List<ReqardResult> reward(MonsterDTO monster) throws GameException {
+	public List<RewardResult> reward(MonsterDTO monster) throws GameException {
 
-		List<ReqardResult> rewardResults = new ArrayList<>();
+		List<RewardResult> rewardResults = new ArrayList<>();
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+		Connection con = null;
 
-		// 보상 처리 전 기본적인 유효성 검사
+		// 보상 처리 전 기본적인 유효성 검사 -----------------------------------------
 		if (monster == null) {
 			throw new GameException("보상 처리할 몬스터 정보가 없습니다.");
 		}
@@ -375,15 +384,14 @@ public class BattleService {
 			throw new GameException("몬스터 보상이 존재하지 않습니다.");
 		}
 		if (monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
-			rewardResults.add(ReqardResult.REWARD);
+			rewardResults.add(RewardResult.REWARD);
 			hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
 			hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
 		}
-
-		// 레벨업 여부 계산
+		// 레벨업 여부 계산 ----------------------------------------
 		if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
 			hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
-			rewardResults.add(ReqardResult.MAX_LEVEL);
+			rewardResults.add(RewardResult.MAX_LEVEL);
 		} else {
 			int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
 			boolean levelUp = hero.getHeroExp() >= expForNextLevel;
@@ -394,22 +402,83 @@ public class BattleService {
 				hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
 
 				// HP는 레벨 당 10씩 증가, MP는 레벨 당 5씩 증가
-				hero.setHeroHp(hero.getHeroHp() + 10);
-				hero.setHeroMp(hero.getHeroMp() + 5);
+				hero.setHeroHp(hero.getHeroHp() + LEVEL_UP_HP_BONUS);
+				hero.setHeroMp(hero.getHeroMp() + LEVEL_UP_MP_BONUS);
 
-				// 공격력 방어력은 레벨 당 2씩 증가
-				hero.setHeroAttack(hero.getHeroAttack() + 2);
-				hero.setHeroDefense(hero.getHeroDefense() + 2);
+				// 공격력 레벨 당 2씩 증가
+				hero.setHeroAttack(hero.getHeroAttack() + LEVEL_UP_ATTACK_BONUS);
+				// 방어력 레벨 당 1씩 증가
+				hero.setHeroDefense(hero.getHeroDefense() + LEVEL_UP_DEFENSE_BONUS);
+
+				rewardResults.add(RewardResult.LEVEL_UP);
 			}
 		}
-		// 영웅 정보 업데이트
-		heroService.updateHero(hero);
+		// 영웅 정보 업데이트 ----------------------------------------
+		heroService.updateHero(con, hero);
+		heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
+
+		// 업적 진행도 증가 로직 ----------------------------------------
+		int stage = monster.getMonsterStage();
+		boolean questUpdated = false;
+
+		try {
+			List<QuestDTO> questList = questService.selectQuestIng(hero.getHeroId());
+
+			for (QuestDTO quest : questList) {
+				boolean updated = false;
+
+				if (quest.getQuestId() == 1 && stage == 1) {
+					int next = Math.min(quest.getQuestIngProgress() + 1, quest.getQuestTarget());
+					quest.setQuestIngProgress(next);
+					updated = true;
+				}
+
+				if (quest.getQuestId() == 2 && stage == 3) {
+					int next = Math.min(quest.getQuestIngProgress() + 1, quest.getQuestTarget());
+					quest.setQuestIngProgress(next);
+					updated = true;
+				}
+
+				if (quest.getQuestId() == 3 && stage >= 3 && quest.getQuestIngProgress() == 0) {
+					quest.setQuestIngProgress(1);
+					updated = true;
+				}
+
+				if (quest.getQuestIngProgress() >= quest.getQuestTarget()) {
+					quest.setQuestIngComplete(true);
+				}
+
+				if (updated) {
+					questService.updateQuestProgress(quest);
+					questUpdated = true;
+				}
+			}
+
+			if (questUpdated) {
+				rewardResults.add(RewardResult.QUEST_PROGRESS);
+			}
+		} catch (SQLException e) {
+			throw new GameException("퀘스트 반영 중 오류가 발생했습니다.");
+		}
+
+		// 현재 진행중인 스테이지보다 높은 스테이지 클리어 시 최대 클리어 스테이지 갱신 ----------------------------------------
+		if (stage > hero.getHeroMaxClearStage() && stage <= MAX_CLEAR_STAGE) {
+			hero.setHeroMaxClearStage(stage);
+			heroService.updateClearStage(con, hero.getHeroId(), stage);
+		}
+
+
 		LoginSession.getInstance().setCurrentHero(hero); // 세션 정보도 업데이트
-
-		// To do : 업적 진행도 증가
 		return rewardResults;
-	}
+	} // reward 메서드 끝
 
+	/**
+	 * 
+	 * 현재 로그인한 영웅이 보유한 스킬 정보를 조회한다.
+	 * 
+	 * @return
+	 * @throws GameException
+	 */
 	public List<HeroSkillDTO> getHeroSkills() throws GameException {
 		List<HeroSkillDTO> skills = null;
 		try {
@@ -426,6 +495,7 @@ public class BattleService {
 	 * - 주사위 결과가 1인 경우, 보정값은 0.7배로 감소한다.
 	 * - 주사위 결과가 6인 경우, 보정값은 1.5배로 증가한다.
 	 * - 그 외의 주사위 결과인 경우, 보정값은 1.0배로 유지된다.
+	 * 
 	 * @param dice
 	 * @return double 주사위 보정값
 	 * @throws GameException 주사위 값이 1~6 범위를 벗어난 경우 예외 발생

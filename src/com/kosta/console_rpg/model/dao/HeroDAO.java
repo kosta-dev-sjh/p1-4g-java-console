@@ -1,17 +1,11 @@
 package com.kosta.console_rpg.model.dao;
 
-import java.sql.SQLException;
-
 import com.kosta.console_rpg.model.dto.HeroDTO;
 
-/**
- * 히어로 조회, 생성, 성장 등 캐릭터 관련 요청을 제어하는 dao
- *
- * 작성자      : 송정현
- * 생성일      : 2026-03-15
- * 최종 수정자 : 
- * 최종 수정일 : 
- */
+import java.sql.Connection;
+import java.sql.SQLException;
+
+
 public interface HeroDAO {
 	
 	/**
@@ -53,6 +47,12 @@ public interface HeroDAO {
 	 */
 	public int updateHero(HeroDTO hero) throws SQLException;
 	
+	/*
+	 * gem, 최고 클리어 스테이지는 제외하고 주요 능력치만 수정 트랜잭션 처리용
+	 */
+	public int updateHero(Connection con, HeroDTO hero) throws SQLException;
+
+
 	/**
 	 * 캐릭터의 최고 클리어 스테이지를 수정한다.
 	 * 전투 승리 후 최고 스테이지 갱신 시 사용한다.
@@ -64,6 +64,12 @@ public interface HeroDAO {
 	 */
 	public int updateClearStage(int heroId, int stage) throws SQLException;
     
+	/*
+	 * 캐릭터의 최고 클리어 스테이지를 수정 트랜잭션 처리용
+	 */
+	public int updateClearStage(Connection con, int heroId, int stage) throws SQLException;
+
+
 	/**
 	 * 캐릭터의 보유 젬을 수정한다.
 	 * 상점 구매, 판매, 전투 보상 지급 시 사용한다.
@@ -74,6 +80,11 @@ public interface HeroDAO {
 	 * @throws SQLException DB 처리 중 오류 발생 시
 	 */
 	public int updateHeroGem(int heroId, int gem) throws SQLException;
-    
+	
+	
+	/*
+	 * 캐릭터의 보유 잼을 수정 트랜잭션 처리용
+	 */
+	public int updateHeroGem(Connection con, int heroId, int gem) throws SQLException;
     
 }
