@@ -8,6 +8,8 @@ import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
 import com.kosta.console_rpg.session.LoginSession;
 
+import java.util.List;
+
 /**
  *  업적 관련 기능 view
  *
@@ -24,17 +26,21 @@ public class QuestView {
         QuestController questController = new QuestController();
         questController.selectQuestsByHeroId(heroId);
     }
-    public static void selectQuestById(int heroId, int questId){
-        QuestController questController = new QuestController();
-        questController.selectQuestById(heroId, questId);
+    public static void selectQuestById( QuestDTO quest){
+        System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
     }
-    public static void selectQuestIng(int heroId){
-        QuestController questController = new QuestController();
-        questController.selectQuestIng(heroId);
+    public static void selectQuestIng(List<QuestDTO> questList){
+        System.out.println("-------in progress--------");
+        for (QuestDTO q : questList) {
+            System.out.println(">" + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
+        }
     }
-    public static void selectQuestEnd(int heroId){
-        QuestController questController = new QuestController();
-        questController.selectQuestEnd(heroId);
+    public static void selectQuestEnd(List<QuestDTO> questList){
+        System.out.println("-------complete--------");
+        //업적 이름만 출력
+            questList.stream()
+                    .map(quest -> "> " + quest.getQuestName())
+                    .forEach(System.out::println);
     }
     public static void updateQuestProgress(QuestDTO quest) {
         QuestController questController = new QuestController();
@@ -47,8 +53,8 @@ public class QuestView {
 
     public static void printQuest(){
         System.out.println(hero.getHeroId());
-        selectQuestEnd(hero.getHeroId());
-        selectQuestIng(hero.getHeroId());
+        //selectQuestEnd(hero.getHeroId());
+        //selectQuestIng(hero.getHeroId());
 
 
     }
