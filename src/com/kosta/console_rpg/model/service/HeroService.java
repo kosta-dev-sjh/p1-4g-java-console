@@ -2,6 +2,7 @@ package com.kosta.console_rpg.model.service;
 
 import java.sql.SQLException;
 
+import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dao.HeroDAO;
 import com.kosta.console_rpg.model.dao.HeroDAOImpl;
@@ -20,6 +21,7 @@ public class HeroService {
 	// ======= field =======
 	private HeroDAO heroDao = new HeroDAOImpl();
 	private final QuestService questService = new QuestService();
+	private final SkillController skillController = new SkillController();
 
 	// ======= public method =======
 	/**
@@ -46,16 +48,15 @@ public class HeroService {
 			if(createdHero == null) {
 				throw new GameException("캐릭터 생성 후 조회에 실패했습니다.");
 			}
-			// TODO: 초기 생성 시 기본 스킬 지급 로직 추가 예정 (SkillService 연동)
 
 			LoginSession.getInstance().setCurrentHero(createdHero);
+			skillController.insertDefaultSkills();
 			//새로운 hero 업적 추가 init
 			questService.insertQuestInit(LoginSession.getInstance().getCurrentHero().getHeroId());
 
 		} catch (SQLException e) {
 			throw new GameException("캐릭터 생성 중 오류가 발생했습니다.");
 		}
-
 	}
 
 	/**

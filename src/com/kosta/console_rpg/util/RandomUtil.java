@@ -5,19 +5,23 @@ import java.util.Random;
 
 public class RandomUtil {
 	
+	private static final Random random = new Random();
+	
+	private RandomUtil() {}
+	
 	//start이상 end미만값의 int 값 반환
-	public int randomArrange(int start, int end) {	  
-		Random random = new Random();	 
-		int result = random.nextInt(start,end);	 
-	 
-		return result;
+	public static int randomArrange(int start, int end) {	  
+		return random.nextInt(start,end);	 
 	} 
+	
 	//1~6의 int형 정수 반환
-	public int diceRoll() {
+	public static int diceRoll() {
 		return randomArrange(1,7);
 	}
+
+	
 	//{4=⚃}의 map으로 반환
-	public HashMap<Integer,String> inhencedDiceRoll(){
+	public static HashMap<Integer,String> inhencedDiceRoll(){
 		int result= diceRoll();
 		HashMap<Integer,String> dice = new HashMap<>(); 
 		switch(result) {
