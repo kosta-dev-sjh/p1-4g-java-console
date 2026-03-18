@@ -19,7 +19,7 @@ import com.kosta.console_rpg.session.LoginSession;
 public class HeroService {
 	// ======= field =======
 	private HeroDAO heroDao = new HeroDAOImpl();
-
+	private final QuestService questService = new QuestService();
 
 	// ======= public method =======
 	/**
@@ -48,11 +48,9 @@ public class HeroService {
 			}
 			// TODO: 초기 생성 시 기본 스킬 지급 로직 추가 예정 (SkillService 연동)
 
-			//새로운 hero 업적 init
-			QuestService qs = new QuestService();
-			qs.insertQuestInit(createdHero.getHeroId());
-
 			LoginSession.getInstance().setCurrentHero(createdHero);
+			//새로운 hero 업적 추가 init
+			questService.insertQuestInit(LoginSession.getInstance().getCurrentHero().getHeroId());
 
 		} catch (SQLException e) {
 			throw new GameException("캐릭터 생성 중 오류가 발생했습니다.");
@@ -68,6 +66,9 @@ public class HeroService {
 	 */
 	public void deleteHero(int heroId) throws GameException {
 		try {
+			//삭제를 위한 업적 삭제(삭제하지 않으면 종속 되있어서 삭제 불가)
+			questService.deleteQuest(heroId);
+
 			int result = heroDao.deleteHero(heroId);
 			if(result == 0) {
 				throw new GameException("캐릭터 삭제에 실패했습니다.");
