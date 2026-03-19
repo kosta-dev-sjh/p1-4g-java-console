@@ -194,7 +194,7 @@ public class skilltest {
 		SkillController skillController = new SkillController();
 		if(hero.getHeroGem() > 100) {
 
-			skillController.upgradeHeroSkill(1, 1);
+			skillController.upgradeHeroSkill(1);
 
 		}
 

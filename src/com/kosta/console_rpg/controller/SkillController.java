@@ -56,11 +56,12 @@ public class SkillController {
 	 * @throws GameException 
 	 * 
 	 */
-	public void upgradeHeroSkill(int heroId, int skillId) throws GameException {
+	public void upgradeHeroSkill(int skillId) throws GameException {
 		try {
+			int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
 			skillService.upgradeHeroSkill(heroId, skillId);
 		} catch(GameException e) {
-			throw e;
+			FailView.errorMessage(e.getMessage());
 		}
 	}
 	
