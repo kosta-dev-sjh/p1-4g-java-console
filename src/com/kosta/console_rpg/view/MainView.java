@@ -3,13 +3,9 @@ package com.kosta.console_rpg.view;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
+import com.kosta.console_rpg.util.ConsoleUtils;
 
 import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.BLACK;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.WHITE_BG;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
 import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
 
 /**

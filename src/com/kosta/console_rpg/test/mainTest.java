@@ -4,6 +4,7 @@ import com.kosta.console_rpg.controller.QuestController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.*;
 
@@ -44,7 +45,7 @@ public class mainTest {
                     mainView.start();
                 }
 
-                System.out.print("선택 ▶ \n");
+                System.out.print("선택 ▶ ");
                 int menu = InputUtil.inputInt();
 
                 if (!isLogin) {     //로그인 되지않았을경우

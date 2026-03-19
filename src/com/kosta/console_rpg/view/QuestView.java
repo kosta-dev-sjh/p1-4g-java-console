@@ -7,6 +7,7 @@ import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 
 import java.util.List;
@@ -21,7 +22,11 @@ import java.util.List;
  */
 public class QuestView {
     static HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-
+    public static final int WIDTH = 70;
+    
+    public static void printQuest(){
+        ConsoleUtils.printTitleBar("Quest");
+    }
 
     public static void showQuestLists(int heroId){
         QuestController questController = new QuestController();
@@ -31,13 +36,13 @@ public class QuestView {
         System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
     }
     public static void selectQuestIng(List<QuestDTO> questList){
-        System.out.println("──────────────── IN PROGRESS QUEST ─────────────────");
+        System.out.println(ConsoleUtils.center("──────────────── IN PROGRESS QUEST ─────────────────", WIDTH));
         for (QuestDTO q : questList) {
             System.out.println("▸ " + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
         }
     }
     public static void selectQuestEnd(List<QuestDTO> questList){
-        System.out.println("──────────────── COMPLETE QUEST ──────────────────");
+        System.out.println(ConsoleUtils.center("──────────────── COMPLETE QUEST ──────────────────\n", WIDTH));
         //업적 이름만 출력
             questList.stream()
                     .map(quest -> "□ " + quest.getQuestName())
@@ -52,13 +57,8 @@ public class QuestView {
         questController.insertQuestInit(heroId);
     }
 
-    public static void printQuest(){
-        System.out.println("____________________________┌ Quest ┐_______________________________\n");
-
-
-    }
     public static void printBackToMenu(){
-        System.out.println("────────────────── MENU ──────────────────\n");
+        System.out.println("\n────────────────── MENU ──────────────────\n");
         System.out.println(" [0] 뒤로가기\n");
         System.out.print("선택 ▶ ");
         InputUtil.backToMenu();
