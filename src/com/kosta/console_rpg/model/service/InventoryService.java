@@ -5,6 +5,7 @@ import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -122,5 +123,9 @@ public class InventoryService {
 		}
 		
 		return potionList;	
+	}
+	public void deleteInventory(int heroId) throws SQLException, GameException {
+
+		inventoryDAO.deleteInventory(heroId);
 	}
 }

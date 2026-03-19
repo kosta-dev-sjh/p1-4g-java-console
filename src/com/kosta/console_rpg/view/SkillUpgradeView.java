@@ -110,7 +110,7 @@ public class SkillUpgradeView {
 
 			sb.append(String.format(" [%d] %s\n", i+1,skillList.get(i).getSkill().getSkillName()));
 			sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(i).getSkillLevel()));
-			sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(i).getSkill().getSkillDamage()));
+			sb.append(String.format("    ▸ 데미지 : %s\n", skill.getCalculatedDamage()));
 			sb.append(String.format("    ▸ MP 소모 : %d\n", skill.getCalculatedMpCost()));
 
 			if ( skillList.get(i).getSkillLevel() == 2) {
