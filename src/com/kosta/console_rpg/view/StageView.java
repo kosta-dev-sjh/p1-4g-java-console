@@ -4,6 +4,9 @@ import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
+
+import static com.kosta.console_rpg.test.BattleTest.startBattle;
+
 /**
  *  스테이지 선택을 위한 스테이지 출력
  *
@@ -16,7 +19,7 @@ public class StageView {
 
     public static void showStage() {
         HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-        //아직 아무것도 클리어하지 못한경우 에필로그
+        //아직 아무것도 클리어하지 못한경우 에필로그 출력
         if(hero.getHeroMaxClearStage() == 0) {
             try {
                 StoryView.epilogue();
@@ -58,36 +61,8 @@ public class StageView {
         System.out.println(" [스테이지를 선택하시오]\n");
         System.out.println(" [0] 뒤로가기\n");
         System.out.print("선택 ▶ ");
-        try {
-            int menu = InputUtil.inputInt();
-            switch (menu) {
-                case 1 -> {
-                    //스테이지 클리어최대치에 따른 스토리 진입
-                    if(hero.getHeroMaxClearStage() <= 0) {}
-                    StoryView.stage1Start();
-                    // 스테이지 진입코드 추가 필요
-                }
-                case 2 -> {
-                    if(hero.getHeroMaxClearStage() <= 1) {}
-                    StoryView.stage2Start();
-                    // 스테이지 진입코드 추가 필요
-                }
-                case 3 -> {
-                    if(hero.getHeroMaxClearStage() <= 2) {}
-                    StoryView.stage2Start();
-                    // 스테이지 진입코드 추가 필요
-                }
-                case 0 -> {  // 뒤로가기: 아무것도 안하고 종료
-                    break;
-                }
-                default -> System.out.println("잘못된 입력입니다.");
-            }
-        } catch (GameException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
+
 
 
 }
