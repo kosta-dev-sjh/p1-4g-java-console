@@ -1,20 +1,19 @@
 package com.kosta.console_rpg.test;
 
-import java.util.List;
-
 import com.kosta.console_rpg.controller.BattleController;
 import com.kosta.console_rpg.controller.InventoryController;
 import com.kosta.console_rpg.controller.UserController;
 import com.kosta.console_rpg.exception.GameException;
-import com.kosta.console_rpg.model.dto.BattleActionResultDTO;
-import com.kosta.console_rpg.model.dto.BattleHeroDTO;
-import com.kosta.console_rpg.model.dto.BattlePotionDTO;
-import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.model.dto.MonsterDTO;
+import com.kosta.console_rpg.model.dto.*;
 import com.kosta.console_rpg.model.enums.BattleActionType;
 import com.kosta.console_rpg.model.enums.BattleResult;
+import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.FailView;
+import com.kosta.console_rpg.view.StageView;
+import com.kosta.console_rpg.view.StoryView;
+
+import java.util.List;
 
 public class BattleTest {
 
@@ -30,65 +29,78 @@ public class BattleTest {
 	private static int nowStage;
 	private static String nowDifficulty;
 
-	public static void main(String[] args) {
-		UserController userController = new UserController();
-		userController.login("1234", "1234");
-
-		startBattle();
-	}
+//	public static void main(String[] args) {
+//		UserController userController = new UserController();
+//		userController.login("b5", "b5");
+//
+//		startBattle();
+//	}
 
 	/**
 	 * 전투 시작
 	 */
 	public static void startBattle() {
+		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 		while (true) {
 			try {
-				System.out.println("========== BATTLE TEST ==========");
-				System.out.println("1. 전투 시작");
-				System.out.println("2. 종료");
+				//스테이지 리스트 출력
+				StageView.showStage();
+				//원하는 스테이지 입력
+				nowStage = InputUtil.inputInt();
+				switch (nowStage) {
+                case 1 -> {
+                    //스테이지 클리어최대치에 따른 스토리 진입
+                    if(hero.getHeroMaxClearStage() <= 0) {
+                        StoryView.stage1Start();	//스토리 시작
+                    }
 
-				int choice = InputUtil.inputInt();
+                }
+                case 2 -> {
+                    if(hero.getHeroMaxClearStage() <= 1) {
+                        StoryView.stage2Start();
+                    }
 
-				if (choice == 1) {
-					System.out.println("전투를 시작합니다...");
-					System.out.print("스테이지를 선택해주세요 : ");
+                }
+                case 3 -> {
+                    if(hero.getHeroMaxClearStage() <= 2) {
+                        StoryView.stage2Start();
+                    }
 
-					nowStage = InputUtil.inputInt();
-					nowDifficulty = "★".repeat(nowStage);
-					
-					battleHero = battleController.createBattleHero();
-					monster = battleController.selectMonsterByStage(nowStage);
+                }
+                case 0 -> {  // 뒤로가기: 아무것도 안하고 종료
+                    break;
+                }
+                default -> System.out.println("잘못된 입력입니다.");
+            }
 
-					if (battleHero == null || monster == null) {
-						FailView.errorMessage("전투 시작에 필요한 정보가 부족합니다.");
-						continue;
-					}
+			battleHero = battleController.createBattleHero();
+			monster = battleController.selectMonsterByStage(nowStage);
 
-					heroSkillList = battleController.getHeroSkills();
-					if (heroSkillList == null || heroSkillList.isEmpty()) {
-						FailView.errorMessage("보유한 스킬이 없습니다.");
-						continue;
-					}
+			if (battleHero == null || monster == null) {
+				FailView.errorMessage("전투 시작에 필요한 정보가 부족합니다.");
+				continue;
+			}
 
-					potionList = inventoryController.showPotionItems();
-					if (potionList == null || potionList.isEmpty()) {
-						System.out.println("보유한 포션 없이 전투를 진행합니다.");
-					}
+			heroSkillList = battleController.getHeroSkills();
+			if (heroSkillList == null || heroSkillList.isEmpty()) {
+				FailView.errorMessage("보유한 스킬이 없습니다.");
+				continue;
+			}
 
-					nowTurn = 1;
-					battleLoop();
+			potionList = inventoryController.showPotionItems();
+			if (potionList == null || potionList.isEmpty()) {
+				System.out.println("보유한 포션 없이 전투를 진행합니다.");
+			}
 
-				} else if (choice == 2) {
-					System.out.println("프로그램을 종료합니다.");
-					return;
-				} else {
-					FailView.errorMessage("잘못된 입력입니다.");
-				}
+			nowTurn = 1;
+			battleLoop();
 
 			} catch (GameException e) {
 				FailView.errorMessage(e.getMessage());
-			}
-		}
+			} catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 	}
 
 	/**
@@ -100,7 +112,6 @@ public class BattleTest {
 		while (true) {
 			System.out.println("현재 턴 : " + nowTurn);
 			System.out.println("현재 스테이지 : " + nowStage);
-			System.out.println("현재 난이도 : " + nowDifficulty);
 
 			showBattleStatus();
 
@@ -195,7 +206,7 @@ public class BattleTest {
 		System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
 		System.out.println("주사위 : 🎲 " + result.getDice());
 		System.out.println("데미지 : -" + result.getResultValue());
-		
+
 		return result.getBattleResult();
 	}
 

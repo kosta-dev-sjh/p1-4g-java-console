@@ -67,11 +67,11 @@ public class mainTest {
                     }
                 } else {    //히어로 생성 및 로그인 완료
                     switch (menu) {
-                        case 1 -> StageView.showStage();      //스테이지 진입
+                        case 1 -> BattleTest.startBattle(); //스테이지 및 배틀 진입
                         case 2 -> ShopView.showShop();    //상점 구현
                         case 3 -> heroView.start();  //히어로 정보
                         case 4 -> InventoryView.start();  //인벤토리 정보
-                        //
+
                         //업적
                         case 5 -> {
                             QuestView.printQuest();
