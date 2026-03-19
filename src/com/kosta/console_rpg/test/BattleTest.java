@@ -16,6 +16,9 @@ import com.kosta.console_rpg.view.StoryView;
 
 import java.util.List;
 
+import static com.kosta.console_rpg.test.ConsoleEffectTest.*;
+import static com.kosta.console_rpg.test.ProgressBar.showProgressBar;
+
 public class BattleTest {
 
 	private static final BattleController battleController = new BattleController();
@@ -91,7 +94,12 @@ public class BattleTest {
 
 			potionList = inventoryController.showPotionItems();
 			if (potionList == null || potionList.isEmpty()) {
-				System.out.println("보유한 포션 없이 전투를 진행합니다.");
+				StringBuilder s = new StringBuilder();
+				s.append(YELLOW);
+				s.append("주의: 보유한 포션 없이 전투를 진행합니다.\n\n");
+				s.append(RESET);
+				ConsoleEffectTest.slowPrint(s.toString(),50);
+
 			}
 
 			nowTurn = 1;
@@ -108,11 +116,16 @@ public class BattleTest {
 	/**
 	 * 전투 루프
 	 */
-	public static void battleLoop() {
+	public static void battleLoop() throws Exception {
 		showBattleStart();
 
 		while (true) {
-			System.out.println("현재 턴 : " + nowTurn);
+			StringBuilder s = new StringBuilder();
+			s.append(GREEN);
+			s.append("____________________________┌ Battle ┐_______________________________");
+			s.append(RESET);
+			System.out.println(s);
+			System.out.println("\n현재 턴 : " + nowTurn);
 			System.out.println("현재 스테이지 : " + nowStage);
 
 			showBattleStatus();
@@ -154,10 +167,14 @@ public class BattleTest {
 	 * 전투 시작 출력
 	 */
 	public static void showBattleStart() {
-		System.out.println("========== BATTLE START ==========");
-		System.out.println("STAGE : " + nowStage);
-		System.out.println("MONSTER : " + monster.getMonsterName());
-		System.out.println("==================================");
+		StringBuilder s = new StringBuilder();
+		s.append(GREEN);
+		s.append("\n____________________________┌ Battle ┐_______________________________\"");
+		s.append(RESET);
+		s.append(String.format("STAGE :  %s ",nowStage ));
+		s.append(String.format("MONSTER : %s",monster.getMonsterName() ));
+
+
 	}
 
 	/**
@@ -197,31 +214,47 @@ public class BattleTest {
 			}
 		}
 	}
+	public static void defaultTurn(BattleActionResultDTO result ) {
+		System.out.println();
+
+		StringBuilder s = new StringBuilder();
+		s.append(GREEN);
+		s.append("____________________________┌ Battle ┐_______________________________\n");
+		s.append(RESET);
+		s.append(String.format("STAGE :  %s\n",nowStage ));
+		s.append(String.format("MONSTER : %s\n",monster.getMonsterName() ));
+		System.out.println(s);
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format(GREEN+"%s"+RESET+" %s\n",battleHero.getHeroName(), result.getAction().getMessage() ));
+		sb.append(String.format("주사위 : . . . 🎲 %d\n",result.getDice() ));
+		sb.append(String.format("데미지 : "+RED+"%d\n" + RESET,result.getResultValue()));
+		try {
+			ConsoleEffectTest.slowPrint(sb.toString(),30);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 
 	/**
 	 * 공격
 	 */
-	public static BattleResult attackTurn() {
+	public static BattleResult attackTurn()  {
 		BattleActionResultDTO result = battleController.attack(battleHero, monster);
-
-		System.out.println();
-		System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
-		System.out.println("주사위 : 🎲 " + result.getDice());
-		System.out.println("데미지 : -" + result.getResultValue());
+		defaultTurn(result);
 
 		return result.getBattleResult();
 	}
+
+
 
 	/**
 	 * 방어
 	 */
 	public static BattleResult defendTurn() {
 		BattleActionResultDTO result = battleController.defend(battleHero);
-
-		System.out.println();
-		System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
-		System.out.println("주사위 : 🎲 " + result.getDice());
-		System.out.println("추가 방어력 : +" + result.getResultValue());
+		defaultTurn(result);
 
 		return result.getBattleResult();
 	}
@@ -231,6 +264,7 @@ public class BattleTest {
 	 */
 	public static BattleResult skillTurn() {
 		try {
+			System.out.println(GREEN + "──────────────── SKILL ─────────────────" + RESET);
 			for (int i = 0; i < heroSkillList.size(); i++) {
 				System.out.println("[" + (i + 1) + "] " + heroSkillList.get(i).toBattleString());
 			}
@@ -250,12 +284,7 @@ public class BattleTest {
 				FailView.errorMessage("MP가 부족하여 스킬을 사용할 수 없습니다.");
 				return BattleResult.INVALID_ACTION;
 			}
-
-			System.out.println();
-			System.out.println(battleHero.getHeroName() + result.getAction().getMessage());
-			System.out.println("스킬명 : " + result.getActionName());
-			System.out.println("주사위 : 🎲 " + result.getDice());
-			System.out.println("데미지 : -" + result.getResultValue());
+			defaultTurn(result);
 
 			return result.getBattleResult();
 
@@ -269,7 +298,7 @@ public class BattleTest {
 	 * 아이템 사용
 	 */
 	public static BattleResult itemTurn() {
-		if (potionList.isEmpty()) {
+		if (potionList==null ||potionList.isEmpty()) {
 			System.out.println("사용 가능한 포션이 없습니다.");
 			return BattleResult.INVALID_ACTION;
 		}
@@ -319,20 +348,40 @@ public class BattleTest {
 		boolean beforeGuard = battleHero.isGuardActive();
 
 		BattleActionResultDTO result = battleController.monsterAttack(battleHero, monster);
-
+		StringBuilder sb = new StringBuilder();
 		System.out.println();
 		if (result.getAction() == BattleActionType.MONSTER_SKILL) {
-			System.out.println(monster.getMonsterName() + result.getAction().getMessage());
-			System.out.println("스킬명 : " + result.getActionName());
+			sb.append(String.format(RED+"%s"+RESET+"%s\n",monster.getMonsterName(), result.getAction().getMessage()));
+			sb.append(String.format("스킬명 :  %s\n",result.getActionName()));
+
 		} else {
-			System.out.println(monster.getMonsterName() + result.getAction().getMessage());
+			sb.append(String.format("%s %s\n",monster.getMonsterName(), result.getAction().getMessage()));
 		}
-		System.out.println("주사위 : 🎲 " + result.getDice());
-		System.out.println("데미지 : -" + result.getResultValue());
+		sb.append(String.format("주사위 : . . . 🎲 %d\n",result.getDice() ));
+		sb.append(String.format("데미지 : "+RED+"%d\n" + RESET,result.getResultValue()));
+
+
+
 
 		if (beforeGuard && !battleHero.isGuardActive()) {
-			System.out.println("방어 자세 해제됨");
+			System.out.println("방어 자세 해제");
 		}
+
+		try {
+			ConsoleEffectTest.slowPrint(sb.toString(),30);
+			//showProgressBar(30,50,"");
+			System.out.println("계속하려면 아무키나 눌러주세요");
+			InputUtil.inputString();
+
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+
+
+
+
 
 		return result.getBattleResult();
 	}
@@ -355,7 +404,8 @@ public class BattleTest {
 	 */
 	public static void showBattleStatus() {
 		System.out.println();
-		System.out.println("------------- BATTLE LOG -------------");
+		System.out.println("┌──────────────── Battle ──────────────────┐");
+
 
 		int currentAttack = battleHero.getHeroAttack();
 		int currentDefense = battleHero.getHeroDefense();
@@ -372,11 +422,11 @@ public class BattleTest {
 			currentDefense += battleHero.getGuardBonus();
 		}
 
-		System.out.println("Hero : " + battleHero.getHeroName());
-		System.out.println("HP : " + battleHero.getHeroHp());
-		System.out.println("MP : " + battleHero.getHeroMp());
-		System.out.println("ATK : " + currentAttack);
-		System.out.println("DEF : " + currentDefense);
+		System.out.println(GREEN +"   Hero : " + battleHero.getHeroName() +RESET);
+		System.out.println("   HP : " + battleHero.getHeroHp());
+		System.out.println("   MP : " + battleHero.getHeroMp());
+		System.out.println("   ATK : " + currentAttack);
+		System.out.println("   DEF : " + currentDefense);
 
 		if (battleHero.isAtkBuffActive()) {
 			System.out.println("(공격 버프 적용 중 +" + battleHero.getTempAtkBonus() + ")");
@@ -391,10 +441,10 @@ public class BattleTest {
 		}
 
 		System.out.println();
-		System.out.println(monster.getMonsterName());
-		System.out.println("HP : " + monster.getMonsterHp());
-		System.out.println("ATK : " + monster.getMonsterAttack());
-		System.out.println("--------------------------------------");
+		System.out.println("   "+ RED + monster.getMonsterName() + RESET);
+		System.out.println("   HP : " + monster.getMonsterHp());
+		System.out.println("   ATK : " + monster.getMonsterAttack());
+		System.out.println("└──────────────────────────────────────────┘");
 	}
 
 	/**
@@ -402,25 +452,25 @@ public class BattleTest {
 	 */
 	public static void showBattleResult(BattleResult result) {
 		System.out.println();
-		System.out.println("=========== RESULT ===========");
+		System.out.println("┌──────────────── Result ──────────────────┐");
 
 		switch (result) {
 			case WIN -> victory();
 			case LOSE -> defeat();
 			case ESCAPE -> escape();
-			default -> System.out.println("종료");
+			default -> System.out.println("   종료");
 		}
 
-		System.out.println("==============================");
+		System.out.println("└──────────────────────────────────────────┘");
 	}
 
 	/**
 	 * 승리
 	 */
 	public static void victory() {
-		System.out.println("🏆 승리!");
-		System.out.println("획득 경험치 : " + monster.getMonsterRewardExp());
-		System.out.println("획득 보석 : " + monster.getMonsterRewardGem());
+		System.out.println("   ▸🏆 승리!");
+		System.out.println("   ▸획득 경험치 : " + monster.getMonsterRewardExp());
+		System.out.println("   ▸획득 보석 : " + monster.getMonsterRewardGem());
 
 		List<RewardResult> results = battleController.reward(monster);
 
@@ -434,7 +484,7 @@ public class BattleTest {
 		            }
 		        }
 		} else {
-			System.out.println("보상 처리 실패");
+			System.out.println("   보상 처리 실패");
 		}
 	}
 
@@ -442,14 +492,14 @@ public class BattleTest {
 	 * 패배
 	 */
 	public static void defeat() {
-		System.out.println("💀 패배...");
+		System.out.println("   ▸💀 패배...");
 		applyDefeatPenalty();
 	}
 	/**
 	 * 도망
 	 */
 	public static void escape() {
-		System.out.println("🏃 도망쳤습니다.");
+		System.out.println("   ▸🏃 도망쳤습니다.");
 		applyDefeatPenalty();
 	}
 
@@ -460,9 +510,9 @@ public class BattleTest {
 		boolean penaltyResult = battleController.defeatPenalty();
 
 		if (penaltyResult) {
-			System.out.println("경험치와 젬이 일부 감소했습니다.");
+			System.out.println("   경험치와 젬이 일부 감소했습니다.");
 		} else {
-			System.out.println("패널티 적용 실패");
+			System.out.println("   패널티 적용 실패");
 		}
 	}
 }

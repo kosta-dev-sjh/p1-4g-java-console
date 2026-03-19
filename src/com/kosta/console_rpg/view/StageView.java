@@ -34,24 +34,26 @@ public class StageView {
 //        }
         int isStageCleared = hero.getHeroMaxClearStage();
         String clearedText = GREEN + " (Cleared)" + RESET;
-        String message = "";
+        String message1 = "";
+        String message2 = "";
+        String message3 = "";
 
         //Stage 1. 스테이지 클리어 여부 출력
         if (isStageCleared >= 1) {
-            message = clearedText;
+            message1 = clearedText;
         }
         System.out.println("_________________________________┌ STAGE SELECT ┐_________________________________\n");
-        System.out.println("[1][Stage 1 - 초록 들판]" + message);
+        System.out.println("[1][Stage 1 - 초록 들판]" + message1);
         System.out.println("    Monster: 슬라임");
         System.out.println("    Difficulty: ★");
 
         System.out.println();
-        
+
         //Stage 2. 스테이지 클리어 여부 출력
         if (isStageCleared >= 2) {
-            message = clearedText;
+            message2 = clearedText;
         }
-        System.out.println("[2][Stage 2 - 고블린 동굴]" + message);
+        System.out.println("[2][Stage 2 - 고블린 동굴]" + message2);
         System.out.println("    Monster: 고블린");
         System.out.println("    Difficulty: ★★");
         System.out.println();
@@ -59,9 +61,9 @@ public class StageView {
 
         // Stage 3. 스테이지 클리어 여부 출력
         if (isStageCleared >= 3) {
-            message = clearedText;
+            message3 = clearedText;
         }
-        System.out.println("[3][Stage 3 - 드래곤 레어]" + message);
+        System.out.println("[3][Stage 3 - 드래곤 레어]" + message3);
         System.out.println("    Monster: 드래곤");
         System.out.println("    Difficulty: ★★★");
         System.out.println();
