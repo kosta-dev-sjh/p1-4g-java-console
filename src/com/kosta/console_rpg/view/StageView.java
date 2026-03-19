@@ -40,9 +40,9 @@ public class StageView {
         if (isStageCleared >= 1) {
             message = clearedText;
         }
-        System.out.println("_________________________________┌ STAGE SELECT ┐_________________________________\n");
-        System.out.println("[1][Stage 1 - 초록 들판]" + message);
-        System.out.println("    Monster: 슬라임");
+        ConsoleUtils.printTitleBar("STAGE SELECT");
+        System.out.println(" [1][Stage 1 - 초록 들판]" + message);
+        System.out.println(RED+"    Monster: 슬라임"+RESET);
         System.out.println("    Difficulty: ★");
         System.out.println();
         
@@ -50,8 +50,8 @@ public class StageView {
         if (isStageCleared >= 2) {
             message = clearedText;
         }
-        System.out.println("[2][Stage 2 - 고블린 동굴]" + message);
-        System.out.println("    Monster: 고블린");
+        System.out.println(" [2][Stage 2 - 고블린 동굴]" + message);
+        System.out.println(RED+"    Monster: 고블린"+RESET);
         System.out.println("    Difficulty: ★★");
         System.out.println();
         
@@ -60,8 +60,8 @@ public class StageView {
         if (isStageCleared >= 3) {
             message = clearedText;
         }
-        System.out.println("[3][Stage 3 - 드래곤 레어]" + message);
-        System.out.println("    Monster: 드래곤");
+        System.out.println(" [3][Stage 3 - 드래곤 레어]" + message);
+        System.out.println(RED+"    Monster: 드래곤"+RESET);
         System.out.println("    Difficulty: ★★★");
         System.out.println();
         
