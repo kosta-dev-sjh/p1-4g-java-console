@@ -23,6 +23,8 @@ public class mainTest {
         QuestController questController = new QuestController();
         HeroView heroView = new HeroView();
         MainView mainView = new MainView();
+        ShopView shopView = new ShopView();
+        
         while (true) {
             try {
                 System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
@@ -70,7 +72,7 @@ public class mainTest {
                 } else {    //히어로 생성 및 로그인 완료
                     switch (menu) {
                         case 1 -> BattleTest.startBattle(); //스테이지 및 배틀 진입
-                        case 2 -> ShopView.showShop();    //상점 구현
+                        case 2 -> shopView.showShop();    //상점 구현
                         case 3 -> heroView.start();  //히어로 정보
                         case 4 -> InventoryView.start();  //인벤토리 정보
 
@@ -85,7 +87,7 @@ public class mainTest {
                         case 6 -> logout();
                         case 7 -> deleteHeroTest();
 
-                        case 0 -> {
+                        case 8 -> {
                             System.out.println("종료합니다.");
                             return;
                         }

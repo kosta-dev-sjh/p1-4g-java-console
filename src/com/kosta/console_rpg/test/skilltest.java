@@ -182,8 +182,9 @@ public class skilltest {
 
 	/**
 	 * 현재 로그인한 사용자 및 캐릭터 세션 정보 출력
+	 * @throws GameException 
 	 */
-	public static void showSession() {
+	public static void showSession() throws GameException {
 		System.out.println("현재 로그인 유저 : " + LoginSession.getInstance().getCurrentUser().getUserName());
 		System.out.println("현재 로그인 된 유저 정보 : " + LoginSession.getInstance().getCurrentUser().getUserId());
 		
@@ -193,7 +194,7 @@ public class skilltest {
 		SkillController skillController = new SkillController();
 		if(hero.getHeroGem() > 100) {
 
-			skillController.upgradeHeroSkill(1);
+			skillController.upgradeHeroSkill(1, 1);
 
 		}
 

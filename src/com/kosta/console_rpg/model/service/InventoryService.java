@@ -2,8 +2,10 @@ package com.kosta.console_rpg.model.service;
 
 import com.kosta.console_rpg.model.dao.InventoryDAOImpl;
 import com.kosta.console_rpg.model.dto.BattlePotionDTO;
+import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
+import com.kosta.console_rpg.session.LoginSession;
 
 import java.util.List;
 import java.util.Map;
@@ -14,15 +16,12 @@ import com.kosta.console_rpg.model.dao.InventoryDAO;
 public class InventoryService {
 	
 	private InventoryDAO inventoryDAO = new InventoryDAOImpl();
+	private HeroService heroService = new HeroService();
 	
 	
 	public List<InventoryDTO> showInventory(int heroId) throws GameException {
 
 		List<InventoryDTO> list = inventoryDAO.selectInventoryByHeroId(heroId);
-
-	    if(list.isEmpty()) {
-	        throw new GameException("인벤토리가 비어있습니다.");
-	    }
 
 	    return list;
 	} 
@@ -89,13 +88,60 @@ public class InventoryService {
 	    // 아이템 장착
 	    inventoryDAO.equipItem(heroId, itemId);
 	    System.out.println("아이템이 장착되었습니다.");
+	    
+	    // 장착 후 영웅 스탯 갱신
+	    updateHeroStatsWithEquippedItems();
 	}
 	
 	public void unequipItem(int heroId, int itemId) throws GameException {
 		
 		inventoryDAO.unequipItem(heroId, itemId);
 		
+		updateHeroStatsWithEquippedItems();
+		
 	}
+	
+	 /**
+     * 현재 장착 중인 장비의 공격력/방어력 반영
+     */
+    public void updateHeroStatsWithEquippedItems() throws GameException {
+        HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+        if (hero == null) {
+            throw new GameException("로그인된 캐릭터가 없습니다.");
+        }
+
+        int heroId = hero.getHeroId();
+
+        List<InventoryDTO> list = inventoryDAO.selectInventoryByHeroId(heroId);
+
+        int totalAttack = 0;
+        int totalDefense = 0;
+
+        for (InventoryDTO inv : list) {
+            if (inv.getInventoryIsEquipped() == 1) { // 장착 중인 장비만
+                ItemDTO item = inv.getItem();
+                if (item.getItemType().equals("weapon")) {
+                    totalAttack += item.getItemAtkBonus();
+                }
+                if (item.getItemType().equals("armor")) {
+                    totalDefense += item.getItemDefBonus();
+                }
+            } 
+        }
+        
+        int baseAttack = 10;   
+        int baseDefense = 5;
+
+        // 기본 공격력/방어력에 장비 스탯 더하기
+        hero.setHeroAttack(baseAttack + totalAttack);
+        hero.setHeroDefense(baseDefense + totalDefense);
+
+        // 세션 갱신
+        LoginSession.getInstance().setCurrentHero(hero);
+
+        // DB 갱신
+        heroService.updateHero(hero);
+    }
 	
 	public void usePotion(int heroId, int inventoryId) throws GameException {
 		

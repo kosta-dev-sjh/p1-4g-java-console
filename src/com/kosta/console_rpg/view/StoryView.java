@@ -156,5 +156,13 @@ public class StoryView {
         ConsoleEffectTest.slowPrint(story,30);
 
     }
+    
+    public static void printStageEndStory(int stage) throws Exception {
+        switch (stage) {
+            case 1 -> stage1End();
+            case 2 -> stage2End();
+            case 3 -> stage3End();
+        }
+    }
 
 }
