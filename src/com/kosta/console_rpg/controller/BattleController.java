@@ -188,7 +188,13 @@ public class BattleController {
 		if (battleService.canUseSkill(hero, heroSkill)) {
 			battleService.consumeSkillMp(hero, heroSkill);
 		} else {
-			return new BattleActionResultDTO(BattleResult.CONTINUE);
+				return new BattleActionResultDTO(
+				BattleResult.INVALID_ACTION,
+				0,
+				0,
+				skill.getSkillName(),
+				BattleActionType.HERO_SKILL
+			);
 		}
 
 		int damage = battleService.calculateSkillDamage(
@@ -244,10 +250,10 @@ public class BattleController {
 	/**
 	 * 5번항목) 전투에서 도망
 	 *
-	 * @return BattleResult 전투 결과 (승리, 패배, 지속)
+	 * @return BattleActionResultDTO 전투 결과 정보 (도망 여부 등)
 	 */
-	public BattleResult escape() {
-		return battleService.escape();
+	public BattleActionResultDTO escape() {
+		return new BattleActionResultDTO(battleService.escape(), BattleActionType.ESCAPE);
 	}
 
 	/**

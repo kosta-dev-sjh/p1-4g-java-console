@@ -115,7 +115,8 @@ public class SkillUpgradeView {
 				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n",  upgradeCost));
 				sb.append("\n\n");
 			} else if (skill.getSkillLevel() == 3) {
-				sb.append(String.format("스킬: 강화 불가\n"));
+				sb.append(String.format("    ▸ 스킬 강화 불가\n"));
+				sb.append("\n\n");
 			}
 		}
 
