@@ -23,7 +23,7 @@ public class StartView {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-
+        sb.append("\u001B[32m");
         sb.append("╔════════════════════════════════════════════════════════╗\n");
         sb.append("║                                                        ║\n");
         sb.append("║    ███████   ██╗   ██╗  ███████╗   ██╗       ██╗       ║\n");
@@ -53,7 +53,7 @@ public class StartView {
         sb.append("║          Press number to begin your adventure...       ║\n");
         sb.append("║                                                        ║\n");
         sb.append("╚════════════════════════════════════════════════════════╝\n");
-	    sb.append(" 선택 ▶ ");
+	    sb.append("\u001B[97m");
 
         return sb.toString();
     }

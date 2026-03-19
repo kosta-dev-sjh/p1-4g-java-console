@@ -38,7 +38,7 @@ public class StoryView {
 
         sb.append(String.format("왕국 동쪽 끝 초록 들판은 이름과 달리 더 이상 평화롭지 않았다.\n"));
         sb.append(String.format("반투명한 슬라임 무리가 들판을 뒤덮으며 꽃들을 녹여버리고 있었고, 마을 사람들은 두려움에 떨며 집 안에 숨어 있었다. \n"));
-        sb.append(String.format("%s — 초원 어귀에 서서 천천히 검을 뽑아 들었다. %s — 초원 어귀에 서서 천천히 검을 뽑아 들었다.\n", heroName, heroName));
+        sb.append(String.format("%s — 초원 어귀에 서서 천천히 검을 뽑아 들었다.\n", heroName));
         sb.append(String.format("눈앞에 펼쳐진 들판 가득 번들거리는 슬라임들이 그를 향해 일제히 몸을 굴려오기 시작했다......\n\n"));
         String story = sb.toString();
         ConsoleEffectTest.slowPrint(story,30);

@@ -20,13 +20,13 @@ public class StageView {
     public static void showStage() {
         HeroDTO hero = LoginSession.getInstance().getCurrentHero();
         //아직 아무것도 클리어하지 못한경우 에필로그 출력
-        if(hero.getHeroMaxClearStage() == 0) {
-            try {
-                StoryView.epilogue();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if(hero.getHeroMaxClearStage() == 0) {
+//            try {
+//                StoryView.epilogue();
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         System.out.println("_________________________________┌ STAGE SELECT ┐_________________________________\n");
         System.out.println("[1][Stage 1 - 초록 들판]");
         System.out.println("[1][Stage: Slime Field]");

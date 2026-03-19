@@ -128,7 +128,7 @@ public class InputUtil {
 			String menu = InputUtil.inputString();
 			switch (menu) {
 				case "0" -> {  // 뒤로가기: 아무것도 안하고 종료
-					break;
+					return;
 				}
 				default -> System.out.println("잘못된 입력입니다.");
 			}
