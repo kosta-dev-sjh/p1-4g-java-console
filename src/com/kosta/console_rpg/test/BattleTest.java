@@ -13,8 +13,10 @@ import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.enums.BattleActionType;
 import com.kosta.console_rpg.model.enums.BattleResult;
+import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.FailView;
+import com.kosta.console_rpg.view.StoryView;
 
 public class BattleTest {
 
@@ -406,10 +408,17 @@ public class BattleTest {
 		System.out.println("획득 경험치 : " + monster.getMonsterRewardExp());
 		System.out.println("획득 보석 : " + monster.getMonsterRewardGem());
 
-		boolean rewardResult = battleController.reward(monster);
+		List<RewardResult> results = battleController.reward(monster);
 
-		if (rewardResult) {
+		if (results != null) {
 			System.out.println("보상 및 성장 정보가 반영되었습니다.\n자세한 정보는 캐릭터 정보에서 확인해주세요.");
+			 if (results.contains(RewardResult.FIRST_CLEAR)) {
+		            try {
+		                StoryView.printStageEndStory(monster.getMonsterStage());
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+		        }
 		} else {
 			System.out.println("보상 처리 실패");
 		}
