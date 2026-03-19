@@ -51,13 +51,14 @@ public class LoginView {
         HeroDTO hero = null;
 
         System.out.println("─────────────────[ LOGIN ]──────────────────");
+        //HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
         while (true) {
 
-            System.out.print("아이디 입력 : ");
+            System.out.print("▸ ID : ");
             String loginId = InputUtil.inputString();
 
-            System.out.print("비밀번호 입력 : ");
+            System.out.print("▸ PW : ");
             String pwd = InputUtil.inputString();
 
             userController.login(loginId, pwd);

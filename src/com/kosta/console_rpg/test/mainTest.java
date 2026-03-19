@@ -23,17 +23,16 @@ public class mainTest {
         QuestController questController = new QuestController();
         HeroView heroView = new HeroView();
         MainView mainView = new MainView();
+        ShopView shopView = new ShopView();
+        
         while (true) {
             try {
-                System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
-
+                //System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
+                // 유틸리티 메서드 호출
                 boolean isLogin = LoginSession.getInstance().isLogin();
                 HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
                 if (!isLogin) {     //로그인 되지않았을경우
-//                    System.out.println("▸[1] 회원가입");
-//                    System.out.println("▸[2] 로그인");
-//                    System.out.println("▸[0] 종료");
                     StartView startView = new StartView();
                     startView.start();
                 } else if (hero == null) {  //로그인은 됐지만, 아직 히어로 생성은 하지않은 경우
@@ -41,10 +40,11 @@ public class mainTest {
                     System.out.println("▸[2] 히어로 생성");
                     System.out.println("▸[0] 종료");
                 } else {    //히어로 생성 및 로그인 완료
+                	ConsoleUtils.printTitleBar("Main Menu");
                     mainView.start();
                 }
 
-                System.out.print("선택 ▶ ");
+                System.out.print("선택 ▶ \n");
                 int menu = InputUtil.inputInt();
 
                 if (!isLogin) {     //로그인 되지않았을경우
@@ -70,7 +70,7 @@ public class mainTest {
                 } else {    //히어로 생성 및 로그인 완료
                     switch (menu) {
                         case 1 -> BattleTest.startBattle(); //스테이지 및 배틀 진입
-                        case 2 -> ShopView.showShop();    //상점 구현
+                        case 2 -> shopView.showShop();    //상점 구현
                         case 3 -> heroView.start();  //히어로 정보
                         case 4 -> InventoryView.start();  //인벤토리 정보
 

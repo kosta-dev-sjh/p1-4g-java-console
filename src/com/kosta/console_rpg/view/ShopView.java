@@ -23,12 +23,12 @@ public class ShopView {
 	private static ShopController shopController = new ShopController();
 	private static	InventoryController inventoryController = new InventoryController();
 	
-	public static void showShop() {
+	public void showShop() {
 		 Scanner sc = new Scanner(System.in);
 		 ShopView view = new ShopView();
 		 
 		    while (true) {
-		    	System.out.print(view); 
+		    	System.out.print(this); 
 		        int menu = sc.nextInt();
 
 		        switch (menu) {
@@ -55,8 +55,7 @@ public class ShopView {
 	    int gem = LoginSession.getInstance()
 	            .getCurrentHero()
 	            .getHeroGem();
-
-	    System.out.println("\n__________________________┌ SHOP BUY ┐__________________________\n");
+	    ConsoleUtils.printTitleBar("SHOP BUY");
 	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
 	    System.out.println("──────────────────────── POTION ────────────────────────\n");

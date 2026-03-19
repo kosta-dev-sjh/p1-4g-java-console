@@ -46,6 +46,7 @@ public class StageView {
         System.out.println("[1][Stage 1 - 초록 들판]" + message1);
         System.out.println("    Monster: 슬라임");
         System.out.println("    Difficulty: ★");
+
         System.out.println();
 
         //Stage 2. 스테이지 클리어 여부 출력
