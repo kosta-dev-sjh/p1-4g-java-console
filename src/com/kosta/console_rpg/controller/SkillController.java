@@ -31,11 +31,11 @@ public class SkillController {
             int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
             return skillService.selectHeroSkills(heroId);
 
-        } catch (SQLException | GameException e) {
+        } catch (GameException e) {
             FailView.errorMessage(e.getMessage());
             return null;
         }
-	}
+	}	
 	
 	/**
 	 * 캐릭터 생성 시 기본 스킬 3개를 지급하는 메소드
@@ -53,15 +53,28 @@ public class SkillController {
 	/**
 	 * 특정 스킬의 강화 레벨을 1 증가시키는 메소드
 	 * 현재 강화된 스킬 정보들을 DB에 반영한다
+	 * @throws GameException 
 	 * 
 	 */
-	public void upgradeHeroSkill(int skillId) {
+	public void upgradeHeroSkill(int heroId, int skillId) throws GameException {
 		try {
-			int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
 			skillService.upgradeHeroSkill(heroId, skillId);
 		} catch(GameException e) {
-			FailView.errorMessage(e.getMessage());
+			throw e;
 		}
 	}
-
+	
+	/**
+	 * 히어로가 삭제될 때 스킬 삭제하는 메소드
+	 * 
+	 */
+	public void deleteHeroSkills() {
+		try {
+			int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
+			skillService.deleteHeroSkills(heroId);
+			LoginSession.getInstance().clearHero();
+		} catch(GameException e) {
+            FailView.errorMessage(e.getMessage());
+		}
+	}
 }

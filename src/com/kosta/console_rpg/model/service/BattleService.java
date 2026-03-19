@@ -1,20 +1,25 @@
 package com.kosta.console_rpg.model.service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dao.MonsterDAO;
 import com.kosta.console_rpg.model.dao.MonsterDAOImpl;
 import com.kosta.console_rpg.model.dto.BattleHeroDTO;
+import com.kosta.console_rpg.model.dto.BattlePotionDTO;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.dto.MonsterDTO;
+import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.enums.BattleResult;
-import com.kosta.console_rpg.model.enums.ReqardResult;
+import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.DBManager;
 
 /**
  * 전투 관련 비즈니스 로직을 처리하는 Service 클래스
@@ -32,9 +37,17 @@ public class BattleService {
 	// ======= field =======
 	private final MonsterDAO monsterDao = new MonsterDAOImpl();
 	private final HeroService heroService = new HeroService();
+	private final SkillService skillService = new SkillService();
+	private final QuestService questService = new QuestService();
+	private final InventoryService inventoryService = new InventoryService();
 	private final static int LEVEL_UP_EXP_MULTIPLIER = 100; // 레벨업에 필요한 경험치 공식에서 곱해지는 값
 	private final static int SKILL_BONUS = 5; // 스킬 레벨당 추가 데미지
 	private final static int HERO_MAX_LEVEL = 10; // 히어로 최대 레벨
+	private static final int LEVEL_UP_HP_BONUS = 10; // 레벨업 시 HP 증가량
+	private static final int LEVEL_UP_MP_BONUS = 5; // 레벨업 시 MP 증가량
+	private static final int LEVEL_UP_ATTACK_BONUS = 2; // 레벨업 시 공격력 증가량
+	private static final int LEVEL_UP_DEFENSE_BONUS = 1; // 레벨업 시 방어력 증가량
+	private final static int MAX_CLEAR_STAGE = 3; // 클리어 가능한 최대 스테이지
 
 	// ======= public method =======
 
@@ -153,17 +166,11 @@ public class BattleService {
 	 * @return int 실제 적용된 데미지
 	 */
 	public int calculateAttackDamage(int attack, int defense, int dice) {
-		double multiplier = switch (dice) {
-			case 1 -> 0.7;
-			case 6 -> 1.5;
-			default -> 1.0;
-		};
+		double multiplier = getDiceMultiplier(dice);
 		int baseDamage = (int) (attack * multiplier);
 
 		int damage = baseDamage - defense;
 
-		// System.out.println("공격력: " + baseDamage + ", 방어력: " + defense + ", 주사위: " +
-		// dice + ", 계산된 데미지: " + damage); // --- IGNORE ---
 		if (damage <= 0) {
 			return 0; // 방어력이 공격력보다 높으면 데미지는 0
 		}
@@ -191,25 +198,24 @@ public class BattleService {
 	/**
 	 * 스킬 사용 시 MP 소모량이 충분한지 확인한다.
 	 *
-	 * @param hero    전투용 영웅 객체
+	 * @param hero      전투용 영웅 객체
 	 * @param heroSkill 사용하려는 스킬 정보
 	 * @return boolean MP가 충분하면 true, 그렇지 않으면 false
 	 */
 	public boolean canUseSkill(BattleHeroDTO hero, HeroSkillDTO heroSkill) {
-		int requiredMp = heroSkill.getSkill().getSkillMpCost();
-		return hero.getHeroMp() >= requiredMp;
+		return hero.getHeroMp() >= heroSkill.getCalculatedMpCost();
 	}
 
 	/**
 	 * 스킬 사용 시 MP를 소모한다.
+	 * MP 소모량은 스킬의 기본 MP 소모량에 스킬 레벨에 따른 추가 소모량을 더한 값으로 계산된다.
+	 * 
 	 *
-	 * @param hero    전투용 영웅 객체
+	 * @param hero      전투용 영웅 객체
 	 * @param heroSkill 사용하려는 스킬 정보
-	 */	
-	
+	 */
 	public void consumeSkillMp(BattleHeroDTO hero, HeroSkillDTO heroSkill) {
-		int requiredMp = heroSkill.getSkill().getSkillMpCost();
-		hero.setHeroMp(hero.getHeroMp() - requiredMp);
+		hero.setHeroMp(hero.getHeroMp() - heroSkill.getCalculatedMpCost());
 	}
 
 	/**
@@ -226,11 +232,7 @@ public class BattleService {
 	 */
 	public int calculateDefense(int defense, int dice) {
 
-		double multiplier = switch (dice) {
-			case 1 -> 0.7;
-			case 6 -> 1.5;
-			default -> 1.0;
-		};
+		double multiplier = getDiceMultiplier(dice);
 
 		int effectiveDefense = (int) (defense * multiplier);
 
@@ -243,27 +245,84 @@ public class BattleService {
 	 * 공격력 증가, 방어력 증가 아이템은 일시적으로 전투 중에만 적용되며, 전투가 종료되면 원래 상태로 돌아간다.
 	 *
 	 * @param hero 현재 전투 중인 영웅 객체
-	 * @param item 사용한 아이템 객체
-	 * @return BattleHeroDTO 아이템 효과가 반영된 영웅 객체
+	 * @param item 사용한 포션 객체
+	 * @return Map<String, Integer> 사용 성공 시 효과 정보 반환
+	 *         - "hpRecovered" : 회복된 HP 값
+	 *         - "mpRecovered" : 회복된 MP 값
+	 *         - "atkBonus" : 증가한 공격력 값
+	 *         - "defBonus" : 증가한 방어력 값
+	 *         사용 가능한 효과만 key로 포함한다.
+	 *
+	 *         아이템 사용 불가 시 빈 Map 반환
 	 */
-	public BattleHeroDTO useItem(BattleHeroDTO hero, ItemDTO item) {
-		// 현재 로그인 세션 영웅의 기본 HP/MP를 최대값 기준으로 사용한다.
-		// 전투 중 회복 시 최대치를 초과하지 않도록 제한한다.
-		int maxHp = LoginSession.getInstance().getCurrentHero().getHeroHp();
-		int maxMp = LoginSession.getInstance().getCurrentHero().getHeroMp();
+	public Map<String, Integer> useItem(BattleHeroDTO hero, BattlePotionDTO item) throws GameException {
+		Map<String, Integer> effectMap = new HashMap<>();
 
+		if (item.getQuantity() <= 0) {
+			throw new GameException("해당 아이템의 수량이 부족합니다.");
+		}
+
+		HeroDTO loginHero = LoginSession.getInstance().getCurrentHero();
+
+		if (loginHero == null) {
+			throw new GameException("로그인 정보가 없습니다.");
+		}
+
+		int maxHp = loginHero.getHeroHp();
+		int maxMp = loginHero.getHeroMp();
+
+		int finalHp = hero.getHeroHp();
+		int finalMp = hero.getHeroMp();
+
+		// HP 회복 계산
 		if (item.getItemEffectHp() != 0) {
-			int newHp = hero.getHeroHp() + item.getItemEffectHp();
-			hero.setHeroHp(Math.min(newHp, maxHp)); // 최대 HP를 초과하지 않도록 설정
+			if (hero.getHeroHp() < maxHp) {
+				int newHp = hero.getHeroHp() + item.getItemEffectHp();
+				int actualHpRecovered = Math.min(newHp, maxHp) - hero.getHeroHp();
+
+				finalHp = Math.min(newHp, maxHp);
+				effectMap.put("hpRecovered", actualHpRecovered);
+			}
 		}
 
+		// MP 회복 계산
 		if (item.getItemEffectMp() != 0) {
-			int newMp = hero.getHeroMp() + item.getItemEffectMp();
-			hero.setHeroMp(Math.min(newMp, maxMp)); // 최대 MP를 초과하지 않도록 설정
+			if (hero.getHeroMp() < maxMp) {
+				int newMp = hero.getHeroMp() + item.getItemEffectMp();
+				int actualMpRecovered = Math.min(newMp, maxMp) - hero.getHeroMp();
+
+				finalMp = Math.min(newMp, maxMp);
+				effectMap.put("mpRecovered", actualMpRecovered);
+			}
 		}
 
-		// 공격력 증가, 방어력 증가 아이템은 일시적으로 전투 중에만 적용된다.
+		// 공격 버프
+		if (item.getItemAtkBonus() != 0) {
+			effectMap.put("atkBonus", item.getItemAtkBonus());
+		}
 
+		// 방어 버프
+		if (item.getItemDefBonus() != 0) {
+			effectMap.put("defBonus", item.getItemDefBonus());
+		}
+
+		// 적용 가능한 효과가 없으면 종료
+		if (effectMap.isEmpty()) {
+			return effectMap;
+		}
+
+		// DB 차감 먼저
+		try {
+			inventoryService.usePotion(loginHero.getHeroId(), item.getInventoryId());
+		} catch (GameException e) {
+			throw new GameException("아이템 사용 중 오류가 발생했습니다");
+		}
+
+		// 실제 hero 반영 (DB 성공 후)
+		hero.setHeroHp(finalHp);
+		hero.setHeroMp(finalMp);
+
+		// 공격 버프 적용
 		if (item.getItemAtkBonus() != 0) {
 			hero.clearAtkBuff();
 			hero.setTempAtkBonus(item.getItemAtkBonus());
@@ -271,14 +330,15 @@ public class BattleService {
 			hero.setAtkBuffTurn(1);
 		}
 
+		// 방어 버프 적용
 		if (item.getItemDefBonus() != 0) {
-			hero.clearDefBuff(); // 기존 방어 버프 효과 제거
+			hero.clearDefBuff();
 			hero.setTempDefBonus(item.getItemDefBonus());
 			hero.setDefBuffActive(true);
 			hero.setDefBuffTurn(1);
 		}
 
-		return hero;
+		return effectMap;
 	}
 
 	/**
@@ -305,57 +365,211 @@ public class BattleService {
 	 * @return
 	 * @throws GameException
 	 */
-	public List<ReqardResult> reward(MonsterDTO monster) throws GameException {
+	public List<RewardResult> reward(MonsterDTO monster) throws GameException {
 
-		List<ReqardResult> rewardResults = new ArrayList<>();
+		List<RewardResult> rewardResults = new ArrayList<>();
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+		Connection con = null;
 
-		// 보상 처리 전 기본적인 유효성 검사
+		// 보상 처리 전 기본적인 유효성 검사 -----------------------------------------
 		if (monster == null) {
 			throw new GameException("보상 처리할 몬스터 정보가 없습니다.");
 		}
 		if (LoginSession.getInstance().getCurrentHero() == null) {
 			throw new GameException("로그인 정보가 없습니다.");
 		}
-		if(monster.getMonsterRewardExp() < 0 || monster.getMonsterRewardGem() < 0) {
-			throw new GameException("몬스터 보상 정보가 유효하지 않습니다.");
-		}
-		if(monster.getMonsterRewardExp() == 0 && monster.getMonsterRewardGem() == 0) {
-			throw new GameException("몬스터 보상이 존재하지 않습니다.");
-		}
-		if(monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
-			rewardResults.add(ReqardResult.REWARD);
-			hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
-			hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
-		}
-		
-		// 레벨업 여부 계산
-		if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
-			hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
-			rewardResults.add(ReqardResult.MAX_LEVEL);
-		} else {
-			int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER; // 예시: 레벨업에 필요한 경험치 공식
-			boolean levelUp = hero.getHeroExp() >= expForNextLevel;
 
-			if (levelUp) {
-				// 레벨업 후 남은 경험치 계산
-				hero.setHeroLevel(hero.getHeroLevel() + 1);
-				hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
+		// =============== [트랜잭션] 보상 처리 및 레벨업, 업적 진행도 증가 로직 ===============
+		try {
+			con = DBManager.getConnection();
+			con.setAutoCommit(false);
 
-				// HP는 레벨 당 10씩 증가, MP는 레벨 당 5씩 증가
-				hero.setHeroHp(hero.getHeroHp() + 10);
-				hero.setHeroMp(hero.getHeroMp() + 5);
-
-				// 공격력 방어력은 레벨 당 2씩 증가
-				hero.setHeroAttack(hero.getHeroAttack() + 2);
-				hero.setHeroDefense(hero.getHeroDefense() + 2);
+			if (monster.getMonsterRewardExp() > 0 && monster.getMonsterRewardGem() > 0) {
+				rewardResults.add(RewardResult.REWARD);
+				hero.setHeroExp(hero.getHeroExp() + monster.getMonsterRewardExp());
+				hero.setHeroGem(hero.getHeroGem() + monster.getMonsterRewardGem());
 			}
-		}
-		// 영웅 정보 업데이트
-		heroService.updateHero(hero);
-		LoginSession.getInstance().setCurrentHero(hero); // 세션 정보도 업데이트
 
-		// To do : 업적 진행도 증가
+			// 레벨업 여부 계산 ----------------------------------------
+			if (hero.getHeroLevel() >= HERO_MAX_LEVEL) {
+				hero.setHeroExp(0); // 최대 레벨 도달 시 경험치 초기화
+				rewardResults.add(RewardResult.MAX_LEVEL);
+			} else {
+				int expForNextLevel = hero.getHeroLevel() * LEVEL_UP_EXP_MULTIPLIER;
+				boolean levelUp = hero.getHeroExp() >= expForNextLevel;
+
+				if (levelUp) {
+					hero.setHeroLevel(hero.getHeroLevel() + 1);
+					hero.setHeroExp(hero.getHeroExp() - expForNextLevel);
+
+					hero.setHeroHp(hero.getHeroHp() + LEVEL_UP_HP_BONUS);
+					hero.setHeroMp(hero.getHeroMp() + LEVEL_UP_MP_BONUS);
+					hero.setHeroAttack(hero.getHeroAttack() + LEVEL_UP_ATTACK_BONUS);
+					hero.setHeroDefense(hero.getHeroDefense() + LEVEL_UP_DEFENSE_BONUS);
+
+					rewardResults.add(RewardResult.LEVEL_UP);
+				}
+			}
+
+			// 영웅 정보 업데이트 ----------------------------------------
+			heroService.updateHero(con, hero);
+			heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
+
+			// 업적 진행도 증가 로직 ----------------------------------------
+			int stage = monster.getMonsterStage();
+			boolean questUpdated = false;
+
+			List<QuestDTO> questList = questService.selectQuestIng(hero.getHeroId());
+
+			for (QuestDTO quest : questList) {
+				boolean updated = false;
+
+				if (quest.getQuestId() == 1 && stage == 1) {
+					int next = Math.min(quest.getQuestIngProgress() + 1, quest.getQuestTarget());
+					quest.setQuestIngProgress(next);
+					updated = true;
+				}
+
+				if (quest.getQuestId() == 2 && stage == 3) {
+					int next = Math.min(quest.getQuestIngProgress() + 1, quest.getQuestTarget());
+					quest.setQuestIngProgress(next);
+					updated = true;
+				}
+
+				if (quest.getQuestId() == 3 && stage >= 3 && quest.getQuestIngProgress() == 0) {
+					quest.setQuestIngProgress(1);
+					updated = true;
+				}
+
+				if (updated) {
+					questService.updateQuestProgress(con, quest);
+					questUpdated = true;
+				}
+			}
+
+			if (questUpdated) {
+				rewardResults.add(RewardResult.QUEST_PROGRESS);
+			}
+
+			// 현재 진행중인 스테이지보다 높은 스테이지 클리어 시 최대 클리어 스테이지 갱신 ----------------
+			if (stage > hero.getHeroMaxClearStage() && stage <= MAX_CLEAR_STAGE) {
+				hero.setHeroMaxClearStage(stage);
+				heroService.updateClearStage(con, hero.getHeroId(), stage);
+			}
+
+			con.commit();
+			LoginSession.getInstance().setCurrentHero(hero);
+
+		} catch (Exception e) {
+			try {
+				if (con != null) {
+					con.rollback();
+				}
+			} catch (SQLException rollbackEx) {
+				rollbackEx.printStackTrace();
+			}
+			throw new GameException("보상 처리 중 오류가 발생했습니다.");
+		} finally {
+			try {
+				if (con != null) {
+					con.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			DBManager.close(con);
+		}
+		// =============== [트랜잭션] 종료 ===============
+
 		return rewardResults;
+	} // reward 메서드 끝
+
+	/**
+	 * 
+	 * 현재 로그인한 영웅이 보유한 스킬 정보를 조회한다.
+	 * 
+	 * @return
+	 * @throws GameException
+	 */
+	public List<HeroSkillDTO> getHeroSkills() throws GameException {
+		List<HeroSkillDTO> skills = null;
+		try {
+			skills = skillService.selectHeroSkills(LoginSession.getInstance().getCurrentHero().getHeroId());
+		} catch (GameException e) {
+			throw new GameException("스킬 조회 중 오류가 발생했습니다");
+		}
+
+		return skills;
+	}
+
+	/**
+	 * 주사위 결과에 따른 공격력/방어력 보정값을 반환한다.
+	 * - 주사위 결과가 1인 경우, 보정값은 0.7배로 감소한다.
+	 * - 주사위 결과가 6인 경우, 보정값은 1.5배로 증가한다.
+	 * - 그 외의 주사위 결과인 경우, 보정값은 1.0배로 유지된다.
+	 * 
+	 * @param dice
+	 * @return double 주사위 보정값
+	 * @throws GameException 주사위 값이 1~6 범위를 벗어난 경우 예외 발생
+	 */
+	private double getDiceMultiplier(int dice) {
+		return switch (dice) {
+			case 1 -> 0.7;
+			case 6 -> 1.5;
+			default -> 1.0;
+		};
+	}
+
+	/**
+	 * 전투 패배 후 패널티를 적용한다.
+	 * - 현재 경험치의 10%와 현재 젬의 10%를 차감한다.
+	 * - 경험치와 젬은 0 미만으로 내려가지 않는다.
+	 * - 패널티 적용 후 영웅 정보를 갱신한다.
+	 *
+	 * @throws GameException 패널티 적용 중 오류가 발생한 경우
+	 */
+	public void defeatPenalty() throws GameException {
+		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+		Connection con = null;
+
+		if (hero == null) {
+			throw new GameException("로그인 정보가 없습니다.");
+		}
+
+		try {
+			con = DBManager.getConnection();
+			con.setAutoCommit(false);
+
+			int penaltyExp = hero.getHeroExp() / 10;
+			int penaltyGem = hero.getHeroGem() / 10;
+
+			hero.setHeroExp(Math.max(0, hero.getHeroExp() - penaltyExp));
+			hero.setHeroGem(Math.max(0, hero.getHeroGem() - penaltyGem));
+
+			heroService.updateHero(con, hero);
+			heroService.updateHeroGem(con, hero.getHeroId(), hero.getHeroGem());
+
+			con.commit();
+			LoginSession.getInstance().setCurrentHero(hero);
+
+		} catch (Exception e) {
+			try {
+				if (con != null) {
+					con.rollback();
+				}
+			} catch (SQLException rollbackEx) {
+				rollbackEx.printStackTrace();
+			}
+			throw new GameException("패배 패널티 적용 중 오류가 발생했습니다.");
+		} finally {
+			try {
+				if (con != null) {
+					con.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			DBManager.close(con);
+		}
 	}
 }

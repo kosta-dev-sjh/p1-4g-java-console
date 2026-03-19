@@ -136,7 +136,9 @@ public class InventoryView {
 
         try {
             if (item.getItemType().equals("potion")) {
-                controller.usePotion(selected.getInventoryId());
+
+                // controller.usePotion(selected.getInventoryId());
+
                 System.out.println("포션 사용 완료!");
             } else {
                 controller.equipItem(item.getItemId());

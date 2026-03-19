@@ -96,22 +96,32 @@ public class HeroDAOImpl implements HeroDAO {
 
 	@Override
 	public int updateHero(HeroDTO hero) throws SQLException {
-		int result = 0;
 		Connection con = null;
+
+		try {
+			con = DBManager.getConnection();
+			return updateHero(con, hero);
+		} finally {
+			DBManager.close(con);
+		}
+	}
+
+	@Override
+	public int updateHero(Connection con, HeroDTO hero) throws SQLException {
+		int result = 0;
 		PreparedStatement ps = null;
 		String sql = """
-				update hero 
+				update hero
 				set hero_level=?,
 				    hero_exp=?,
 				    hero_hp=?,
 				    hero_mp=?,
 				    hero_attack=?,
-				    hero_defense=? 
+				    hero_defense=?
 				where hero_id=?
 				""";
 
 		try {
-			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, hero.getHeroLevel());
@@ -124,26 +134,36 @@ public class HeroDAOImpl implements HeroDAO {
 
 			result = ps.executeUpdate();
 		} finally {
-			DBManager.close(con, ps);
+			DBManager.close(ps);
 		}
 		return result;
 	}
 
 	@Override
 	public int updateClearStage(int heroId, int stage) throws SQLException {
-		int result = 0;
 		Connection con = null;
+
+		try {
+			con = DBManager.getConnection();
+			return updateClearStage(con, heroId, stage);
+		} finally {
+			DBManager.close(con);
+		}
+	}
+
+	@Override
+	public int updateClearStage(Connection con, int heroId, int stage) throws SQLException {
+		int result = 0;
 		PreparedStatement ps = null;
 		String sql = "update hero set hero_max_clear_stage=? where hero_id=?";
 
 		try {
-			con = DBManager.getConnection();
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, stage);
 			ps.setInt(2, heroId);
 			result = ps.executeUpdate();
 		} finally {
-			DBManager.close(con, ps);
+			DBManager.close(ps);
 		}
 		return result;
 	}
@@ -154,14 +174,14 @@ public class HeroDAOImpl implements HeroDAO {
 
 		try {
 			con = DBManager.getConnection();
-			 return updateHeroGem(con, heroId, gem);
-			 
+			return updateHeroGem(con, heroId, gem);
+
 		} finally {
 			DBManager.close(con);
 		}
 	}
-	
-	
+
+	@Override
 	public int updateHeroGem(Connection con, int heroId, int gem) throws SQLException {
 		int result = 0;
 		PreparedStatement ps = null;
