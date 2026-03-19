@@ -21,8 +21,6 @@ import java.util.List;
  * 최종 수정일 : 
  */
 public class SkillUpgradeView {
-	
-	
 
 	private static final int MP_CONSUMPTION =5 ;
 	private static SkillController skillController = new SkillController();

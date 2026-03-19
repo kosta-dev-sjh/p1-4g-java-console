@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.session.LoginSession;
 
 /**
  * 게임 히어로 정보 뷰
@@ -16,8 +15,8 @@ import com.kosta.console_rpg.session.LoginSession;
  */
 public class skillView {
 
-    private static Scanner sc = new Scanner(System.in);
-    private static SkillController skillController = new SkillController();
+    private Scanner sc = new Scanner(System.in);
+    private SkillController skillController = new SkillController();
     
 	public static void main(String[] args) {
 		skillView view = new skillView();
@@ -25,15 +24,9 @@ public class skillView {
     }
 
 
-    public static void start() {
-    	
-    	if (LoginSession.getInstance().getCurrentHero() == null) {
-    	    System.out.println("로그인이 필요합니다.");
-    	    return;
-    	}
-    	
+    public void start() {
     	while (true) {
-    		 System.out.println(new skillView());
+            System.out.println(this);
 
             String input = sc.nextLine().toUpperCase();
 
@@ -118,8 +111,8 @@ public class skillView {
 	}
 	
 	
-	public static void skillMenu() {
-		int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
+	public void skillMenu() {
+		int heroId = 1;
 
 	    while (true) {
 	        System.out.println("\n===== [ 스킬 메뉴 ] =====");
@@ -169,11 +162,11 @@ public class skillView {
 	        // 3️. 선택한 스킬
 	        HeroSkillDTO selected = skillList.get(choice - 1);
 	        int skillId = selected.getSkill().getSkillId();
-	        
+
 	        // 4️. 강화 실행
 	        try {
                 // 👉 heroId 같이 넘기도록 수정
-                skillController.upgradeHeroSkill(heroId, skillId);
+                skillController.upgradeHeroSkill(skillId);
                 System.out.println("스킬이 강화되었습니다.");
             } catch (Exception e) {
                 System.out.println(e.getMessage());

@@ -7,7 +7,6 @@ import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.*;
 import com.kosta.console_rpg.model.enums.BattleActionType;
 import com.kosta.console_rpg.model.enums.BattleResult;
-import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.FailView;
@@ -71,6 +70,7 @@ public class BattleTest {
                 }
                 case 0 -> {  // 뒤로가기: 아무것도 안하고 종료
                     return;
+
                 }
                 default -> System.out.println("잘못된 입력입니다.");
             }
@@ -422,17 +422,10 @@ public class BattleTest {
 		System.out.println("획득 경험치 : " + monster.getMonsterRewardExp());
 		System.out.println("획득 보석 : " + monster.getMonsterRewardGem());
 
-		List<RewardResult> results = battleController.reward(monster);
+		boolean rewardResult = battleController.reward(monster);
 
-		if (results != null) {
+		if (rewardResult) {
 			System.out.println("보상 및 성장 정보가 반영되었습니다.\n자세한 정보는 캐릭터 정보에서 확인해주세요.");
-			 if (results.contains(RewardResult.FIRST_CLEAR)) {
-		            try {
-		                StoryView.printStageEndStory(monster.getMonsterStage());
-		            } catch (Exception e) {
-		                e.printStackTrace();
-		            }
-		        }
 		} else {
 			System.out.println("보상 처리 실패");
 		}

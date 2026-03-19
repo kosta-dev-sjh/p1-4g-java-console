@@ -12,7 +12,6 @@ import com.kosta.console_rpg.model.dto.MonsterDTO;
 import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.model.enums.BattleActionType;
 import com.kosta.console_rpg.model.enums.BattleResult;
-import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.model.service.BattleService;
 import com.kosta.console_rpg.util.RandomUtil;
 import com.kosta.console_rpg.view.FailView;
@@ -266,13 +265,14 @@ public class BattleController {
 	 * @throws GameException 보상 처리 중 발생할 수 있는 예외
 	 * @return void
 	 */
-	public List<RewardResult> reward(MonsterDTO monster) {
+	public boolean reward(MonsterDTO monster) {
 		try {
-			return battleService.reward(monster);
+			battleService.reward(monster);
+			return true;
 		} catch (GameException e) {
 			FailView.errorMessage(e.getMessage());
 		}
-		return null;
+		return false;
 	}
 
 	/**

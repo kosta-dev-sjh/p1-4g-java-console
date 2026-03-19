@@ -70,7 +70,7 @@ public class SkillService {
      * 스킬 강화 조건 체크 + 강화 실행
      */
     public void upgradeHeroSkill(int heroId, int skillId) throws GameException {
-        try { 	
+        try {
             // 1. 스킬 조회
             HeroSkillDTO heroSkill = skillDao.selectHeroSkill(heroId, skillId);
             if (heroSkill == null) {
@@ -128,7 +128,7 @@ public class SkillService {
             }
 
         } catch (Exception e) {
-            throw new GameException(e.getMessage());
+            throw new GameException("스킬 강화 중 오류가 발생했습니다.");
         }
     }
     
