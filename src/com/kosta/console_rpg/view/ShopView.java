@@ -55,8 +55,7 @@ public class ShopView {
 	    int gem = LoginSession.getInstance()
 	            .getCurrentHero()
 	            .getHeroGem();
-
-	    System.out.println("\n__________________________┌ SHOP BUY ┐__________________________\n");
+	    ConsoleUtils.printTitleBar("SHOP BUY");
 	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
 	    System.out.println("──────────────────────── POTION ────────────────────────\n");
