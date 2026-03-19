@@ -4,6 +4,12 @@ import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 
+import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
+
 /**
  * 게임 메인화면 뷰
  *
@@ -66,9 +72,11 @@ public class MainView {
         sb.append(String.format(" %s \n", center("⚔ BATTLE ⚔", WIDTH - 2)));
         sb.append(String.format(" %-"+WIDTH+"s \n", ""));
         sb.append(String.format(" %s \n", center("Choose your stage to fight", WIDTH)));
+        sb.append(GREEN);
         sb.append(String.format(" %-"+WIDTH+"s \n", ""));
         sb.append(String.format(" %s \n", center("▸[1] 스테이지 진입하기", WIDTH - 3)));
         sb.append(String.format(" %-"+WIDTH+"s \n", ""));
+        sb.append(RESET);
         sb.append(String.format(" %s \n", center("Monsters are waiting for you...", WIDTH)));
         sb.append(String.format(" %-"+WIDTH+"s \n", ""));
 
@@ -76,12 +84,14 @@ public class MainView {
 
         sb.append(String.format(" %-" + WIDTH + "s \n", ""));
         sb.append(String.format(" %-" + WIDTH + "s \n", "  MENU"));
+        sb.append(GREEN);
         sb.append(String.format(" %-" + WIDTH + "s \n", ""));
     	sb.append(String.format(" %-" + (WIDTH-2) + "s \n", String.format("▸ [2] %-13s ▸ [3] %-12s", "상점", "히어로 정보")));
     	sb.append(String.format(" %-" + (WIDTH-2) + "s \n", String.format("▸ [4] %-12s ▸ [5] %-12s", "인벤토리", "업적")));
     	sb.append(String.format(" %-" + (WIDTH-3) + "s \n", String.format("▸ [6] %-12s ▸ [7] %-12s", "로그아웃", "히어로 삭제")));
         sb.append(String.format(" %-" + (WIDTH-3) + "s \n", String.format("▸ [8] %-12s", "프로그램 종료")));
-        sb.append(String.format(" %-" + WIDTH + "s \n", ""));
+        sb.append(String.format(" %-" + WIDTH + "s \n \u001B[97m", ""));
+        sb.append(RESET);
         
         sb.append("║────────────────────────────────────────────────────────────────────║\n");
 

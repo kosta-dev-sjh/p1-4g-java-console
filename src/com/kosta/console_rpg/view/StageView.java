@@ -5,6 +5,11 @@ import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 
+import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
 import static com.kosta.console_rpg.test.BattleTest.startBattle;
 
 /**
@@ -27,40 +32,43 @@ public class StageView {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("_________________________________┌ STAGE SELECT ┐_________________________________\n");
-        System.out.println("[1][Stage 1 - 초록 들판]");
-        System.out.println("[1][Stage: Slime Field]");
-        System.out.println("Monster: 슬라임");
-        System.out.println("Difficulty: ★");
-        //스테이지 클리어 여부 출력
-        if(hero.getHeroMaxClearStage() >=1) {
-            System.out.println("Stage Cleared");
-        }
+        
+        int isStageCleared = hero.getHeroMaxClearStage();
+        String cleared = GREEN + " (Cleared)" + RESET;
+        String message = "";
 
-        // Stage 2
-        System.out.println("[2][Stage 2 - 고블린 동굴]");
-        System.out.println("[2][Stage: Goblin Cave]");
-        System.out.println("Monster: 고블린");
-        System.out.println("Difficulty: ★★");
         //스테이지 클리어 여부 출력
-        if(hero.getHeroMaxClearStage() >=2) {
-            System.out.println("Stage Cleared");
+        if(isStageCleared >= 1) {
+            message = cleared;
         }
-        System.out.println();
+        System.out.println("___________________________┌ STAGE SELECT ┐____________________________\n\n");
+        System.out.println("[1][Stage 1 - 초록 들판]" + message);
+        System.out.println(RED+"    Monster: 슬라임"+RESET);
+        System.out.println("    Difficulty: ★");
+        
+        // Stage 2
+        //스테이지 클리어 여부 출력
+        if(isStageCleared >= 2) {
+            message = cleared;
+        }
+        System.out.println("\n");
+        System.out.println("[2][Stage 2 - 고블린 동굴]" + message);
+        System.out.println(RED+"    Monster: 고블린"+RESET);
+        System.out.println("    Difficulty: ★★");
 
         // Stage 3
-        System.out.println("[3][Stage 3 - 드래곤 레어]");
-        System.out.println("[3][Stage: Dragon Lair]");
-        System.out.println("Monster: 드래곤");
-        System.out.println("Difficulty: ★★★");
         //스테이지 클리어 여부 출력
-        if(hero.getHeroMaxClearStage() >=3) {
-            System.out.println("Stage Cleared");
+        if(isStageCleared >= 3) {
+            message = cleared;
         }
-        System.out.println("────────────────── MENU ──────────────────\n");
-        System.out.println(" [스테이지를 선택하시오]\n");
-        System.out.println(" [0] 뒤로가기\n");
-        System.out.print("선택 ▶ ");
+        System.out.println("\n");
+        System.out.println("[3][Stage 3 - 드래곤 레어]" + message);
+        System.out.println(RED+"    Monster: 드래곤"+RESET);
+        System.out.println("    Difficulty: ★★★");
+        
+        System.out.println("\n────────────────── MENU ──────────────────\n");
+        System.out.println("[0] 뒤로가기\n");
+        System.out.print("선택 ▶ \n");
     }
 
 

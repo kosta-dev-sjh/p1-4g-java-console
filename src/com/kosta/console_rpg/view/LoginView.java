@@ -49,17 +49,26 @@ public class LoginView {
      */
     public static void login() throws GameException {
         System.out.println("─────────────────[ LOGIN ]──────────────────");
+        
+        while(true) {
+        	System.out.print("▸ ID : ");
+            String loginId = InputUtil.inputString();
 
-        System.out.print("▸ ID : ");
-        String loginId = InputUtil.inputString();
+            System.out.print("▸ PW : ");
+            String pwd = InputUtil.inputString();
+            
+            userController.login(loginId, pwd);
 
-        System.out.print("▸ PW : ");
-        String pwd = InputUtil.inputString();
-
-        userController.login(loginId, pwd);
-
+            // 로그인세션에 유저가 있는지 판별하고 없으면 다시
+            HeroDTO user = LoginSession.getInstance().getCurrentHero();
+            if(user != null) {
+            	break;
+            } else {
+            	System.out.println("로그인에 실패하였으니 다시 입력해 주세요.\n");
+            }
+        }
+        	
         HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-
         if (hero != null) {
             System.out.println("현재 캐릭터명 : " + hero.getHeroName());
         } else {

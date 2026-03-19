@@ -23,26 +23,34 @@ public class QuestView {
     static HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
 
-    public static void showQuestLists(int heroId){
-        QuestController questController = new QuestController();
-        questController.selectQuestsByHeroId(heroId);
+    public static void printQuest(){
+        System.out.println("____________________________┌ Quest ┐_______________________________\n\n");
     }
-    public static void selectQuestById( QuestDTO quest){
-        System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
+    
+    public static void selectQuestEnd(List<QuestDTO> questList){
+        System.out.println("\n────────────── COMPLETED ────────────────\n");
+        //업적 이름만 출력
+        questList.stream()
+        	.map(quest -> "□ " + quest.getQuestName())
+        	.forEach(System.out::println);
     }
+
+    
     public static void selectQuestIng(List<QuestDTO> questList){
-        System.out.println("──────────────── IN PROGRESS QUEST ─────────────────");
+        System.out.println("\n\n─────────────── IN PROGRESS ─────────────────\n");
         for (QuestDTO q : questList) {
             System.out.println("▸ " + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
         }
     }
-    public static void selectQuestEnd(List<QuestDTO> questList){
-        System.out.println("──────────────── COMPLETE QUEST ──────────────────");
-        //업적 이름만 출력
-            questList.stream()
-                    .map(quest -> "□ " + quest.getQuestName())
-                    .forEach(System.out::println);
+    
+    public static void printBackToMenu(){
+        System.out.println("\n────────────────── MENU ──────────────────\n");
+        System.out.println("[0] 뒤로가기\n");
+        System.out.print("선택 ▶ \n");
+        InputUtil.backToMenu();
     }
+    
+    
     public static void updateQuestProgress(QuestDTO quest) {
         QuestController questController = new QuestController();
         questController.updateQuestProgress(quest);
@@ -51,16 +59,12 @@ public class QuestView {
         QuestController questController = new QuestController();
         questController.insertQuestInit(heroId);
     }
-
-    public static void printQuest(){
-        System.out.println("____________________________┌ Quest ┐_______________________________\n");
-
-
+    
+    public static void showQuestLists(int heroId){
+        QuestController questController = new QuestController();
+        questController.selectQuestsByHeroId(heroId);
     }
-    public static void printBackToMenu(){
-        System.out.println("────────────────── MENU ──────────────────\n");
-        System.out.println(" [0] 뒤로가기\n");
-        System.out.print("선택 ▶ ");
-        InputUtil.backToMenu();
+    public static void selectQuestById(QuestDTO quest){
+        System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
     }
 }

@@ -68,63 +68,40 @@ public class SkillService {
 
     /**
      * 스킬 강화 조건 체크 + 강화 실행
+     * @throws SQLException 
      */
-    public void upgradeHeroSkill(int heroId, int skillId) throws GameException {
-        try {
-            // 1. 스킬 조회
-            HeroSkillDTO heroSkill = skillDao.selectHeroSkill(heroId, skillId);
-            if (heroSkill == null) {
-                throw new GameException("보유하지 않은 스킬입니다.");
-            }
+    public HeroSkillDTO upgradeHeroSkill(int heroId, int skillId) throws GameException, SQLException {
 
-            int currentLevel = heroSkill.getSkillLevel();
-            int nextLevel = currentLevel + 1;
+        // 1. 스킬 조회
+        HeroSkillDTO hs = skillDao.selectHeroSkill(heroId, skillId);
+        if (hs == null) throw new GameException("보유하지 않은 스킬입니다.");
 
-            // 2. 최대 레벨 체크
-            if (currentLevel >= heroSkill.getSkill().getSkillMaxLevel()) {
-                throw new GameException("이미 최대 레벨입니다.");
-            }
+        int currentLevel = hs.getSkillLevel();
+        int nextLevel = currentLevel + 1;
 
-            // 3. 히어로 조회
-            HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-            if (hero == null) {
-                throw new GameException("히어로 정보가 없습니다.");
-            }
-
-            // 4. 요구 레벨 계산
-            int baseRequiredLevel = heroSkill.getSkill().getSkillRequiredHeroLevel();
-            int requiredLevel = baseRequiredLevel + (nextLevel - 1) * REQUIRED_LEVEL_INCREASE;
-
-            if (hero.getHeroLevel() < requiredLevel) {
-                throw new GameException("히어로 레벨이 부족합니다.");
-            }
-
-            // 5. 강화 비용 계산
-            int baseUpgradeCost = heroSkill.getSkill().getSkillUpgradeCost();
-            int upgradeCost = baseUpgradeCost * currentLevel;
-
-            if (hero.getHeroGem() < upgradeCost) {
-                throw new GameException("젬이 부족합니다.");
-            }
-
-            // 6. 스킬 강화
-            int result = skillDao.upgradeHeroSkill(heroId, skillId);
-            if (result == 0) {
-                throw new GameException("스킬 강화에 실패했습니다.");
-            }
-
-            // 7. 젬 차감
-            int newGem = hero.getHeroGem() - upgradeCost;
-            hero.setHeroGem(newGem);
-
-            int gemResult = heroDao.updateHeroGem(heroId, newGem);
-            if (gemResult == 0) {
-                throw new GameException("젬 차감에 실패했습니다.");
-            }
-
-        } catch (Exception e) {
-            throw new GameException("스킬 강화 중 오류가 발생했습니다.");
+        // 2. 최대 레벨 체크
+        if (currentLevel >= hs.getSkill().getSkillMaxLevel()) {
+            throw new GameException("이미 최대 레벨입니다.");
         }
+
+        // 3. 히어로 조회
+        HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+        if (hero == null) throw new GameException("히어로 정보가 없습니다.");
+
+        // 4. 레벨 요구치 계산
+        int requiredLevel = hs.getSkill().getSkillRequiredHeroLevel() + (nextLevel - 1);
+        if (hero.getHeroLevel() < requiredLevel) {
+            throw new GameException("히어로 레벨이 부족합니다.");
+        }
+
+        // 5. 강화 비용 계산 (DTO 기준으로 통일)
+        int upgradeCost = hs.getSkill().getSkillUpgradeCost() * nextLevel;
+        if (hero.getHeroGem() < upgradeCost) {
+            throw new GameException("젬이 부족합니다.");
+        }
+
+        // 6. 핵심: "레벨만 증가된 DTO 생성"
+        return new HeroSkillDTO(hs.getHeroId(), hs.getSkill(), nextLevel);
     }
     
     /**

@@ -56,12 +56,12 @@ public class SkillController {
 	 * 
 	 */
 	public void upgradeHeroSkill(int skillId) {
-		try {
-			int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
-			skillService.upgradeHeroSkill(heroId, skillId);
-		} catch(GameException e) {
-			FailView.errorMessage(e.getMessage());
-		}
+	    try {
+	        int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
+	        skillService.upgradeHeroSkill(heroId, skillId);
+	    } catch(SQLException | GameException e) {
+	        FailView.errorMessage(e.getMessage());
+	    }
 	}
 	
 	/**
