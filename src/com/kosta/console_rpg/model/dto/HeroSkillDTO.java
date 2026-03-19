@@ -71,9 +71,9 @@ public class HeroSkillDTO {
 	public String toBattleString() {
 		return """
 				%s
-				▸ 레벨 : %d
-				▸ 대미지 : %d
-				▸ MP 소모 : %d
+				   ▸ 레벨 : %d
+				   ▸ 대미지 : %d
+				   ▸ MP 소모 : %d
 				"""
 				.formatted(
 						skill.getSkillName(),

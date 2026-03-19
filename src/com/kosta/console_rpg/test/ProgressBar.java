@@ -4,7 +4,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class ProgressBar {
-    public static void showProgressBar(int length, int interval, String message) {
+    public static void
+    showProgressBar(int length, int interval, String message) {
         char incomplete = '░';
         char complete = '█';
         StringBuilder progress = new StringBuilder();
