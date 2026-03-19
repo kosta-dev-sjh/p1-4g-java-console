@@ -10,6 +10,7 @@ import com.kosta.console_rpg.controller.ShopController;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 
 /**
  * 게임 샵 정보 뷰
