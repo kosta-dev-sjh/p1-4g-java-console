@@ -77,8 +77,8 @@ public class SkillService {
                 throw new GameException("보유하지 않은 스킬입니다.");
             }
 
-            int currentLevel = heroSkill.getSkillLevel();
-            int nextLevel = currentLevel + 1;
+            int currentLevel = heroSkill.getSkillLevel();   //특정스킬의 현재스킬레벨
+            int nextLevel = currentLevel + 1;   //현재 스킬 레벨 +1
 
             // 2. 최대 레벨 체크
             if (currentLevel >= heroSkill.getSkill().getSkillMaxLevel()) {
@@ -92,8 +92,13 @@ public class SkillService {
             }
 
             // 4. 요구 레벨 계산
-            int baseRequiredLevel = heroSkill.getSkill().getSkillRequiredHeroLevel();
-            int requiredLevel = baseRequiredLevel + (nextLevel - 1) * REQUIRED_LEVEL_INCREASE;
+            //int requiredLevel = heroSkill.getSkill().getSkillRequiredHeroLevel();//현재스킬의 요구량
+            //int requiredLevel = baseRequiredLevel + (nextLevel - 1) * REQUIRED_LEVEL_INCREASE; //
+            int requiredLevel = heroSkill.getSkill().getSkillRequiredHeroLevel();
+            if(heroSkill.getSkillLevel() > 1){
+                requiredLevel += 1;
+            }
+
 
             if (hero.getHeroLevel() < requiredLevel) {
                 throw new GameException("히어로 레벨이 부족합니다.");

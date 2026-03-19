@@ -51,6 +51,7 @@ public class BattleTest {
                 case 1 -> {
                     //스테이지 클리어최대치에 따른 스토리 진입
                     if(hero.getHeroMaxClearStage() <= 0) {
+						            StoryView.epilogue();
                         StoryView.stage1Start();	//스토리 시작
                     }
 
@@ -68,7 +69,8 @@ public class BattleTest {
 
                 }
                 case 0 -> {  // 뒤로가기: 아무것도 안하고 종료
-                    break;
+                    return;
+
                 }
                 default -> System.out.println("잘못된 입력입니다.");
             }

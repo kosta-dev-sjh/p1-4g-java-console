@@ -31,9 +31,11 @@ public class mainTest {
                 HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
                 if (!isLogin) {     //로그인 되지않았을경우
-                    System.out.println("▸[1] 회원가입");
-                    System.out.println("▸[2] 로그인");
-                    System.out.println("▸[0] 종료");
+//                    System.out.println("▸[1] 회원가입");
+//                    System.out.println("▸[2] 로그인");
+//                    System.out.println("▸[0] 종료");
+                    StartView startView = new StartView();
+                    startView.start();
                 } else if (hero == null) {  //로그인은 됐지만, 아직 히어로 생성은 하지않은 경우
                     System.out.println("▸[1] 로그아웃");
                     System.out.println("▸[2] 히어로 생성");
