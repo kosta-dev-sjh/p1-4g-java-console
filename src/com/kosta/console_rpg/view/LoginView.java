@@ -48,10 +48,13 @@ public class LoginView {
      * @throws GameException 입력 또는 처리 중 오류 발생 시
      */
     public static void login() throws GameException {
+        HeroDTO hero = null;
+
         System.out.println("─────────────────[ LOGIN ]──────────────────");
         //HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
-        while(true) {
+        while (true) {
+
             System.out.print("▸ ID : ");
             String loginId = InputUtil.inputString();
 
@@ -60,28 +63,27 @@ public class LoginView {
 
             userController.login(loginId, pwd);
 
-            // 로그인 성공 여부 확인
-            HeroDTO user = LoginSession.getInstance().getCurrentHero();
-            if (user != null) {
-                break;
-            } else {
-                System.out.println("로그인에 실패하였으니 다시 입력해 주세요. \n");
-            }
-        }
-            HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+            UserDTO user = LoginSession.getInstance().getCurrentUser();
+            hero = LoginSession.getInstance().getCurrentHero();
 
-            if (hero != null) {
-                System.out.println("현재 캐릭터명 : " + hero.getHeroName());
-            } else {
+
+            if (user == null) {
+                System.out.println("로그인 실패! 다시 시도하세요.");
+                continue;
+            }
+
+
+            if (hero == null) {
                 System.out.println("히어로 정보가 없습니다.");
                 createHeroTest();
+                continue;
             }
 
 
-
-        System.out.println("현재 로그인 유저 : " + LoginSession.getInstance().getCurrentUser().getUserName());
-
-        System.out.println("──────────────────────────────────────────\n\n");
+            System.out.println("현재 캐릭터명 : " + hero.getHeroName());
+            System.out.println("현재 로그인 유저 : " + user.getUserName());
+            break;
+        }
     }
 
     /**

@@ -475,7 +475,7 @@ public class BattleTest {
 		List<RewardResult> results = battleController.reward(monster);
 
 		if (results != null) {
-			System.out.println("보상 및 성장 정보가 반영되었습니다.\n자세한 정보는 캐릭터 정보에서 확인해주세요.");
+			System.out.println("   보상 및 성장 정보가 반영되었습니다.\n   자세한 정보는 캐릭터 정보에서 확인해주세요.");
 			 if (results.contains(RewardResult.FIRST_CLEAR)) {
 		            try {
 		                StoryView.printStageEndStory(monster.getMonsterStage());
