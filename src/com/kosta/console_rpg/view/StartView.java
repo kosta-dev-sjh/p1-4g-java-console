@@ -1,5 +1,11 @@
 package com.kosta.console_rpg.view;
 
+import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
+
 /**
  * 게임 시작 뷰
  *
@@ -23,37 +29,37 @@ public class StartView {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-
-        sb.append("╔════════════════════════════════════════════════════════╗\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║    ███████   ██╗   ██╗  ███████╗   ██╗       ██╗       ║\n");
-        sb.append("║    ██╔════╝  ██║   ██║  ██╔════╝   ██║       ██║       ║\n");
-        sb.append("║    ███████   ████████║  █████╗     ██║       ██║       ║\n");
-        sb.append("║    ╚════██║  ██╔═══██║  ██╔══╝     ██║       ██║       ║\n");
-        sb.append("║    ███████║  ██║   ██║  █████████╗ ███████╗  ███████╗  ║\n");
-        sb.append("║    ╚══════╝  ╚═╝   ╚═╝  ╚════════╝ ╚══════╝  ╚══════╝  ║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║                ██╗   ██╗ ███████╗ ██████╗   ██████╗    ║\n");
-        sb.append("║                ██║   ██║ ██╔════╝ ██╔══██╗ ██╔═══██╗   ║\n");
-        sb.append("║                ████████║ █████╗   ██████╔╝ ██║   ██║   ║\n");
-        sb.append("║                ██╔═══██║ ██╔══╝   ██╔══██╗ ██║   ██║   ║\n");
-        sb.append("║                ██║   ██║ ███████╗ ██║  ██║ ╚██████╔╝   ║\n");
-        sb.append("║                ╚═╝   ╚═╝ ╚══════╝ ╚═╝  ╚═╝  ╚═════╝    ║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║              A Terminal Adventure RPG                  ║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║────────────────────────────────────────────────────────║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║             [1]  SIGN UP                               ║\n");
-        sb.append("║             [2]  LOGIN                                 ║\n");
-        sb.append("║             [3]  EXIT                                  ║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║────────────────────────────────────────────────────────║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("║          Press number to begin your adventure...       ║\n");
-        sb.append("║                                                        ║\n");
-        sb.append("╚════════════════════════════════════════════════════════╝\n");
-	    sb.append(" 선택 ▶ ");
+        sb.append(GREEN);
+        sb.append("╔══════════════════════════════════════════════════════════╗\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║    ███████   ██╗   ██╗  ███████╗   ██╗       ██╗         ║\n");
+        sb.append("║    ██╔════╝  ██║   ██║  ██╔════╝   ██║       ██║         ║\n");
+        sb.append("║    ███████   ████████║  █████╗     ██║       ██║         ║\n");
+        sb.append("║    ╚════██║  ██╔═══██║  ██╔══╝     ██║       ██║         ║\n");
+        sb.append("║    ███████║  ██║   ██║  ████████╗  ███████╗  ███████╗    ║\n");
+        sb.append("║    ╚══════╝  ╚═╝   ╚═╝  ╚═══════╝  ╚══════╝  ╚══════╝    ║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║                ██╗   ██╗ ███████╗  ██████╗   ██████╗     ║\n");
+        sb.append("║                ██║   ██║ ██╔════╝  ██╔══██╗ ██╔═══██╗    ║\n");
+        sb.append("║                ████████║ █████╗    ██████╔╝ ██║   ██║    ║\n");
+        sb.append("║                ██╔═══██║ ██╔══╝    ██╔══██╗ ██║   ██║    ║\n");
+        sb.append("║                ██║   ██║ ████████╗ ██║  ██║ ╚██████╔╝    ║\n");
+        sb.append("║                ╚═╝   ╚═╝ ╚═══════╝ ╚═╝  ╚═╝  ╚═════╝     ║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║              A Terminal Adventure RPG                    ║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║──────────────────────────────────────────────────────────║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║             [1]  SIGN UP                                 ║\n");
+        sb.append("║             [2]  LOGIN                                   ║\n");
+        sb.append("║             [3]  EXIT                                    ║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║──────────────────────────────────────────────────────────║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("║          Press number to begin your adventure...         ║\n");
+        sb.append("║                                                          ║\n");
+        sb.append("╚══════════════════════════════════════════════════════════╝\n");
+        sb.append(RESET);
 
         return sb.toString();
     }

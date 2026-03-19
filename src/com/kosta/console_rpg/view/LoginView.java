@@ -50,13 +50,23 @@ public class LoginView {
     public static void login() throws GameException {
         System.out.println("─────────────────[ LOGIN ]──────────────────");
 
-        System.out.print("▸ ID : ");
-        String loginId = InputUtil.inputString();
+        while(true) {
+        	System.out.print("▸ ID : ");
+            String loginId = InputUtil.inputString();
 
-        System.out.print("▸ PW : ");
-        String pwd = InputUtil.inputString();
+            System.out.print("▸ PW : ");
+            String pwd = InputUtil.inputString();
 
-        userController.login(loginId, pwd);
+            userController.login(loginId, pwd);
+            
+            // 로그인 성공 여부 확인
+            HeroDTO user = LoginSession.getInstance().getCurrentHero();
+            if(user != null) {
+            	break;
+            }else {
+            	System.out.println("로그인에 실패하였으니 다시 입력해 주세요. \n");
+            }
+        }
 
         HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
