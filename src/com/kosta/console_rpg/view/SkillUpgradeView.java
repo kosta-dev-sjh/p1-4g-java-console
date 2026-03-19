@@ -20,115 +20,122 @@ import java.util.List;
  */
 public class SkillUpgradeView {
 
-    public void start() {
-        System.out.println(this);
-		System.out.print("선택 ▶ ");
-		try {
-			String menu = InputUtil.inputString();
-			switch (menu) {
-				case "0" -> {
-					break;
-				}
-				default -> System.out.println("잘못된 입력입니다.");
-			}
-		} catch (GameException e) {
-			System.out.println(e.getMessage());
+	private static SkillController skillController = new SkillController();
+
+	public static void start() {
+
+		if (LoginSession.getInstance().getCurrentHero() == null) {
+			System.out.println("로그인이 필요합니다.");
+			return;
 		}
-    }
-	public void upgrade() {
-		System.out.println("──────────────── SKILL UPGRADE ─────────────────");
-		System.out.println("강화할 스킬의 숫자를 입력해주세요");
-		try {
-			int menu = InputUtil.inputInt();
-			switch (menu) {
-				//case 1 ->
-				//case 2 ->
-				//case 3 ->
-				default -> System.out.println("잘못된 입력입니다.");
+
+		while (true) {
+			System.out.println(new SkillUpgradeView());
+			System.out.print("선택 ▶ ");
+
+			try {
+				int choice = InputUtil.inputInt();
+
+				if (choice == 0) {
+					System.out.println("뒤로가기");
+					return;
+				}
+
+				List<HeroSkillDTO> skillList = skillController.selectHeroSkills();
+
+				if (choice < 1 || choice > skillList.size()) {
+					System.out.println("잘못된 입력입니다.");
+					continue;
+				}
+
+				HeroSkillDTO selected = skillList.get(choice - 1);
+				int skillId = selected.getSkill().getSkillId();
+				int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
+
+				// Y/N 확인
+				System.out.println("\n▶ 스킬을 강화하시겠습니까?");
+				System.out.print("[Y] YES  [N] NO ▶ ");
+
+				String confirm = InputUtil.inputString().trim().toUpperCase();
+
+				if (!confirm.equals("Y")) {
+					System.out.println("취소되었습니다.");
+					continue;
+				}
+
+				// 강화 실행
+				skillController.upgradeHeroSkill(skillId);
+
+				// 최신 데이터 다시 조회
+				List<HeroSkillDTO> updatedList = skillController.selectHeroSkills();
+				HeroSkillDTO updatedSkill = updatedList.get(choice - 1);
+
+				int newLevel = updatedSkill.getSkillLevel();
+				int currentGem = LoginSession.getInstance().getCurrentHero().getHeroGem();
+
+				// 결과 출력
+				System.out.println("\n현재 " + updatedSkill.getSkill().getSkillName() + " 레벨은 " + newLevel + "입니다.");
+				System.err.println();
+				System.out.println("현재 보유 Gem : " + currentGem);
+
+			} catch (GameException e) {
+				System.out.println(e.getMessage());
 			}
-		} catch (GameException e) {
-			System.out.println(e.getMessage());
 		}
 	}
-    
+
 	@Override
 	public String toString() {
+
 		HeroDTO hero = LoginSession.getInstance().getCurrentHero();
-		SkillController skillController = new SkillController();
-
 		List<HeroSkillDTO> skillList = skillController.selectHeroSkills();
-	    StringBuilder sb = new StringBuilder();
 
-	    // 예시 데이터 (실제로는 필드로 두면 된다)
-	    String name = "히어로짱";
-	    int gem = 128;
+		StringBuilder sb = new StringBuilder();
 
-	    int level = 7;
-	    int hp = 95;
-	    int maxHp = 120;
-	    int mp = 40;
-	    int maxMp = 60;
-	    int attack = 18;
-	    int defense = 12;
-	    int exp = 140;
-	    int maxExp = 200;
-
-	    String skill1 = "Fire Slash";
-	    int skill1Lv = 2;
-	    String skill1Desc = "적에게 강한 화염 공격";
-	    int skill1Mp = 10;
-
-	    String skill2 = "Guard Break";
-	    int skill2Lv = 1;
-	    String skill2Desc = "적 방어력 감소 공격";
-	    int skill2Mp = 8;
-
-	    String skill3 = "Healing Light";
-	    int skill3Lv = 1;
-	    String skill3Desc = "HP 회복";
-	    int skill3Mp = 12;
-
-	    sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
-	    sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
-	    sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));
+		sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
+		sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
+		sb.append(String.format(" 현재 Level : %d\n", hero.getHeroLevel()));
+		sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));
 
 
-		sb.append("──────────────── SKILL INFO ─────────────────\n\n");
+		sb.append("──────────────── SKILL UPGRADE ─────────────────\n\n");
 
 		for (int i = 0; i < 3; i++) {
 			HeroSkillDTO skill = skillList.get(i);
+			int upgradeCost = skillList.get(i).getSkill().getSkillUpgradeCost() * skill.getSkillLevel();
+			int requiredLevel = skill.getSkill().getSkillRequiredHeroLevel();
 			sb.append(String.format(" [%d] %s\n", i+1,skillList.get(i).getSkill().getSkillName()));
 			sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(i).getSkillLevel()));
 			sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(i).getSkill().getSkillDamage()));
 			sb.append(String.format("    ▸ MP 소모 : %d\n", skillList.get(i).getSkill().getSkillMpCost()));
-			if (skill.getSkillLevel() <= 2) {
-				int upgradeCost = skill.getSkill().getSkillUpgradeCost() * skill.getSkillLevel();
-				sb.append(String.format("    ▸ 스킬 강화 비용: %d\n",  upgradeCost));
+
+			if ( skillList.get(i).getSkillLevel() == 2) {
+				requiredLevel +=1;
+
+				sb.append(String.format("    ▸ 요구 레벨 : %d\n",requiredLevel));
+				sb.append("    --------------\n");
+				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n",  upgradeCost));
+				sb.append("\n\n");
 			} else if (skill.getSkillLevel() == 3) {
-				sb.append(String.format("스킬: 강화 불가\n"));
+				sb.append(String.format("    ▸ SKILL MASTERED\n"));
+				sb.append("\n\n");
+			}
+			else{
+				sb.append(String.format("    ▸ 요구 레벨 : %d\n",requiredLevel));
+				sb.append("    --------------\n");
+				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n",  upgradeCost));
+				sb.append("\n\n");
 			}
 		}
 
-	    sb.append("────────────────── MENU ──────────────────\n\n");
-		sb.append(" [U] Upgrade \n");
-	    sb.append(" [0] Main\n\n");
-	    //sb.append("선택 ▶ ");
+		sb.append("────────────────── MENU ──────────────────\n\n");
+		sb.append(" [번호 입력] 스킬 강화\n");
+		sb.append(" [0] 뒤로가기\n\n");
+		//sb.append("선택 ▶ ");
 
 
 
-        return sb.toString();
+		return sb.toString();
 	}
-	
-
-	public static void createHeroView() {
-		
-	}
-	
-	public static void showHeroInfo() {
-
-    }
-	
-
-
 
 }
