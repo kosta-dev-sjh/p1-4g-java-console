@@ -51,7 +51,7 @@ public class BattleTest {
                 case 1 -> {
                     //스테이지 클리어최대치에 따른 스토리 진입
                     if(hero.getHeroMaxClearStage() <= 0) {
-						StoryView.epilogue();
+						            StoryView.epilogue();
                         StoryView.stage1Start();	//스토리 시작
                     }
 
