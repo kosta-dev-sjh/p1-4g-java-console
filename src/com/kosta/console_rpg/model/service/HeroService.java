@@ -24,8 +24,6 @@ public class HeroService {
 
 	private final QuestService questService = new QuestService();
 	private final SkillController skillController = new SkillController();
-	private final SkillService skillService = new SkillService();
-	private final InventoryService inventoryService = new InventoryService();
 
 	/**
 	 * 신규 히어로를 생성하고 로그인 세션에 저장한다.
@@ -67,14 +65,11 @@ public class HeroService {
 		try {
 			// 삭제를 위한 업적 삭제(삭제하지 않으면 종속 되있어서 삭제 불가)
 			questService.deleteQuest(heroId);
-			skillService.deleteHeroSkills(heroId);
-			inventoryService.deleteInventory(heroId);
+
 			int result = heroDao.deleteHero(heroId);
 
 			if (result == 0) {
-
 				throw new GameException("캐릭터 삭제에 실패했습니다.");
-
 			}
 
 		}  catch (SQLException e) {

@@ -52,7 +52,5 @@ public interface InventoryDAO {
 	 * 인벤토리에 아이템 등록
 	 */
 	void insertItem(int heroId, int itemId) throws GameException;
-
-	void deleteInventory(int heroId)throws GameException;
 	
 }
