@@ -2,7 +2,7 @@ package com.kosta.console_rpg.test;
 
 public class ConsoleEffectTest {
 
-	public static final String RESET = "\u001B[0m";
+	public static final String RESET = "\u001B[97m";
 	//public static final String RED = "\u001B[31m";
 	public static final String RED = "\u001B[38;5;203m";
 	public static final String BLACK = "\u001B[30m";

@@ -173,7 +173,7 @@ public class skillView {
 	        // 4️. 강화 실행
 	        try {
                 // 👉 heroId 같이 넘기도록 수정
-                skillController.upgradeHeroSkill(heroId, skillId);
+                skillController.upgradeHeroSkill(skillId);
                 System.out.println("스킬이 강화되었습니다.");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
