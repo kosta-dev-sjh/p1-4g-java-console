@@ -391,4 +391,22 @@ public class InventoryDAOImpl implements InventoryDAO {
 		return potionList;
 	}
 
+	@Override
+	public void deleteInventory(int heroId) throws GameException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "delete from inventory where fk_hero_id=?";
+
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, heroId);
+
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			DBManager.close(con, ps);
+		}
+	}
 }

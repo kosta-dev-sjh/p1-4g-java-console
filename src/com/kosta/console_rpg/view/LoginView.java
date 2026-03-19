@@ -48,36 +48,41 @@ public class LoginView {
      * @throws GameException 입력 또는 처리 중 오류 발생 시
      */
     public static void login() throws GameException {
-        System.out.println("─────────────────[ LOGIN ]──────────────────");
-        //HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+        HeroDTO hero = null;
 
-        while(true) {
-            System.out.print("▸ ID : ");
+        System.out.println("─────────────────[ LOGIN ]──────────────────");
+
+        while (true) {
+
+            System.out.print("아이디 입력 : ");
             String loginId = InputUtil.inputString();
 
-            System.out.print("▸ PW : ");
+            System.out.print("비밀번호 입력 : ");
             String pwd = InputUtil.inputString();
 
             userController.login(loginId, pwd);
 
-            // 로그인 성공 여부 확인
-            HeroDTO user = LoginSession.getInstance().getCurrentHero();
-            if (user != null) {
-                break;
-            } else {
-                System.out.println("로그인에 실패하였으니 다시 입력해 주세요. \n");
-            }
-        }
-            HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+            UserDTO user = LoginSession.getInstance().getCurrentUser();
+            hero = LoginSession.getInstance().getCurrentHero();
 
-            if (hero != null) {
-                System.out.println("현재 캐릭터명 : " + hero.getHeroName());
-            } else {
+            //  로그인 실패
+            if (user == null) {
+                System.out.println("로그인 실패! 다시 시도하세요.");
+                continue;
+            }
+
+            //  로그인 성공 + hero 없음
+            if (hero == null) {
                 System.out.println("히어로 정보가 없습니다.");
                 createHeroTest();
+                continue;
             }
 
-
+            //  로그인 성공 + hero 있음
+            System.out.println("현재 캐릭터명 : " + hero.getHeroName());
+            System.out.println("현재 로그인 유저 : " + user.getUserName());
+            break;
+        }
 
         System.out.println("현재 로그인 유저 : " + LoginSession.getInstance().getCurrentUser().getUserName());
 

@@ -63,9 +63,12 @@ public class HeroService {
 	 */
 	public void deleteHero(int heroId) throws GameException {
 		try {
+			InventoryService inventoryService = new InventoryService();
+			SkillService skillService = new SkillService();
 			// 삭제를 위한 업적 삭제(삭제하지 않으면 종속 되있어서 삭제 불가)
 			questService.deleteQuest(heroId);
-
+			inventoryService.deleteInventory(heroId);
+			skillService.deleteHeroSkills(heroId);
 			int result = heroDao.deleteHero(heroId);
 
 			if (result == 0) {

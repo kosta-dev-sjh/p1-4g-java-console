@@ -100,15 +100,15 @@ public class HeroView {
 
 	    sb.append(String.format(" [1] %s\n", skillList.get(0).getSkill().getSkillName()));
 	    sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(0).getSkillLevel()));
-	    sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(0).getSkill().getSkillDamage()));
+	    sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(0).getCalculatedDamage()));
 	    sb.append(String.format("    ▸ MP 소모 : %d\n\n", skillList.get(0).getCalculatedMpCost()));
 	    sb.append(String.format(" [2] %s\n", skillList.get(1).getSkill().getSkillName()));
 		sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(1).getSkillLevel()));
-		sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(1).getSkill().getSkillDamage()));
+		sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(1).getCalculatedDamage()));
 		sb.append(String.format("    ▸ MP 소모 : %d\n\n", skillList.get(1).getCalculatedMpCost()));
 	    sb.append(String.format(" [3] %s\n",skillList.get(2).getSkill().getSkillName()));
 		sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(2).getSkillLevel()));
-		sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(2).getSkill().getSkillDamage()));
+		sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(2).getCalculatedDamage()));
 		sb.append(String.format("    ▸ MP 소모 : %d\n\n", skillList.get(2).getCalculatedMpCost()));
 
 	    sb.append("────────────────── MENU ──────────────────\n\n");
