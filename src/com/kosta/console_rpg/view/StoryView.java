@@ -101,11 +101,11 @@ public class StoryView {
         ConsoleEffectTest.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
-        sb.append(String.format("세계의 끝, 불과 용암이 흐르는 검은 산 정상.\n", heroName));
+        sb.append(String.format("세계의 끝, 불과 용암이 흐르는 검은 산 정상.\n"));
         sb.append(String.format("%s — 드래곤레어 앞에 섰을 때, 외투는 너덜너덜했고 검에는 수십 번의 전투 흔적이 새겨져 있었다. \n", heroName));
         sb.append(String.format("굴 안에서 뜨거운 바람이 터져나왔다.\n"));
         sb.append(String.format("비늘 하나하나가 흑요석처럼 빛나는 드래곤 이그나르가 날개를 펼치자 하늘이 가려졌다.\n"));
-        sb.append(String.format("그러나 %s — 뒷걸음치지 않았다. \n"));
+        sb.append(String.format("그러나 %s — 뒷걸음치지 않았다. \n", heroName));
         sb.append(String.format("오히려 한 걸음 더 나아갔다.\n"));
 
         String story = sb.toString();
@@ -130,7 +130,9 @@ public class StoryView {
 
         String story = sb.toString();
         ConsoleEffectTest.slowPrint(story,30);
-
+        
+        // 마지막 엔딩 호출
+        end();
     }
 
     public static void end() throws Exception {
@@ -142,8 +144,8 @@ public class StoryView {
 
         sb.append(String.format("아르테리아에 종이 울렸다.\n"));
         sb.append(String.format("왕국의 모든 이들이 거리로 쏟아져 나와 하늘을 올려다보았고,"));
-        sb.append(String.format("드래곤레어가 있던 검은 산에서 뻗어나온 빛이 초원으로, 동굴로, 마을 골목골목까지 퍼져나갔다.\n", heroName));
-        sb.append(String.format("%s — 왕궁이 아닌 마을로 돌아갔다. \n"));
+        sb.append(String.format("드래곤레어가 있던 검은 산에서 뻗어나온 빛이 초원으로, 동굴로, 마을 골목골목까지 퍼져나갔다.\n"));
+        sb.append(String.format("%s — 왕궁이 아닌 마을로 돌아갔다. \n", heroName));
         sb.append(String.format("왕관도, 훈장도 원하지 않았다. \n"));
         sb.append(String.format("그저 낡은 검을 문 앞에 세워두고 내일의 아침을 기다렸다.\n"));
         sb.append(String.format("그의 이름은 세월이 흘러 전설이 되었다.\n"));
@@ -154,7 +156,15 @@ public class StoryView {
 
         String story = sb.toString();
         ConsoleEffectTest.slowPrint(story,30);
-
+        
+    }
+    
+    public static void printStageEndStory(int stage) throws Exception {
+        switch (stage) {
+            case 1 -> stage1End();
+            case 2 -> stage2End();
+            case 3 -> stage3End();
+        }
     }
 
 }

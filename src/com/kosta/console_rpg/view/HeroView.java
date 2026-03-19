@@ -30,7 +30,7 @@ public class HeroView {
 
     public void start() {
 		SkillUpgradeView sv = new SkillUpgradeView();
-        System.out.println(this);
+		System.out.println(this);
 		System.out.print("선택 ▶ ");
 		try {
 			String menu = InputUtil.inputString();
@@ -93,7 +93,7 @@ public class HeroView {
 	    sb.append(String.format(" [2] HP   : %d / %d\n", hero.getHeroHp(), hero.getHeroHp()));
 	    sb.append(String.format(" [3] MP   : %d / %d\n", hero.getHeroMp(), hero.getHeroMp()));
 	    sb.append(String.format(" [4] 공격력 : %d\n", hero.getHeroAttack()));
-	    sb.append(String.format(" [5] 방어력 : %d\n", hero.getHeroId()));
+	    sb.append(String.format(" [5] 방어력 : %d\n", hero.getHeroDefense()));
 	    sb.append(String.format(" [6] 경험치 : %d / %d\n\n", hero.getHeroExp(), hero.getHeroLevel()*100));	//max경험치
 
 		sb.append("──────────────── SKILL INFO ─────────────────\n\n");
@@ -118,17 +118,4 @@ public class HeroView {
 
         return sb.toString();
 	}
-	
-
-	public static void createHeroView() {
-		
-	}
-	
-	public static void showHeroInfo() {
-
-    }
-	
-
-
-
 }

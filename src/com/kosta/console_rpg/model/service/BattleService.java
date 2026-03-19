@@ -417,6 +417,7 @@ public class BattleService {
 
 			// 업적 진행도 증가 로직 ----------------------------------------
 			int stage = monster.getMonsterStage();
+			boolean isFirstClear = stage > hero.getHeroMaxClearStage();
 			boolean questUpdated = false;
 
 			List<QuestDTO> questList = questService.selectQuestIng(hero.getHeroId());
@@ -449,6 +450,10 @@ public class BattleService {
 
 			if (questUpdated) {
 				rewardResults.add(RewardResult.QUEST_PROGRESS);
+			}
+			
+			if (isFirstClear) {
+			    rewardResults.add(RewardResult.FIRST_CLEAR);
 			}
 
 			// 현재 진행중인 스테이지보다 높은 스테이지 클리어 시 최대 클리어 스테이지 갱신 ----------------
@@ -483,6 +488,22 @@ public class BattleService {
 
 		return rewardResults;
 	} // reward 메서드 끝
+	
+	/**
+	 * 해당 스테이지를 최초 클리어했는지 여부 반환
+	 *
+	 * @param stage 현재 클리어한 스테이지
+	 * @return true = 최초 클리어, false = 이미 클리어한 스테이지
+	 */
+	public boolean isFirstClear(int stage) throws GameException {
+	    HeroDTO hero = LoginSession.getInstance().getCurrentHero();
+
+	    if (hero == null) {
+	        throw new GameException("로그인 정보가 없습니다.");
+	    }
+
+	    return stage > hero.getHeroMaxClearStage();
+	}
 
 	/**
 	 * 

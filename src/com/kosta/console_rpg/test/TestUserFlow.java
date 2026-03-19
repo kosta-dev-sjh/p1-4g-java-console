@@ -7,8 +7,11 @@ import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.UserDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
+import com.kosta.console_rpg.view.HeroView;
 import com.kosta.console_rpg.view.InventoryView;
 import com.kosta.console_rpg.view.ShopView;
+import com.kosta.console_rpg.view.SkillUpgradeView;
+import com.kosta.console_rpg.view.skillView;
 
 /**
  * 로그인 및 회원가입에 대한 플로우 추적용 테스트 뷰
@@ -220,8 +223,14 @@ public class TestUserFlow {
 //		System.out.println("상점 테스트");
 //		ShopView.showShop();
 		
-		System.out.println("인벤토리 테스트");
-		InventoryView.start();
+//		System.out.println("인벤토리 테스트");
+//		InventoryView.start();
+		
+		System.out.println("스킬강화 테스트");
+		HeroView heroView = new HeroView();
+		//skillView.start();
+		heroView.start();
+		//SkillUpgradeView.start();
 		
 	}
 

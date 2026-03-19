@@ -23,12 +23,12 @@ public class ShopView {
 	private static ShopController shopController = new ShopController();
 	private static	InventoryController inventoryController = new InventoryController();
 	
-	public static void showShop() {
+	public void showShop() {
 		 Scanner sc = new Scanner(System.in);
 		 ShopView view = new ShopView();
 		 
 		    while (true) {
-		    	System.out.print(view); 
+		    	System.out.print(this); 
 		        int menu = sc.nextInt();
 
 		        switch (menu) {
