@@ -46,6 +46,11 @@ public class ShopService {
 
 	        //️ 현재 Gem 조회
 	        int gem = LoginSession.getInstance().getCurrentHero().getHeroGem();
+	        
+	     // 오버플로우 방지 
+	        if (gem > Integer.MAX_VALUE - price) {
+	            throw new GameException("Gem 최대치를 초과했습니다.");
+	        }
 
 	        // Gem 부족 체크
 	        if (gem < price) {
@@ -61,10 +66,18 @@ public class ShopService {
 
 	        con.commit(); //성공 시 commit
 
+	    } catch (GameException e) {
+
+	        try {
+	            con.rollback();
+	        } catch (Exception ex) {}
+
+	        throw e; 
+
 	    } catch (Exception e) {
 
 	        try {
-	            con.rollback(); //실패 시 rollback
+	            con.rollback();
 	        } catch (Exception ex) {}
 
 	        throw new GameException("아이템 구매 실패");
@@ -96,7 +109,12 @@ public class ShopService {
 	        //️ 현재 Gem 조회
 	        int gem = LoginSession.getInstance().getCurrentHero().getHeroGem();
 	        
-	        // 인벤토리 삭제
+	        // 오버플로우 방지 
+	        if (gem > Integer.MAX_VALUE - price) {
+	            throw new GameException("Gem 최대치를 초과했습니다.");
+	        }
+	        
+	        // 인벤토리 감소
 	        shopDAO.sellShopItem(con, heroId, itemId);
 
 	        // Gem 증가
