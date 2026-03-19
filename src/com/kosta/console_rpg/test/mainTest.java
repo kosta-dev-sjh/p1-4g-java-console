@@ -85,7 +85,7 @@ public class mainTest {
                         case 6 -> logout();
                         case 7 -> deleteHeroTest();
 
-                        case 0 -> {
+                        case 8 -> {
                             System.out.println("종료합니다.");
                             return;
                         }
