@@ -10,6 +10,8 @@ import com.kosta.console_rpg.util.InputUtil;
 
 import java.util.List;
 
+
+
 /**
  * 게임 히어로 정보 뷰
  *
@@ -20,6 +22,7 @@ import java.util.List;
  */
 public class SkillUpgradeView {
 
+	private static final int MP_CONSUMPTION =5 ;
 	private static SkillController skillController = new SkillController();
 
 	public static void start() {
@@ -104,10 +107,11 @@ public class SkillUpgradeView {
 			HeroSkillDTO skill = skillList.get(i);
 			int upgradeCost = skillList.get(i).getSkill().getSkillUpgradeCost() * skill.getSkillLevel();
 			int requiredLevel = skill.getSkill().getSkillRequiredHeroLevel();
+
 			sb.append(String.format(" [%d] %s\n", i+1,skillList.get(i).getSkill().getSkillName()));
 			sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(i).getSkillLevel()));
 			sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(i).getSkill().getSkillDamage()));
-			sb.append(String.format("    ▸ MP 소모 : %d\n", skillList.get(i).getSkill().getSkillMpCost()));
+			sb.append(String.format("    ▸ MP 소모 : %d\n", skill.getCalculatedMpCost()));
 
 			if ( skillList.get(i).getSkillLevel() == 2) {
 				requiredLevel +=1;
