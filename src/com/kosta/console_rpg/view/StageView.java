@@ -36,6 +36,7 @@ public class StageView {
         if(hero.getHeroMaxClearStage() >=1) {
             System.out.println("Stage Cleared");
         }
+        System.out.println();
 
         // Stage 2
         System.out.println("[2][Stage 2 - 고블린 동굴]");

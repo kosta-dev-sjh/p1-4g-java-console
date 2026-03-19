@@ -64,7 +64,7 @@ public class BattleTest {
                 }
                 case 3 -> {
                     if(hero.getHeroMaxClearStage() <= 2) {
-                        StoryView.stage2Start();
+                        StoryView.stage3Start();
                     }
 
                 }
