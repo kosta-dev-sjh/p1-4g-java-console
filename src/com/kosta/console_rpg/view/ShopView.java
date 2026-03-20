@@ -10,8 +10,9 @@ import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.session.LoginSession;
-import com.kosta.console_rpg.util.InputUtil;
+import com.kosta.console_rpg.util.ConsoleEffectUtil;
 import com.kosta.console_rpg.util.ConsoleUtils;
+import com.kosta.console_rpg.util.InputUtil;
 
 public class ShopView {
 	private static ShopController shopController = new ShopController();
@@ -55,15 +56,15 @@ public class ShopView {
 	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
 	    System.out.println("──────────────────────── POTION ────────────────────────\n");
-	    System.out.println("[1] 포션");
+	    System.out.println(" [1] 포션");
 
 	    System.out.println("\n─────────────────────── EQUIPMENT ───────────────────────\n");
-	    System.out.println("[2] 장비");
-	    System.out.println(" - 무기");
-	    System.out.println(" - 갑옷");
+	    System.out.println(" [2] 장비");
+	    System.out.println("  - 무기");
+	    System.out.println("  - 갑옷");
 
 	    System.out.println("\n─────────────────────────────────────────────────────────");
-	    System.out.println("[0] 뒤로가기");
+	    System.out.println(" [0] 뒤로가기 \n");
 	    System.out.print("선택 ▶ ");
 
 	    int select;
@@ -109,11 +110,10 @@ public class ShopView {
 
 	            if(item.getItemType().equals("potion")) {
 
-	                System.out.println("[" + no + "] " + item.getItemName());
-	                System.out.println("효과 : HP +" + item.getItemEffectHp());
-	                System.out.println("효과 : MP +" + item.getItemEffectMp());
-	                System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
-
+	            System.out.println(" [" + no + "] " + item.getItemName());
+	            System.out.println("   ▸ 효과 : " + ConsoleEffectUtil.GREEN + "HP +" + item.getItemEffectHp() + ConsoleEffectUtil.RESET);
+	            System.out.println("   ▸ 효과 : " + ConsoleEffectUtil.GREEN + "MP +" + item.getItemEffectMp() + ConsoleEffectUtil.RESET);
+	            System.out.println("   ▸ 가격 : " + ConsoleEffectUtil.RED + item.getItemPriceBuy() + "Gem\n" + ConsoleEffectUtil.RESET);
 	                menuMap.put(no, item);
 	                no++;
 	            }
@@ -221,9 +221,9 @@ public class ShopView {
 
 	            if(item.getItemType().equals("weapon")) {
 
-	                System.out.println("[" + no + "] " + item.getItemName());
-	                System.out.println("공격력 : +" + item.getItemAtkBonus());
-	                System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+					System.out.println(" [" + no + "] " + item.getItemName());
+					System.out.println(" ▸ 공격력 : " + ConsoleEffectUtil.GREEN + "+" + item.getItemAtkBonus() + ConsoleEffectUtil.RESET);
+					System.out.println(" ▸ 가격 : " + ConsoleEffectUtil.RED +item.getItemPriceBuy() + " Gem\n" + ConsoleEffectUtil.RESET);
 
 	                menuMap.put(no, item);
 	                no++;
@@ -235,10 +235,10 @@ public class ShopView {
 	        for(ItemDTO item : items) {
 
 	            if(item.getItemType().equals("armor")) {
-
-	                System.out.println("[" + no + "] " + item.getItemName());
-	                System.out.println("방어력 : +" + item.getItemDefBonus());
-	                System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+					
+					System.out.println(" [" + no + "] " + item.getItemName());
+					System.out.println(" ▸ 방어력 : " + ConsoleEffectUtil.GREEN + "+" +item.getItemDefBonus() + ConsoleEffectUtil.RESET);
+					System.out.println(" ▸ 가격 : " + ConsoleEffectUtil.RED + item.getItemPriceBuy() + "Gem\n" + ConsoleEffectUtil.RESET);
 
 	                menuMap.put(no, item);
 	                no++;
