@@ -19,7 +19,14 @@ replay_pid*
 # Package Files
 ############################
 
+# lib 내부 jar 허용
+lib/*
+!lib/*.jar
+
+# jar 기본 무시 후 실행용 jar 허용
 *.jar
+!ShellHero.jar
+
 *.war
 *.nar
 *.ear
@@ -111,5 +118,12 @@ aws_config
 ############################
 # DB Properties
 ############################
+
 src/**/db.properties
 db.properties
+
+############################
+# Keep executable files
+############################
+
+!run.bat
