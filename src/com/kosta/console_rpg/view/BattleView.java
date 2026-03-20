@@ -220,6 +220,8 @@ public class BattleView {
 	}
 	public static void defaultTurn(BattleActionResultDTO result ) {
 		System.out.println();
+		int d = result.getDice();
+
 
 		StringBuilder s = new StringBuilder();
 		s.append(ConsoleEffectUtil.GREEN);
@@ -230,7 +232,11 @@ public class BattleView {
 		System.out.println(s);
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format(ConsoleEffectUtil.GREEN+"%s"+ConsoleEffectUtil.RESET+" %s\n",battleHero.getHeroName(), result.getAction().getMessage() ));
-		sb.append(String.format("주사위 : . . . 🎲 %d\n",result.getDice() ));
+		sb.append(String.format("주사위 : . . . 🎲 %d\n",d ));
+		if(d == 6){
+			sb.append(String.format(ConsoleEffectUtil.RED+"CRITICAL\n"+ConsoleEffectUtil.RED));
+		}
+
 		sb.append(String.format("데미지 : "+ConsoleEffectUtil.RED+"%d\n" + ConsoleEffectUtil.RESET,result.getResultValue()));
 		try {
 			ConsoleEffectUtil.slowPrint(sb.toString(),30);
@@ -353,6 +359,7 @@ public class BattleView {
 
 		BattleActionResultDTO result = battleController.monsterAttack(battleHero, monster);
 		StringBuilder sb = new StringBuilder();
+		int d = result.getDice();
 		System.out.println();
 		if (result.getAction() == BattleActionType.MONSTER_SKILL) {
 			sb.append(String.format(ConsoleEffectUtil.RED+"%s"+ConsoleEffectUtil.RESET+"%s\n",monster.getMonsterName(), result.getAction().getMessage()));
@@ -361,7 +368,10 @@ public class BattleView {
 		} else {
 			sb.append(String.format("%s %s\n",monster.getMonsterName(), result.getAction().getMessage()));
 		}
-		sb.append(String.format("주사위 : . . . 🎲 %d\n",result.getDice() ));
+		sb.append(String.format("주사위 : . . . 🎲 %d\n",d ));
+		if(d == 6){
+			sb.append(String.format(ConsoleEffectUtil.RED+"CRITICAL\n"+ConsoleEffectUtil.RED));
+		}
 		sb.append(String.format("데미지 : "+ConsoleEffectUtil.RED+"%d\n" + ConsoleEffectUtil.RESET,result.getResultValue()));
 
 
