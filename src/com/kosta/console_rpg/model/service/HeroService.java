@@ -35,7 +35,7 @@ public class HeroService {
 	public void createHero(int userId, String heroName) throws GameException {
 		try {
 			HeroDTO hero = heroDao.selectHeroByUserId(userId);
-			
+
 			if (hero != null) {
 				throw new GameException("이미 생성된 캐릭터가 존재합니다.");
 			}
@@ -63,15 +63,20 @@ public class HeroService {
 	 */
 	public void deleteHero(int heroId) throws GameException {
 		try {
+			InventoryService inventoryService = new InventoryService();
+			SkillService skillService = new SkillService();
 			// 삭제를 위한 업적 삭제(삭제하지 않으면 종속 되있어서 삭제 불가)
 			questService.deleteQuest(heroId);
-
+			inventoryService.deleteInventory(heroId);
+			skillService.deleteHeroSkills(heroId);
 			int result = heroDao.deleteHero(heroId);
+
 			if (result == 0) {
 				throw new GameException("캐릭터 삭제에 실패했습니다.");
 			}
 
 		}  catch (SQLException e) {
+			
 			throw new GameException("캐릭터 삭제 중 오류가 발생했습니다.");
 		}
 	}
@@ -93,6 +98,7 @@ public class HeroService {
 	}
 
 	/**
+	 * 최대 클리어 스테이지 갱신
 	 * 최대 클리어 스테이지를 갱신한다.
 	 *
 	 * @param heroId 캐릭터 번호
@@ -113,6 +119,7 @@ public class HeroService {
 	}
 
 	/**
+	 * 보유 젬 갱신
 	 * 보유 젬 수를 갱신한다.
 	 *
 	 * @param heroId 캐릭터 번호

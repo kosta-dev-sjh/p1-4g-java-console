@@ -9,10 +9,6 @@ package com.kosta.console_rpg.view;
  * 최종 수정일 : 
  */
 public class UserView {
-	public static void main(String[] args) {
-		UserView view = new UserView();
-        view.start();
-	}
 	public void start() {
 		System.out.println(this);
 	}

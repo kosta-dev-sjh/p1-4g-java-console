@@ -4,25 +4,13 @@ import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 
 import java.util.List;
 
-
-
-/**
- * 게임 히어로 정보 뷰
- *
- * 작성자     : 이진주
- * 생성일     : 2026.03.16
- * 최종 수정자 : 
- * 최종 수정일 : 
- */
 public class SkillUpgradeView {
-
-	private static final int MP_CONSUMPTION =5 ;
 	private static SkillController skillController = new SkillController();
 
 	public static void start() {
@@ -53,7 +41,6 @@ public class SkillUpgradeView {
 
 				HeroSkillDTO selected = skillList.get(choice - 1);
 				int skillId = selected.getSkill().getSkillId();
-				int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
 
 				// Y/N 확인
 				System.out.println("\n▶ 스킬을 강화하시겠습니까?");
@@ -78,7 +65,7 @@ public class SkillUpgradeView {
 
 				// 결과 출력
 				System.out.println("\n현재 " + updatedSkill.getSkill().getSkillName() + " 레벨은 " + newLevel + "입니다.");
-				System.err.println();
+				System.out.println();
 				System.out.println("현재 보유 Gem : " + currentGem);
 
 			} catch (GameException e) {
@@ -95,11 +82,10 @@ public class SkillUpgradeView {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
+		ConsoleUtils.printTitleBar("HERO STATUS");
 		sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
 		sb.append(String.format(" 현재 Level : %d\n", hero.getHeroLevel()));
 		sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));
-
 
 		sb.append("──────────────── SKILL UPGRADE ─────────────────\n\n");
 
@@ -108,26 +94,25 @@ public class SkillUpgradeView {
 			int upgradeCost = skillList.get(i).getSkill().getSkillUpgradeCost() * skill.getSkillLevel();
 			int requiredLevel = skill.getSkill().getSkillRequiredHeroLevel();
 
-			sb.append(String.format(" [%d] %s\n", i+1,skillList.get(i).getSkill().getSkillName()));
+			sb.append(String.format(" [%d] %s\n", i + 1, skillList.get(i).getSkill().getSkillName()));
 			sb.append(String.format("    ▸ 레벨 : %d\n", skillList.get(i).getSkillLevel()));
-			sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(i).getSkill().getSkillDamage()));
+			sb.append(String.format("    ▸ 데미지 : %s\n", skillList.get(i).getCalculatedDamage()));
 			sb.append(String.format("    ▸ MP 소모 : %d\n", skill.getCalculatedMpCost()));
 
-			if ( skillList.get(i).getSkillLevel() == 2) {
-				requiredLevel +=1;
+			if (skillList.get(i).getSkillLevel() == 2) {
+				requiredLevel += 1;
 
-				sb.append(String.format("    ▸ 요구 레벨 : %d\n",requiredLevel));
+				sb.append(String.format("    ▸ 요구 레벨 : %d\n", requiredLevel));
 				sb.append("    --------------\n");
-				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n",  upgradeCost));
+				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n", upgradeCost));
 				sb.append("\n\n");
 			} else if (skill.getSkillLevel() == 3) {
 				sb.append(String.format("    ▸ SKILL MASTERED\n"));
 				sb.append("\n\n");
-			}
-			else{
-				sb.append(String.format("    ▸ 요구 레벨 : %d\n",requiredLevel));
+			} else {
+				sb.append(String.format("    ▸ 요구 레벨 : %d\n", requiredLevel));
 				sb.append("    --------------\n");
-				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n",  upgradeCost));
+				sb.append(String.format("    ▸ 스킬 강화 비용: %d Gem\n", upgradeCost));
 				sb.append("\n\n");
 			}
 		}
@@ -135,11 +120,7 @@ public class SkillUpgradeView {
 		sb.append("────────────────── MENU ──────────────────\n\n");
 		sb.append(" [번호 입력] 스킬 강화\n");
 		sb.append(" [0] 뒤로가기\n\n");
-		//sb.append("선택 ▶ ");
-
-
 
 		return sb.toString();
 	}
-
 }

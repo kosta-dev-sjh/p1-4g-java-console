@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
+import com.kosta.console_rpg.session.LoginSession;
 
 /**
  * 게임 히어로 정보 뷰
@@ -15,18 +16,18 @@ import com.kosta.console_rpg.model.dto.HeroSkillDTO;
  */
 public class skillView {
 
-    private Scanner sc = new Scanner(System.in);
-    private SkillController skillController = new SkillController();
-    
-	public static void main(String[] args) {
-		skillView view = new skillView();
-        view.start();
-    }
+    private static Scanner sc = new Scanner(System.in);
+    private static SkillController skillController = new SkillController();
 
-
-    public void start() {
+    public static void start() {
+    	
+    	if (LoginSession.getInstance().getCurrentHero() == null) {
+    	    System.out.println("로그인이 필요합니다.");
+    	    return;
+    	}
+    	
     	while (true) {
-            System.out.println(this);
+    		 System.out.println(new skillView());
 
             String input = sc.nextLine().toUpperCase();
 
@@ -111,8 +112,7 @@ public class skillView {
 	}
 	
 	
-	public void skillMenu() {
-		int heroId = 1;
+	public static void skillMenu() {
 
 	    while (true) {
 	        System.out.println("\n===== [ 스킬 메뉴 ] =====");
@@ -162,7 +162,7 @@ public class skillView {
 	        // 3️. 선택한 스킬
 	        HeroSkillDTO selected = skillList.get(choice - 1);
 	        int skillId = selected.getSkill().getSkillId();
-
+	        
 	        // 4️. 강화 실행
 	        try {
                 // 👉 heroId 같이 넘기도록 수정
