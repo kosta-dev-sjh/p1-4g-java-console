@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 향후 일정</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --neon-red: #FF3131;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --node-bg: #111;
+            --node-border: #666;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a1a1a' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 맵 컨테이너 */
+        .map-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* SVG 경로 레이어 */
+        .svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .path-line {
+            fill: none;
+            stroke: #444;
+            stroke-width: 4;
+            stroke-dasharray: 10, 10;
+        }
+
+        .path-line-active {
+            fill: none;
+            stroke: var(--neon-green);
+            stroke-width: 4;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            filter: drop-shadow(0 0 5px var(--neon-green));
+            animation: drawPath 1s forwards ease-in-out; /* Reduced duration to stop at node 1 */
+        }
+
+        /* Only animate part of the path */
+        .path-line-partial {
+             fill: none;
+            stroke: var(--neon-green);
+            stroke-width: 4;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            filter: drop-shadow(0 0 5px var(--neon-green));
+            animation: drawPartialPath 1.5s forwards ease-in-out;
+        }
+        
+        @keyframes drawPartialPath {
+            to { stroke-dashoffset: 850; } /* Adjust offset to stop after first segment */
+        }
+
+        @keyframes drawPath {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 스테이지 노드 */
+        .stage-node {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .node-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background-color: var(--node-bg);
+            border: 4px solid var(--node-border);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .stage-node:hover .node-icon-wrapper {
+            border-color: var(--neon-green);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+            background-color: #222;
+        }
+
+        /* IN PROGRESS Style */
+        .stage-node.in-progress .node-icon-wrapper {
+            border-color: var(--pastel-blue);
+            box-shadow: 0 0 30px rgba(191, 219, 254, 0.5);
+            background-color: #1a202c; /* Darker blue bg */
+            animation: pulse-blue 2s infinite;
+        }
+        
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(191, 219, 254, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(191, 219, 254, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(191, 219, 254, 0); }
+        }
+
+        .stage-node.in-progress .node-icon {
+            color: var(--pastel-blue);
+        }
+
+        /* LOCKED Style */
+        .stage-node.locked-node {
+            opacity: 0.7;
+        }
+        
+        .stage-node.locked-node .node-icon-wrapper {
+            border-color: #444;
+            background-color: #111;
+            box-shadow: none;
+        }
+        
+        .stage-node.locked-node .node-icon {
+            color: #555;
+        }
+        
+        .stage-node.locked-node .info-box {
+            border-color: #444;
+            opacity: 0.8;
+        }
+
+        .node-icon {
+            font-size: 40px;
+            color: var(--pastel-blue);
+            transition: color 0.3s;
+        }
+
+        .stage-node:hover .node-icon {
+            color: var(--neon-green);
+        }
+
+        /* BOSS 노드 스타일 */
+        .stage-node.boss .node-icon-wrapper {
+            width: 140px;
+            height: 140px;
+            border-color: var(--neon-red);
+            border-width: 6px;
+        }
+        
+        .stage-node.boss.locked-node .node-icon-wrapper {
+             border-color: #522; /* Dim red */
+        }
+        
+        .stage-node.boss.locked-node .node-icon {
+             color: #722;
+        }
+
+        .stage-node.boss:hover .node-icon-wrapper {
+            box-shadow: 0 0 40px rgba(255, 49, 49, 0.4);
+            transform: scale(1.15);
+        }
+
+        .stage-node.boss .node-icon {
+            font-size: 60px;
+            color: var(--neon-red);
+        }
+
+        .stage-node.boss:hover .node-icon {
+            color: #FF6B6B;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* 텍스트 박스 */
+        .info-box {
+            margin-top: 20px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--border-color);
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            min-width: 240px;
+        }
+
+        .stage-node:hover .info-box {
+            border-color: var(--neon-green);
+            background-color: rgba(30, 40, 30, 0.95);
+            transform: translateY(-5px);
+        }
+        
+        .stage-node.in-progress:hover .info-box {
+            border-color: var(--pastel-blue);
+            background-color: rgba(30, 40, 50, 0.95);
+        }
+
+        .stage-node.boss:hover .info-box {
+            border-color: var(--neon-red);
+            background-color: rgba(40, 20, 20, 0.95);
+        }
+
+        .stage-date {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--pastel-yellow);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stage-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin: 0;
+        }
+
+        /* 픽셀 장식 */
+        .pixel-deco {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-white);
+        }
+        .pd-tl { top: -3px; left: -3px; }
+        .pd-tr { top: -3px; right: -3px; }
+        .pd-bl { bottom: -3px; left: -3px; }
+        .pd-br { bottom: -3px; right: -3px; }
+
+        .stage-node:hover .pixel-deco { background-color: var(--neon-green); }
+        .stage-node.in-progress:hover .pixel-deco { background-color: var(--pastel-blue); }
+        .stage-node.boss:hover .pixel-deco { background-color: var(--neon-red); }
+
+        /* 상태 표시기 (Clear/Current/Locked) */
+        .status-badge {
+            position: absolute;
+            top: -15px;
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-family: monospace;
+            border-radius: 4px;
+            border: 1px solid #555;
+            z-index: 20;
+        }
+
+        .status-badge.cleared {
+            background-color: var(--neon-green);
+            color: #000;
+            border-color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        .status-badge.current {
+            background-color: var(--pastel-blue);
+            color: #000;
+            border-color: var(--pastel-blue);
+            animation: bounce 1s infinite;
+        }
+        
+        .status-badge.in-progress {
+            background-color: var(--pastel-blue);
+            color: #000;
+            border-color: var(--pastel-blue);
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--pastel-blue);
+        }
+
+        .status-badge.locked {
+            background-color: #222;
+            color: #666;
+            border-color: #444;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 좌표 위치 설정 */
+        #node1 { left: 15%; top: 60%; }
+        #node2 { left: 40%; top: 40%; }
+        #node3 { left: 65%; top: 60%; }
+        #node4 { left: 90%; top: 35%; }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"></h1>
+<div class="header-deco">
+<i class="fas fa-map-signs"></i> PROJECT_ROADMAP
+        </div>
+</div>
+<!-- 맵 컨테이너 -->
+<div class="map-container">
+<!-- SVG 연결선 -->
+<svg class="svg-layer">
+<!-- 배경 라인 (점선) -->
+<path class="path-line" d="M288 648 L768 432 L1248 648 L1728 378"></path>
+<!-- 애니메이션 라인 (실선) -->
+<path class="path-line-partial" d="M288 648 L768 432 L1248 648 L1728 378" id="activePath"></path>
+</svg>
+<!-- Node 1: IN PROGRESS -->
+<div class="stage-node in-progress" id="node1">
+<div class="status-badge in-progress">IN PROGRESS</div>
+<div class="node-icon-wrapper">
+<i class="fas fa-pencil-ruler node-icon"></i>
+</div>
+<div class="info-box">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<span class="stage-date">MAR 1st WEEK</span>
+<p class="stage-title">시스템 설계</p>
+<p style="font-size: 14px; color: #ccc; margin-top:5px;">(초안 완료)</p>
+</div>
+</div>
+<!-- Node 2: LOCKED -->
+<div class="stage-node locked-node" id="node2">
+<div class="status-badge locked">LOCKED</div>
+<div class="node-icon-wrapper">
+<i class="fas fa-code node-icon"></i>
+</div>
+<div class="info-box">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<span class="stage-date">MAR 2nd WEEK</span>
+<p class="stage-title">핵심 기능 구현</p>
+<p style="font-size: 14px; color: #666; margin-top:5px;">전투/상점/인벤토리</p>
+</div>
+</div>
+<!-- Node 3: LOCKED -->
+<div class="stage-node locked-node" id="node3">
+<div class="status-badge locked">LOCKED</div>
+<div class="node-icon-wrapper">
+<i class="fas fa-tools node-icon"></i>
+</div>
+<div class="info-box">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<span class="stage-date">MAR 3rd WEEK</span>
+<p class="stage-title">기능 통합 및 테스트</p>
+<p style="font-size: 14px; color: #666; margin-top:5px;">버그 수정 및 밸런싱</p>
+</div>
+</div>
+<!-- Node 4 (BOSS): LOCKED -->
+<div class="stage-node boss locked-node" id="node4">
+<div class="status-badge locked">FINAL BOSS</div>
+<div class="node-icon-wrapper">
+<i class="fas fa-crown node-icon"></i>
+</div>
+<div class="info-box">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<span class="stage-date" style="color:#722;">MAR 20th</span>
+<p class="stage-title" style="color:#722;">최종 발표</p>
+<p style="font-size: 14px; color: #666; margin-top:5px;">시연 및 배포</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleText = "향후 일정";
+        const titleElement = document.getElementById('pageTitle');
+        const nodes = [
+            document.getElementById('node1'),
+            document.getElementById('node2'),
+            document.getElementById('node3'),
+            document.getElementById('node4')
+        ];
+        const activePath = document.getElementById('activePath');
+
+        // 초기 상태: 패스 숨김
+        activePath.style.display = 'none';
+
+        // 1. 타이틀 타이핑 애니메이션
+        titleElement.innerHTML = '<span class="cursor-blink"></span>';
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < titleText.length) {
+                const currentText = titleText.substring(0, charIndex + 1);
+                titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                charIndex++;
+                setTimeout(typeWriter, 100);
+            } else {
+                // 타이핑 완료 후 맵 애니메이션 시작
+                startMapAnimation();
+            }
+        }
+
+        function startMapAnimation() {
+            // 패스 애니메이션 시작 (부분적으로만 그려짐)
+            activePath.style.display = 'block';
+            
+            // 노드 순차 등장
+            setTimeout(() => { showNode(0); }, 100);   // Node 1 (In Progress)
+            setTimeout(() => { showNode(1); }, 600);   // Node 2 (Locked)
+            setTimeout(() => { showNode(2); }, 1100);  // Node 3 (Locked)
+            setTimeout(() => { showNode(3); }, 1600);  // Node 4 (Boss - Locked)
+        }
+
+        function showNode(index) {
+            const node = nodes[index];
+            node.style.opacity = '1';
+            node.style.transform = node.style.transform.replace('scale(0)', 'scale(1)'); // 혹시 초기 scale이 있다면
+            
+            // 쿵! 하는 느낌을 주기 위한 애니메이션 클래스 추가 가능
+            node.animate([
+                { transform: 'translate(-50%, -60%) scale(1.2)', opacity: 1 },
+                { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }
+            ], {
+                duration: 300,
+                easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            });
+        }
+
+        // 시작
+        setTimeout(typeWriter, 500);
+    });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "21.html";
+    }
+});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "19.html";
+        }
+    });
+</script>
+</body>
+</html>

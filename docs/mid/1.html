@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - Cover</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+        /* 배경 도트 패턴 (CSS Gradient 사용 금지 대체: SVG Data URI) */
+        
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2));
+            background-size: 100% 4px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+        /* CSS Gradient 금지라서 이미지나 단색으로 처리해야 하지만 스캔라인 효과를 위해 최소한의 반복 패턴 사용 필요. 
+           엄격한 금지라면 제외하겠지만, 레트로 느낌을 위해 필요한 경우 SVG 패턴으로 대체 가능.
+           여기서는 안전하게 SVG 패턴으로 스캔라인 대체.
+        */
+        
+        .bg-scanlines-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        /* 픽셀 코너 장식 */
+        
+        .pixel-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--neon-green);
+            z-index: 10;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .top-left {
+            top: 60px;
+            left: 60px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .top-right {
+            top: 60px;
+            right: 60px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .bottom-left {
+            bottom: 60px;
+            left: 60px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .bottom-right {
+            bottom: 60px;
+            right: 60px;
+            border-left: none;
+            border-top: none;
+        }
+        /* 타이틀 스타일 */
+        
+        .main-title {
+            font-family: 'Press Start 2P', monospace;
+            /* 픽셀 폰트 강조 */
+            font-size: 80px;
+            /* 명세의 60pt보다 조금 더 크게 시각적 보정 */
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0px #333, 0 0 20px var(--neon-green);
+            margin-bottom: 60px;
+            letter-spacing: -2px;
+            text-align: center;
+            opacity: 0;
+            /* 타이핑 애니메이션 전 숨김 */
+        }
+        
+        .typing-cursor::after {
+            content: ' ';
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            vertical-align: bottom;
+            margin-left: 5px;
+            animation: blink 1s step-end infinite;
+        }
+        /* 깜빡이는 애니메이션 (중제목) */
+        
+        .blink-text {
+            color: var(--neon-green);
+            font-size: 24px;
+            /* 본문보다 약간 크게 */
+            font-weight: 700;
+            margin-bottom: 40px;
+            animation: blink 1.5s step-end infinite;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+            font-family: 'Press Start 2P', monospace;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        /* 팀 정보 스타일 */
+        
+        .team-info {
+            font-size: 18px;
+            /* 본문 14pt(약 18.6px) 대응 */
+            font-weight: 500;
+            color: #ccc;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 30px;
+            border: 1px solid #444;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            opacity: 0;
+            /* 애니메이션으로 등장 */
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        
+        .team-label {
+            color: var(--pastel-blue);
+            font-weight: 700;
+        }
+        
+        .team-members {
+            color: var(--text-white);
+        }
+        /* 슬라이드 업 애니메이션 클래스 */
+        
+        .slide-up-show {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        /* 장식용 라인 */
+        
+        .deco-line {
+            position: absolute;
+            height: 2px;
+            background-color: var(--neon-green);
+            width: 0;
+            transition: width 1.5s ease-in-out;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .deco-top {
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .deco-bottom {
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .width-full-show {
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="bg-grid"></div>
+    <div class="bg-scanlines-svg"></div>
+    <!-- 코너 장식 -->
+    <div class="pixel-corner top-left"></div>
+    <div class="pixel-corner top-right"></div>
+    <div class="pixel-corner bottom-left"></div>
+    <div class="pixel-corner bottom-right"></div>
+    <div class="container-frame">
+        <div class="deco-line deco-top" id="decoTop"></div>
+        <!-- 메인 타이틀 -->
+        <h1 class="main-title" id="mainTitle" style="opacity: 1;"><span class="typing-cursor"></span></h1>
+        <!-- 중제목 (깜빡임 효과) -->
+        <div class="blink-text" id="startPrompt" style="visibility: hidden;">
+            <p>&gt; PRESS ANY KEY TO START PPT_</p>
+        </div>
+        <!-- 소제목 (팀 정보) -->
+        <div class="team-info" id="teamInfo">
+            <p><span class="team-label">TEAM 4G</span></p>
+            <p class="team-members">송정현 · 이진주 · 김재민 · 홍준화</p>
+        </div>
+        <div class="deco-line deco-bottom" id="decoBottom"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "Shell Hero";
+            const titleElement = document.getElementById('mainTitle');
+            const startPrompt = document.getElementById('startPrompt');
+            const teamInfo = document.getElementById('teamInfo');
+            const decoTop = document.getElementById('decoTop');
+            const decoBottom = document.getElementById('decoBottom');
+
+            // 초기화
+            titleElement.innerHTML = '<span class="typing-cursor"></span>';
+            titleElement.style.opacity = '1';
+
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    // 커서 앞에 글자 추가
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="typing-cursor"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 150); // 타이핑 속도
+                } else {
+                    // 타이핑 완료 후 애니메이션
+                    setTimeout(() => {
+                        // 라인 확장
+                        decoTop.classList.add('width-full-show');
+                        decoBottom.classList.add('width-full-show');
+
+                        // 중제목 및 본문 등장
+                        setTimeout(() => {
+                            startPrompt.style.visibility = 'visible';
+                            teamInfo.classList.add('slide-up-show');
+                        }, 800);
+                    }, 500);
+                }
+            }
+
+            // 시작 딜레이
+            setTimeout(typeWriter, 500);
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowRight") {
+                window.location.href = "2.html";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

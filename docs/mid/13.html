@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 도메인 용어집</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.9);
+            --card-hover-bg: rgba(30, 40, 30, 0.95);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 3x3 그리드 컨테이너 */
+        .grid-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px; 
+            padding-bottom: 20px;
+        }
+
+        /* 용어 카드 */
+        .term-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0; /* 초기 상태 hidden */
+            transform: scale(0.9);
+            overflow: hidden;
+        }
+
+        .term-card:hover {
+            border-color: var(--neon-green);
+            background-color: var(--card-hover-bg);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.15);
+            z-index: 10;
+        }
+
+        /* 카드 내부 레이아웃 */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px; /* 여백 약간 줄임 */
+            border-bottom: 1px dashed #444;
+            padding-bottom: 6px;
+        }
+
+        /* 아이콘 박스 */
+        .term-icon-box {
+            width: 80px;
+            height: 80px;
+            background-color: #111;
+            border: 1px solid #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        /* 아이콘 크기 */
+        .term-icon {
+            font-size: 50px;
+            color: var(--pastel-blue);
+            transition: color 0.3s;
+        }
+
+        .term-card:hover .term-icon {
+            color: var(--neon-green);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .term-titles {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 용어명 */
+        .term-name {
+            font-size: 44px;
+            font-weight: 900;
+            color: var(--neon-green);
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .term-eng {
+            font-size: 13px;
+            color: #888;
+            font-family: monospace;
+            margin: 2px 0 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 5px 0 0 0; /* 상단 패딩 약간 추가 */
+        }
+
+        /* 용어 설명 텍스트 확대 및 패딩 추가 */
+        .term-desc {
+            font-size: 16px; /* 13px -> 16px */
+            color: #ccc;
+            line-height: 1.4;
+            margin: 0 0 6px 0;
+            padding: 5px; /* 상하좌우 5px 패딩 추가 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 예시 텍스트 확대 */
+        .term-ex {
+            font-size: 13px; /* 11px -> 13px */
+            color: var(--pastel-yellow);
+            background-color: rgba(254, 240, 138, 0.05);
+            padding: 6px; /* 5px -> 6px */
+            border-left: 2px solid var(--pastel-yellow);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 픽셀 코너 장식 */
+        .pixel-deco {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--border-color);
+            transition: background-color 0.3s;
+        }
+
+        .term-card:hover .pixel-deco {
+            background-color: var(--neon-green);
+        }
+
+        .pd-tl { top: 2px; left: 2px; }
+        .pd-tr { top: 2px; right: 2px; }
+        .pd-bl { bottom: 2px; left: 2px; }
+        .pd-br { bottom: 2px; right: 2px; }
+
+        /* 카드 번호 */
+        .card-number {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: #222;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: opacity 0.3s, color 0.3s;
+        }
+
+        .term-card:hover .card-number {
+            color: #333;
+            opacity: 0.8;
+        }
+
+        /* Animation visibility class */
+        .visible {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+    </style>
+</head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">도메인 용어집<span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<p><i class="fas fa-book-atlas"></i> DICTIONARY_DATABASE</p>
+</div>
+</div>
+<!-- 3x3 그리드 -->
+<div class="grid-container">
+<!-- 1. 골드 -->
+<div class="term-card visible" id="card1">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">01</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-coins term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">골드</p>
+<p class="term-eng">Gold</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">게임 내에서 사용하는 기본 화폐. 아이템 구매 및 판매에 사용됨.</p>
+<p class="term-ex">ex) 상점에서 물건을 살 때 사용하는 돈과 비슷함.</p>
+</div>
+</div>
+<!-- 2. 경험치 -->
+<div class="term-card visible" id="card2">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">02</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-star term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">경험치</p>
+<p class="term-eng">Experience Points (XP)</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">캐릭터 성장에 필요한 누적 점수. 전투 승리 등을 통해 획득.</p>
+<p class="term-ex">ex) 활동을 하면 칭찬 스티커가 쌓이는 것과 비슷함.</p>
+</div>
+</div>
+<!-- 3. 레벨 -->
+<div class="term-card visible" id="card3">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">03</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-arrow-up term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">레벨</p>
+<p class="term-eng">Level</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">캐릭터의 성장 단계. 경험치가 누적되면 상승하며 능력치가 증가함.</p>
+<p class="term-ex">ex) 학년이 올라가는 것과 비슷함.</p>
+</div>
+</div>
+<!-- 4. MP -->
+<div class="term-card visible" id="card4">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">04</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-bolt term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">MP</p>
+<p class="term-eng">Magic Point</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">스킬 사용 시 소비되는 에너지 자원. 부족하면 기술 사용 불가.</p>
+<p class="term-ex">ex) 배터리처럼 기술을 사용할 때 필요한 힘과 비슷함.</p>
+</div>
+</div>
+<!-- 5. 스테이지 -->
+<div class="term-card visible" id="card5">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">05</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-map term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">스테이지</p>
+<p class="term-eng">Stage</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">게임 진행이 구분되는 단계 또는 구간. 난이도와 적이 다름.</p>
+<p class="term-ex">ex) 한 판의 미션이나 코스와 비슷함.</p>
+</div>
+</div>
+<!-- 6. 보스/몬스터 -->
+<div class="term-card visible" id="card6">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">06</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-skull term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">몬스터</p>
+<p class="term-eng">Boss / Monster</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">플레이어가 전투를 통해 상대하는 적 캐릭터. 보스는 마지막 강적.</p>
+<p class="term-ex">ex) 시험의 마지막 어려운 문제와 비슷함.</p>
+</div>
+</div>
+<!-- 7. 장비 -->
+<div class="term-card visible" id="card7">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">07</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-shield-alt term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">장비</p>
+<p class="term-eng">Equipment</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">캐릭터 능력치(공격력, 방어력 등)를 향상시키기 위해 착용하는 아이템.</p>
+<p class="term-ex">ex) 운동 시 착용하는 보호장비와 비슷함.</p>
+</div>
+</div>
+<!-- 8. 소비 아이템 -->
+<div class="term-card visible" id="card8">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">08</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-flask term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">소비템</p>
+<p class="term-eng">Consumable Item</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">사용 시 즉시 효과가 발생하며 한 번 사용하면 소멸되는 아이템.</p>
+<p class="term-ex">ex) 먹으면 사라지는 간식과 비슷함.</p>
+</div>
+</div>
+<!-- 9. 스킬 레벨 -->
+<div class="term-card visible" id="card9">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div>
+<div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="card-number">09</p>
+<div class="card-header">
+<div class="term-icon-box"><i class="fas fa-book-open term-icon"></i></div>
+<div class="term-titles">
+<p class="term-name">스킬Lv</p>
+<p class="term-eng">Skill Level</p>
+</div>
+</div>
+<div class="card-body">
+<p class="term-desc">개별 기술의 강화 단계. 상승 시 기술의 위력이나 효과가 증가함.</p>
+<p class="term-ex">ex) 연습할수록 실력이 좋아지는 것과 비슷함.</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "도메인 용어집";
+            const titleElement = document.getElementById('pageTitle');
+            const cards = document.querySelectorAll('.term-card');
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 80); // 타이핑 속도 약간 빠르게
+                } else {
+                    // 2. 카드 순차 등장
+                    showCards();
+                }
+            }
+
+            function showCards() {
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        // 클래스 추가 방식으로 변경하여 확실하게 스타일 적용
+                        card.classList.add('visible');
+                    }, index * 80 + 200); 
+                });
+            }
+
+            // 시작
+            setTimeout(typeWriter, 300);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "14.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "12.html";
+            }
+        });
+    </script>
+
+</body></html>

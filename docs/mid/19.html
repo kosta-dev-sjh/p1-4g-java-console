@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 월드맵 섹션 표지</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --panel-bg: rgba(20, 20, 20, 0.9);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 1920px;
+            height: 1080px;
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 중앙 원형 확산 패턴 (월드맵 느낌) */
+        .radar-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: radarExpand 4s infinite linear;
+            z-index: 1;
+        }
+
+        .radar-circle:nth-child(1) { width: 300px; height: 300px; animation-delay: 0s; }
+        .radar-circle:nth-child(2) { width: 300px; height: 300px; animation-delay: 1.3s; }
+        .radar-circle:nth-child(3) { width: 300px; height: 300px; animation-delay: 2.6s; }
+
+        @keyframes radarExpand {
+            0% {
+                width: 300px;
+                height: 300px;
+                opacity: 0.8;
+                border-color: var(--neon-green);
+                border-width: 4px;
+            }
+            100% {
+                width: 1200px;
+                height: 1200px;
+                opacity: 0;
+                border-color: var(--pastel-blue);
+                border-width: 1px;
+            }
+        }
+
+        /* 십자선 */
+        .crosshair-v {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background-color: var(--border-color);
+            z-index: 0;
+        }
+        .crosshair-h {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--border-color);
+            z-index: 0;
+        }
+
+        /* 컨텐츠 컨테이너 */
+        .content-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 상단 STAGE 표시 */
+        .stage-indicator {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--pastel-yellow);
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease-out;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border: 2px solid var(--pastel-yellow);
+            box-shadow: 0 0 15px rgba(254, 240, 138, 0.2);
+        }
+
+        /* 메인 타이틀 */
+        .main-title {
+            font-family: 'Paperlogy', sans-serif;
+            font-size: 100px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 20px 0;
+            text-shadow: 6px 6px 0 #333;
+            letter-spacing: -2px;
+            position: relative;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 하단 데코 텍스트 */
+        .sub-text {
+            font-family: monospace;
+            font-size: 24px;
+            color: var(--pastel-blue);
+            margin-top: 30px;
+            opacity: 0;
+            letter-spacing: 2px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 15px;
+        }
+
+        /* 코너 브라켓 */
+        .bracket {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 6px solid var(--text-white);
+            z-index: 5;
+            transition: all 0.5s ease-out;
+            opacity: 0;
+        }
+
+        .bracket-tl { top: -80px; left: -100px; border-right: none; border-bottom: none; }
+        .bracket-tr { top: -80px; right: -100px; border-left: none; border-bottom: none; }
+        .bracket-bl { bottom: -80px; left: -100px; border-right: none; border-top: none; }
+        .bracket-br { bottom: -80px; right: -100px; border-left: none; border-top: none; }
+
+        /* 지도 아이콘 */
+        .map-icon {
+            font-size: 60px;
+            color: var(--neon-green);
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 10px var(--neon-green));
+        }
+
+        /* 좌표 텍스트 */
+        .coord-text {
+            position: absolute;
+            font-family: monospace;
+            font-size: 14px;
+            color: #666;
+        }
+        .coord-tl { top: 20px; left: 20px; }
+        .coord-tr { top: 20px; right: 20px; }
+        .coord-bl { bottom: 20px; left: 20px; }
+        .coord-br { bottom: 20px; right: 20px; }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<!-- 레이더 원형 -->
+<div class="radar-circle"></div>
+<div class="radar-circle"></div>
+<div class="radar-circle"></div>
+<!-- 십자선 -->
+<div class="crosshair-v"></div>
+<div class="crosshair-h"></div>
+<!-- 좌표 텍스트 -->
+<p class="coord-text coord-tl">LAT: 37.5665 N</p>
+<p class="coord-text coord-tr">LNG: 126.9780 E</p>
+<p class="coord-text coord-bl">SEC: ALPHA-04</p>
+<p class="coord-text coord-br">ZOOM: 100%</p>
+<!-- 메인 컨텐츠 -->
+<div class="content-container">
+<!-- 코너 브라켓 -->
+<div class="bracket bracket-tl" id="bTL"></div>
+<div class="bracket bracket-tr" id="bTR"></div>
+<div class="bracket bracket-bl" id="bBL"></div>
+<div class="bracket bracket-br" id="bBR"></div>
+<!-- 아이콘 -->
+<i class="fas fa-globe-asia map-icon" id="mapIcon"></i>
+<!-- 스테이지 표시 -->
+<div class="stage-indicator" id="stageInd">STAGE_04</div>
+<!-- 메인 타이틀 -->
+<h1 class="main-title" id="mainTitle"></h1>
+<!-- 하단 텍스트 -->
+<p class="sub-text" id="subText">&gt; LOADING_WORLD_MAP_DATA...</p>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "월드맵";
+            const titleElement = document.getElementById('mainTitle');
+            const stageInd = document.getElementById('stageInd');
+            const subText = document.getElementById('subText');
+            const mapIcon = document.getElementById('mapIcon');
+            
+            // 브라켓
+            const bTL = document.getElementById('bTL');
+            const bTR = document.getElementById('bTR');
+            const bBL = document.getElementById('bBL');
+            const bBR = document.getElementById('bBR');
+
+            // 1. 브라켓 등장 애니메이션
+            setTimeout(() => {
+                bTL.style.opacity = '1'; bTL.style.top = '-40px'; bTL.style.left = '-60px';
+                bTR.style.opacity = '1'; bTR.style.top = '-40px'; bTR.style.right = '-60px';
+                bBL.style.opacity = '1'; bBL.style.bottom = '-40px'; bBL.style.left = '-60px';
+                bBR.style.opacity = '1'; bBR.style.bottom = '-40px'; bBR.style.right = '-60px';
+            }, 300);
+
+            // 2. 아이콘 및 STAGE 표시
+            setTimeout(() => {
+                mapIcon.style.opacity = '1';
+                mapIcon.style.transform = 'scale(1)';
+                stageInd.style.opacity = '1';
+                stageInd.style.transform = 'translateY(0)';
+            }, 800);
+
+            // 3. 타이틀 타이핑 애니메이션
+            setTimeout(() => {
+                titleElement.innerHTML = '<span class="cursor-blink"></span>';
+                let charIndex = 0;
+
+                function typeWriter() {
+                    if (charIndex < titleText.length) {
+                        const currentText = titleText.substring(0, charIndex + 1);
+                        titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                        charIndex++;
+                        setTimeout(typeWriter, 150);
+                    } else {
+                        // 타이핑 완료 후 서브 텍스트 등장
+                        setTimeout(() => {
+                            subText.style.opacity = '1';
+                            blinkSubText();
+                        }, 500);
+                    }
+                }
+                typeWriter();
+            }, 1200);
+
+            function blinkSubText() {
+                let visible = true;
+                setInterval(() => {
+                    subText.style.opacity = visible ? '0.5' : '1';
+                    visible = !visible;
+                }, 800);
+            }
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "20.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "18.html";
+            }
+        });
+    </script>
+</body>
+</html>

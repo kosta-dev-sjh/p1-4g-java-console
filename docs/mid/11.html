@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 프로젝트 목표</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.9);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 50px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 목표 리스트 컨테이너 */
+        .goals-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            padding: 0 50px;
+        }
+
+        .goal-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 25px 40px;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .goal-item:hover {
+            border-color: var(--neon-green);
+            transform: translateX(20px) scale(1.02);
+            background-color: rgba(30, 30, 30, 0.95);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.15);
+            z-index: 10;
+        }
+
+        .goal-number {
+            font-family: 'Press Start 2P', monospace; /* 픽셀 폰트 느낌 */
+            font-size: 40px;
+            color: #444;
+            margin-right: 40px;
+            min-width: 60px;
+            text-align: right;
+            transition: color 0.3s;
+        }
+
+        .goal-item:hover .goal-number {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .goal-text {
+            font-size: 28px;
+            color: var(--text-white);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .goal-icon {
+            font-size: 32px;
+            color: var(--pastel-blue);
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s;
+        }
+
+        .goal-item:hover .goal-icon {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--pastel-yellow);
+        }
+
+        /* 진행 상태 바 (장식용) */
+        .progress-deco {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 4px;
+            background-color: var(--neon-green);
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+
+        .goal-item:hover .progress-deco {
+            width: 100%;
+        }
+
+        /* 픽셀 코너 장식 */
+        .pixel-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--text-white);
+            transition: background-color 0.3s;
+        }
+
+        .goal-item:hover .pixel-corner {
+            background-color: var(--neon-green);
+        }
+
+        .pc-tl { top: -2px; left: -2px; }
+        .pc-tr { top: -2px; right: -2px; }
+        .pc-bl { bottom: -2px; left: -2px; }
+        .pc-br { bottom: -2px; right: -2px; }
+
+    </style>
+</head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">프로젝트 목표<span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<i class="fas fa-bullseye"></i> MISSION_OBJECTIVES
+            </div>
+</div>
+<!-- 목표 리스트 -->
+<div class="goals-container">
+<!-- 목표 1 -->
+<div class="goal-item" id="goal1" style="opacity: 1; transform: translateY(0px); border-color: var(--border-color);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<span class="goal-number">01</span>
+<p class="goal-text">로그인 기반 사용자–캐릭터 데이터 분리 구조 설계</p>
+<i class="fas fa-database goal-icon"></i>
+<div class="progress-deco"></div>
+</div>
+<!-- 목표 2 -->
+<div class="goal-item" id="goal2" style="opacity: 1; transform: translateY(0px); border-color: var(--border-color);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<span class="goal-number">02</span>
+<p class="goal-text">사용자 선택이 전투 결과에 반영되는 턴제 전투 시스템 구현</p>
+<i class="fas fa-gavel goal-icon"></i>
+<div class="progress-deco"></div>
+</div>
+<!-- 목표 3 -->
+<div class="goal-item" id="goal3" style="opacity: 1; transform: translateY(0px); border-color: var(--border-color);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<span class="goal-number">03</span>
+<p class="goal-text">전투 보상 → 성장 → 상위 스테이지 도전으로 이어지는 순환 구조 설계</p>
+<i class="fas fa-sync-alt goal-icon"></i>
+<div class="progress-deco"></div>
+</div>
+<!-- 목표 4 -->
+<div class="goal-item" id="goal4" style="opacity: 1; transform: translateY(0px); border-color: var(--border-color);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<span class="goal-number">04</span>
+<p class="goal-text">HP, MP, 경험치, 골드 등 주요 상태 값의 규칙 기반 관리 및 저장·복원</p>
+<i class="fas fa-save goal-icon"></i>
+<div class="progress-deco"></div>
+</div>
+<!-- 목표 5 -->
+<div class="goal-item" id="goal5" style="opacity: 1; transform: translateY(0px); border-color: var(--border-color);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<span class="goal-number">05</span>
+<p class="goal-text">관계형 데이터 모델 기반 무결성 유지</p>
+<i class="fas fa-project-diagram goal-icon"></i>
+<div class="progress-deco"></div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "프로젝트 목표";
+            const titleElement = document.getElementById('pageTitle');
+            const goals = [
+                document.getElementById('goal1'),
+                document.getElementById('goal2'),
+                document.getElementById('goal3'),
+                document.getElementById('goal4'),
+                document.getElementById('goal5')
+            ];
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 2. 목표 항목 순차 등장
+                    showGoals();
+                }
+            }
+
+            function showGoals() {
+                goals.forEach((goal, index) => {
+                    setTimeout(() => {
+                        goal.style.opacity = '1';
+                        goal.style.transform = 'translateY(0)';
+                        
+                        // 등장 효과음 느낌의 짧은 강조 (선택 사항)
+                        goal.style.borderColor = 'var(--pastel-blue)';
+                        setTimeout(() => {
+                            goal.style.borderColor = 'var(--border-color)';
+                        }, 300);
+                        
+                    }, index * 250 + 300);
+                });
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "12.html";
+    }
+});
+document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "10.html";
+            }
+        });
+    </script>
+
+</body></html>
