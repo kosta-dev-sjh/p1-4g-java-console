@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 시스템 플로우차트</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --node-bg: rgba(20, 20, 20, 0.95);
+            --node-border: #444;
+            --arrow-color: #555;
+            --arrow-active: #39FF14;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        /* 플로우차트 컨테이너 */
+        .flowchart-container {
+            flex: 1;
+            position: relative;
+            background-color: rgba(10, 10, 10, 0.5);
+            border: 2px solid #222;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* SVG 레이어 */
+        .svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 노드 레이어 */
+        .nodes-layer {
+            position: relative;
+            width: 1800px;
+            height: 900px;
+            z-index: 2;
+            transform-origin: center top;
+            transform: scale(0.95); /* 전체 스케일 조정 */
+        }
+
+        /* 플로우 노드 공통 스타일 */
+        .flow-node {
+            position: absolute;
+            background-color: var(--node-bg);
+            border: 2px solid var(--node-border);
+            color: #ddd;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            min-width: 140px;
+            height: 60px; /* 고정 높이 */
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .flow-node:hover {
+            border-color: var(--neon-green);
+            transform: scale(1.05);
+            z-index: 10;
+            color: var(--text-white);
+        }
+
+        .flow-node.active {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+            color: var(--neon-green);
+        }
+
+        /* 메인 메뉴 강조 (점선 둥근 박스) */
+        .flow-node.main-menu {
+            border: 3px dashed var(--pastel-yellow);
+            border-radius: 15px;
+            height: 80px;
+            width: 160px;
+            background-color: rgba(30, 30, 30, 0.95);
+        }
+        
+        .flow-node.main-menu.active {
+            border-color: var(--neon-green);
+            border-style: solid;
+        }
+
+        /* 다이아몬드 (분기) */
+        .diamond-wrapper {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .flow-node.diamond-shape {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            transform: rotate(45deg);
+            border-color: var(--pastel-yellow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            background-color: #222;
+        }
+        
+        .flow-node.diamond-shape:hover {
+            transform: rotate(45deg) scale(1.1);
+            border-color: var(--neon-green);
+        }
+        
+        .flow-node.diamond-shape.active {
+            transform: rotate(45deg);
+            border-color: var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+        }
+
+        /* 다이아몬드 내부 텍스트 복구 (회전 취소) */
+        .diamond-text {
+            transform: rotate(-45deg);
+            text-align: center;
+            width: 80px; /* 텍스트 너비 확보 */
+        }
+
+        .node-title {
+            font-family: 'Paperlogy', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .node-desc {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+        
+        /* 분기 라벨 */
+        .branch-label {
+            position: absolute;
+            color: var(--pastel-blue);
+            font-size: 12px;
+            font-weight: bold;
+            background-color: var(--bg-black);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            z-index: 5;
+        }
+
+        /* 노드 위치 정의 - 세로 중심축 정렬 (X: 900) */
+        /* Top Flow */
+        #node-login { top: 30px; left: 350px; }
+        #node-char { top: 30px; left: 625px; }
+        #node-main { top: 20px; left: 900px; transform: translateX(-50%); }
+
+        /* Level 2: 3-Way Branch */
+        /* 전투 (중앙) */
+        #node-battle { top: 160px; left: 900px; transform: translateX(-50%); }
+        /* 상점 (왼쪽) */
+        #node-shop { top: 160px; left: 450px; transform: translateX(-50%); }
+        /* 인벤토리 (오른쪽) */
+        #node-inven { top: 160px; left: 1350px; transform: translateX(-50%); }
+
+        /* Level 3: Actions */
+        #node-action { top: 260px; left: 900px; transform: translateX(-50%); width: 180px; } /* 공격/스킬/아이템 */
+        #node-buy { top: 260px; left: 450px; transform: translateX(-50%); }
+        #node-check { top: 260px; left: 1350px; transform: translateX(-50%); }
+
+        /* Level 4: Boss Battle / Returns */
+        #node-boss { top: 360px; left: 900px; transform: translateX(-50%); }
+        #node-shop-return { top: 360px; left: 450px; transform: translateX(-50%); border-style: dashed; }
+        #node-inven-return { top: 360px; left: 1350px; transform: translateX(-50%); border-style: dashed; }
+
+        /* Level 5: Win/Lose Branch (Diamond) */
+        #node-result-wrapper { top: 450px; left: 900px; transform: translateX(-50%); }
+
+        /* Level 6: Win / Lose */
+        #node-win { top: 560px; left: 750px; transform: translateX(-50%); }
+        #node-lose { top: 560px; left: 1050px; transform: translateX(-50%); }
+
+        /* Level 7: Rewards / Penalty */
+        #node-reward { top: 660px; left: 750px; transform: translateX(-50%); width: 160px; height: 80px; }
+        #node-penalty { top: 660px; left: 1050px; transform: translateX(-50%); width: 160px; height: 80px; }
+
+        /* Level 8: Next / Return */
+        #node-next { top: 780px; left: 750px; transform: translateX(-50%); }
+        #node-lose-return { top: 780px; left: 1050px; transform: translateX(-50%); border-style: dashed; }
+
+        /* Level 9: Final Return */
+        #node-final-return { top: 870px; left: 900px; transform: translateX(-50%); width: 200px; border-style: dashed; }
+
+        /* SVG Paths */
+        path {
+            fill: none;
+            stroke: var(--arrow-color);
+            stroke-width: 2;
+            transition: stroke 0.3s;
+        }
+
+        path.active-path {
+            stroke: var(--neon-green);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 5px var(--neon-green));
+            animation: dash 1s linear infinite;
+            stroke-dasharray: 20;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -40; }
+        }
+
+        /* 픽셀 장식 */
+        .pixel-deco {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--text-white);
+        }
+        .flow-node:hover .pixel-deco { background-color: var(--neon-green); }
+        .pd-tl { top: -2px; left: -2px; }
+        .pd-tr { top: -2px; right: -2px; }
+        .pd-bl { bottom: -2px; left: -2px; }
+        .pd-br { bottom: -2px; right: -2px; }
+
+        /* 가이드 텍스트 */
+        .guide-text {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: var(--pastel-yellow);
+            background-color: rgba(0,0,0,0.7);
+            padding: 8px 16px;
+            border: 1px dashed var(--pastel-yellow);
+            pointer-events: none;
+            z-index: 20;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+    </style>
+</head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"><span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<i class="fas fa-project-diagram"></i> SYSTEM_FLOW_DIAGRAM
+        </div>
+</div>
+<!-- 플로우차트 영역 -->
+<div class="flowchart-container">
+<!-- SVG 연결선 (배경) -->
+<svg class="svg-layer" id="svgLayer" viewBox="0 0 1800 900">
+<defs>
+<marker id="arrow-head" markerHeight="10" markerUnits="strokeWidth" markerWidth="10" orient="auto" refX="9" refY="3">
+<path d="M0,0 L0,6 L9,3 z" fill="#555"></path>
+</marker>
+<marker id="arrow-head-active" markerHeight="10" markerUnits="strokeWidth" markerWidth="10" orient="auto" refX="9" refY="3">
+<path d="M0,0 L0,6 L9,3 z" fill="#39FF14"></path>
+</marker>
+</defs>
+<!-- Paths will be drawn by JS -->
+</svg>
+<!-- 노드 레이어 -->
+<div class="nodes-layer">
+<!-- Top Flow -->
+<div class="flow-node" id="node-login">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">로그인</p>
+</div>
+<div class="flow-node" id="node-char">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">캐릭터 생성</p>
+</div>
+<div class="flow-node main-menu" id="node-main">
+<p class="node-title" style="color: var(--pastel-yellow);">메인 메뉴</p>
+<p class="node-desc">(분기점)</p>
+</div>
+<!-- Level 2: 3-Way Branch -->
+<div class="flow-node" id="node-battle">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">전투</p>
+</div>
+<div class="flow-node" id="node-shop">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">상점</p>
+</div>
+<div class="flow-node" id="node-inven">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">인벤토리</p>
+</div>
+<!-- Level 3: Actions -->
+<div class="flow-node" id="node-action">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">공격/스킬/아이템</p>
+</div>
+<div class="flow-node" id="node-buy">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">아이템 구매</p>
+</div>
+<div class="flow-node" id="node-check">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">확인 / 사용</p>
+</div>
+<!-- Level 4: Boss / Returns -->
+<div class="flow-node" id="node-boss">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">보스 대전</p>
+</div>
+<div class="flow-node" id="node-shop-return">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">메인 메뉴 복귀</p>
+</div>
+<div class="flow-node" id="node-inven-return">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">메인 메뉴 복귀</p>
+</div>
+<!-- Level 5: Win/Lose Branch (Diamond) -->
+<div class="diamond-wrapper" id="node-result-wrapper">
+<div class="flow-node diamond-shape" id="node-result">
+<div class="diamond-text">
+<p class="node-title">승리?</p>
+</div>
+</div>
+</div>
+<!-- Level 6: Win/Lose -->
+<div class="flow-node" id="node-win">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">승리</p>
+</div>
+<div class="flow-node" id="node-lose">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">패배</p>
+</div>
+<!-- Level 7: Rewards/Penalty -->
+<div class="flow-node" id="node-reward">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">보상 획득<br><span style="font-size:11px; color:#aaa;">(EXP / Gold / 아이템)</span></p>
+</div>
+<div class="flow-node" id="node-penalty">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">패널티 적용<br><span style="font-size:11px; color:#aaa;">(Gold 감소 / HP 초기화)</span></p>
+</div>
+<!-- Level 8: Next / Return -->
+<div class="flow-node" id="node-next">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">생성 / 다음</p>
+</div>
+<div class="flow-node" id="node-lose-return">
+<div class="pixel-deco pd-tl"></div><div class="pixel-deco pd-tr"></div><div class="pixel-deco pd-bl"></div><div class="pixel-deco pd-br"></div>
+<p class="node-title">패배 복귀</p>
+</div>
+<!-- Level 9: Final Return -->
+<div class="flow-node" id="node-final-return">
+<p class="node-title">메인 메뉴 복귀</p>
+</div>
+</div>
+<div class="guide-text">
+            &gt; CLICK NODES TO SEE FLOW
+        </div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleText = "시스템 플로우차트";
+        const titleElement = document.getElementById('pageTitle');
+        const svgLayer = document.getElementById('svgLayer');
+        
+        // 노드 정의 (ID 기반 매핑)
+        const nodeIds = [
+            'login', 'char', 'main', 
+            'battle', 'shop', 'inven',
+            'action', 'buy', 'check',
+            'boss', 'shop-return', 'inven-return',
+            'result', // 분기점
+            'win', 'lose',
+            'reward', 'penalty',
+            'next', 'lose-return',
+            'final-return'
+        ];
+        
+        const nodes = {};
+        nodeIds.forEach(id => {
+            nodes[id] = document.getElementById(`node-${id}`);
+        });
+
+        // 연결 정의 (from -> to)
+        const connections = [
+            // 초기 흐름
+            { from: 'login', to: 'char', id: 'path-login-char' },
+            { from: 'char', to: 'main', id: 'path-char-main' },
+            
+            // 메인 분기 (3갈래)
+            { from: 'main', to: 'battle', id: 'path-main-battle' },
+            { from: 'main', to: 'shop', id: 'path-main-shop' },
+            { from: 'main', to: 'inven', id: 'path-main-inven' },
+            
+            // 상점 흐름
+            { from: 'shop', to: 'buy', id: 'path-shop-buy' },
+            { from: 'buy', to: 'shop-return', id: 'path-buy-return' },
+            { from: 'shop-return', to: 'main', id: 'path-shop-main', return: true, via: 'top' }, // 메인으로 복귀
+            
+            // 인벤토리 흐름
+            { from: 'inven', to: 'check', id: 'path-inven-check' },
+            { from: 'check', to: 'inven-return', id: 'path-check-return' },
+            { from: 'inven-return', to: 'main', id: 'path-inven-main', return: true, via: 'top' }, // 메인으로 복귀
+            
+            // 전투 흐름
+            { from: 'battle', to: 'action', id: 'path-battle-action' },
+            { from: 'action', to: 'boss', id: 'path-action-boss' },
+            { from: 'boss', to: 'result', id: 'path-boss-result' },
+            
+            // 승패 분기
+            { from: 'result', to: 'win', id: 'path-result-win' },
+            { from: 'result', to: 'lose', id: 'path-result-lose' },
+            
+            // 승리 흐름
+            { from: 'win', to: 'reward', id: 'path-win-reward' },
+            { from: 'reward', to: 'next', id: 'path-reward-next' },
+            { from: 'next', to: 'final-return', id: 'path-next-final' },
+            
+            // 패배 흐름
+            { from: 'lose', to: 'penalty', id: 'path-lose-penalty' },
+            { from: 'penalty', to: 'lose-return', id: 'path-penalty-return' },
+            { from: 'lose-return', to: 'final-return', id: 'path-lose-final' },
+            
+            // 최종 복귀
+            { from: 'final-return', to: 'main', id: 'path-final-main', return: true, via: 'left' }
+        ];
+
+        // 1. 타이틀 타이핑 애니메이션
+        titleElement.innerHTML = '<span class="cursor-blink"></span>';
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < titleText.length) {
+                const currentText = titleText.substring(0, charIndex + 1);
+                titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                charIndex++;
+                setTimeout(typeWriter, 80);
+            } else {
+                initFlowchart();
+            }
+        }
+
+        // 플로우차트 초기화 및 그리기
+        function initFlowchart() {
+            drawPaths();
+            setupInteractions();
+            
+            // 초기 자동 시연
+            setTimeout(() => {
+                triggerFlow('login');
+            }, 500);
+        }
+
+        function getCenter(element) {
+            const rect = element.getBoundingClientRect();
+            // 상대 좌표 계산 (컨테이너 기준)
+            const containerRect = document.querySelector('.nodes-layer').getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2 - containerRect.left,
+                y: rect.top + rect.height / 2 - containerRect.top,
+                w: rect.width,
+                h: rect.height,
+                left: rect.left - containerRect.left,
+                right: rect.right - containerRect.left,
+                top: rect.top - containerRect.top,
+                bottom: rect.bottom - containerRect.top
+            };
+        }
+
+        function drawPaths() {
+            connections.forEach(conn => {
+                const fromEl = nodes[conn.from];
+                const toEl = nodes[conn.to];
+                if (!fromEl || !toEl) return;
+                
+                const fromPos = getCenter(fromEl);
+                const toPos = getCenter(toEl);
+
+                let d = '';
+
+                if (conn.return && conn.via === 'top') {
+                    // 상단 복귀 경로 (상점/인벤 -> 메인)
+                    // 위로 올라가서 메인 메뉴로
+                    const startX = fromPos.x;
+                    const startY = fromPos.top;
+                    const endX = toPos.x;
+                    const endY = toPos.bottom;
+                    const midY = (startY + endY) / 2; // 중간 높이 안씀, 바로 위로 꺾음
+                    
+                    // 위로 -> 옆으로 -> 아래로 (ㄷ자 뒤집은 형태는 아님, 그냥 직각)
+                    // 여기서는 간단하게 위쪽에서 가로질러 가는 형태 대신, 
+                    // 개별 노드에서 위쪽으로 선을 그어 메인 메뉴 하단이나 측면으로 연결
+                    // 시각적 명확성을 위해: 노드 위 -> 메인 메뉴 아래 (X) 이미 아래로 흐르고 있음
+                    // 노드 아래 -> 메인 메뉴 (순환)
+                    
+                    // 수정: 복귀 경로는 아래에서 위로 크게 돌아가는 선
+                    const outY = fromPos.bottom + 10;
+                    const mainY = toPos.bottom + 10; // 메인 메뉴 아래쪽으로 진입? 
+                    // 복잡하므로, 상점/인벤토리는 그냥 아래로 진행하다가 끝나는게 아니라 메인으로 돌아가는 화살표
+                    
+                    // 여기서는 직각으로 꺾어서 메인 메뉴 측면으로 연결
+                    const midX = (fromPos.x + toPos.x) / 2;
+                    d = `M${fromPos.x},${fromPos.bottom} L${fromPos.x},${fromPos.bottom + 20} L${midX},${fromPos.bottom + 20} L${midX},${toPos.bottom + 20} L${toPos.x},${toPos.bottom}`;
+                    // 복귀 선은 복잡해서 생략하거나 단순화
+                    // 상점/인벤토리의 "메인 메뉴 복귀" 노드에서 메인 메뉴 노드로의 선 그리기
+                    
+                    // 상점 복귀 (왼쪽에서 메인으로)
+                    if (conn.from === 'shop-return') {
+                         d = `M${fromPos.right},${fromPos.y} L${fromPos.right + 20},${fromPos.y} L${fromPos.right + 20},${toPos.y} L${toPos.left},${toPos.y}`;
+                    } else if (conn.from === 'inven-return') {
+                         d = `M${fromPos.left},${fromPos.y} L${fromPos.left - 20},${fromPos.y} L${fromPos.left - 20},${toPos.y} L${toPos.right},${toPos.y}`;
+                    }
+
+                } else if (conn.return && conn.via === 'left') {
+                    // 최종 복귀 (맨 아래에서 맨 위 메인으로)
+                    const startX = fromPos.left;
+                    const startY = fromPos.y;
+                    const endX = toPos.left;
+                    const endY = toPos.y;
+                    
+                    // 왼쪽으로 크게 돌아서 위로
+                    d = `M${startX},${startY} L${startX - 200},${startY} L${startX - 200},${endY} L${endX},${endY}`;
+                } else {
+                    // 일반적인 하향/횡향 연결
+                    if (Math.abs(fromPos.x - toPos.x) < 5) {
+                        // 수직 연결
+                        d = `M${fromPos.x},${fromPos.bottom} L${toPos.x},${toPos.top}`;
+                    } else {
+                        // 직각 연결 (수평 -> 수직)
+                        // 분기점에서는 옆으로 나갔다가 아래로
+                        if (conn.from === 'main') {
+                            // 메인 메뉴 분기
+                            const midY = (fromPos.bottom + toPos.top) / 2;
+                            d = `M${fromPos.x},${fromPos.bottom} L${fromPos.x},${midY} L${toPos.x},${midY} L${toPos.x},${toPos.top}`;
+                        } else if (conn.from === 'result') {
+                            // 승패 분기 (다이아몬드)
+                            // 다이아몬드는 좌우/아래로 나감
+                            if (conn.to === 'win') {
+                                // 왼쪽(승리)
+                                d = `M${fromPos.left},${fromPos.y} L${toPos.x},${fromPos.y} L${toPos.x},${toPos.top}`;
+                            } else {
+                                // 오른쪽(패배)
+                                d = `M${fromPos.right},${fromPos.y} L${toPos.x},${fromPos.y} L${toPos.x},${toPos.top}`;
+                            }
+                        } else {
+                            // 일반 직각
+                            const midX = (fromPos.x + toPos.x) / 2;
+                            d = `M${fromPos.right},${fromPos.y} L${midX},${fromPos.y} L${midX},${toPos.top} L${toPos.x},${toPos.top}`;
+                            // 수평 정렬된 경우 (로그인 -> 캐릭터 -> 메인)
+                            if (Math.abs(fromPos.y - toPos.y) < 5) {
+                                d = `M${fromPos.right},${fromPos.y} L${toPos.left},${toPos.y}`;
+                            }
+                        }
+                    }
+                }
+
+                if (d) {
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path.setAttribute("d", d);
+                    path.setAttribute("id", conn.id);
+                    path.setAttribute("marker-end", "url(#arrow-head)");
+                    svgLayer.appendChild(path);
+                }
+            });
+        }
+
+        function setupInteractions() {
+            Object.keys(nodes).forEach(key => {
+                if(nodes[key]) {
+                    nodes[key].addEventListener('click', () => {
+                        triggerFlow(key);
+                    });
+                }
+            });
+        }
+
+        function triggerFlow(nodeKey) {
+            // 모든 활성 상태 초기화
+            document.querySelectorAll('.flow-node').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('path').forEach(el => {
+                el.classList.remove('active-path');
+                el.setAttribute("marker-end", "url(#arrow-head)");
+            });
+
+            const currentElement = nodes[nodeKey];
+            if(currentElement) currentElement.classList.add('active');
+
+            // 다음 단계 찾기
+            let nextNodes = [];
+            
+            // 연결 정보를 기반으로 다음 노드 검색
+            const outgoingConns = connections.filter(c => c.from === nodeKey);
+            nextNodes = outgoingConns.map(c => c.to);
+
+            // 경로 및 다음 노드 활성화 애니메이션
+            nextNodes.forEach(nextKey => {
+                const conn = connections.find(c => c.from === nodeKey && c.to === nextKey);
+                if (conn && conn.id) {
+                    const pathEl = document.getElementById(conn.id);
+                    if (pathEl) {
+                        pathEl.classList.add('active-path');
+                        pathEl.setAttribute("marker-end", "url(#arrow-head-active)");
+                    }
+                }
+
+                // 0.3초 후 다음 노드 강조
+                setTimeout(() => {
+                    if(nodes[nextKey]) nodes[nextKey].classList.add('active');
+                    
+                    // 만약 다음 노드가 메인 메뉴 복귀라면 (자동 흐름)
+                    if (['final-return'].includes(nextKey)) {
+                        setTimeout(() => {
+                             // 메인 메뉴로 자동 복귀 효과
+                             nodes['main'].classList.add('active');
+                             // 복귀 선 활성화
+                             const returnPath = document.getElementById('path-final-main');
+                             if(returnPath) {
+                                 returnPath.classList.add('active-path');
+                                 returnPath.setAttribute("marker-end", "url(#arrow-head-active)");
+                             }
+                        }, 500);
+                    }
+                }, 300);
+            });
+        }
+
+        // 시작
+        setTimeout(typeWriter, 500);
+    });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "16.html";
+    }
+});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "14.html";
+        }
+    });
+</script>
+
+</body></html>

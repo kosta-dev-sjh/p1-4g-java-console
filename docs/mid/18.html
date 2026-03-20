@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 협업 환경</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.95);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 50px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 2x2 그리드 컨테이너 */
+        .tools-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 40px;
+            padding: 20px 0;
+        }
+
+        /* 도구 카드 스타일 */
+        .tool-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 40px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(30px);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: var(--neon-green);
+            background-color: rgba(30, 30, 30, 0.98);
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* 아이콘 영역 */
+        .icon-wrapper {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            margin-right: 40px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .tool-card:hover .icon-wrapper {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 64px;
+            color: var(--pastel-blue);
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover .tool-icon {
+            color: var(--neon-green);
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px var(--neon-green));
+        }
+
+        /* 텍스트 영역 */
+        .text-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tool-name {
+            font-family: 'Press Start 2P', monospace; /* 픽셀 느낌 대체 폰트가 없다면 monospace 계열 사용 */
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tool-desc {
+            font-size: 24px;
+            color: #ccc;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .highlight-text {
+            color: var(--pastel-yellow);
+            font-weight: 600;
+        }
+
+        /* 픽셀 코너 장식 */
+        .pixel-corner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--border-color);
+            transition: background-color 0.3s;
+        }
+
+        .tool-card:hover .pixel-corner {
+            background-color: var(--neon-green);
+        }
+
+        .pc-tl { top: 0; left: 0; }
+        .pc-tr { top: 0; right: 0; }
+        .pc-bl { bottom: 0; left: 0; }
+        .pc-br { bottom: 0; right: 0; }
+
+        /* 카드 번호 (배경 장식) */
+        .card-number {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-family: monospace;
+            font-size: 48px;
+            font-weight: 900;
+            color: #222;
+            z-index: 0;
+            pointer-events: none;
+            transition: color 0.3s;
+        }
+
+        .tool-card:hover .card-number {
+            color: #2a2a2a;
+        }
+
+        /* 연결선 장식 (가운데 십자가) */
+        .grid-line-v {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 0;
+            background-color: #333;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: height 1s;
+        }
+        
+        .grid-line-h {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #333;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: width 1s;
+        }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"></h1>
+<div class="header-deco">
+<i class="fas fa-network-wired"></i> COLLABORATION_TOOLS
+        </div>
+</div>
+<!-- 2x2 그리드 -->
+<div class="tools-container">
+<!-- 중앙 연결선 장식 -->
+<div class="grid-line-v" id="lineV"></div>
+<div class="grid-line-h" id="lineH"></div>
+<!-- 1. GitHub -->
+<div class="tool-card" id="card1">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-number">01</div>
+<div class="icon-wrapper">
+<i class="fab fa-github tool-icon"></i>
+</div>
+<div class="text-content">
+<div class="tool-name">GitHub</div>
+<p class="tool-desc">
+                    소스 코드 형상 관리 및 <br/>
+<span class="highlight-text">PR(Pull Request)</span> 기반 협업
+                </p>
+</div>
+</div>
+<!-- 2. GitHub Wiki -->
+<div class="tool-card" id="card2">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-number">02</div>
+<div class="icon-wrapper">
+<i class="fas fa-book-open tool-icon"></i>
+</div>
+<div class="text-content">
+<div class="tool-name">GitHub Wiki</div>
+<p class="tool-desc">
+                    설계 문서 정리 및 공유 <br/>
+<span class="highlight-text">(요구사항, UML, ERD)</span>
+</p>
+</div>
+</div>
+<!-- 3. Jira -->
+<div class="tool-card" id="card3">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-number">03</div>
+<div class="icon-wrapper">
+<i class="fab fa-jira tool-icon"></i>
+</div>
+<div class="text-content">
+<div class="tool-name">Jira</div>
+<p class="tool-desc">
+                    작업 단위(Task) 생성 및 <br/>
+<span class="highlight-text">애자일(Agile)</span> 진행 관리
+                </p>
+</div>
+</div>
+<!-- 4. Slack -->
+<div class="tool-card" id="card4">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-number">04</div>
+<div class="icon-wrapper">
+<i class="fab fa-slack tool-icon"></i>
+</div>
+<div class="text-content">
+<div class="tool-name">Slack</div>
+<p class="tool-desc">
+                    실시간 팀 커뮤니케이션 및 <br/>
+<span class="highlight-text">개발 도구 알림</span> 연동
+                </p>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "협업 환경";
+            const titleElement = document.getElementById('pageTitle');
+            const cards = [
+                document.getElementById('card1'),
+                document.getElementById('card2'),
+                document.getElementById('card3'),
+                document.getElementById('card4')
+            ];
+            const lineV = document.getElementById('lineV');
+            const lineH = document.getElementById('lineH');
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 타이핑 완료 후 그리드 라인 및 카드 등장
+                    showContent();
+                }
+            }
+
+            function showContent() {
+                // 그리드 라인 확장
+                lineV.style.height = '100%';
+                lineH.style.width = '100%';
+
+                // 카드 순차 등장
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 200 + 500);
+                });
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "19.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "17.html";
+            }
+        });
+    </script>
+</body>
+</html>

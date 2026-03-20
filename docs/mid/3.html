@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 섹션 표지</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 (CSS Gradient 대체: SVG Data URI) */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 중앙 정렬 컨테이너 */
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        /* 픽셀 코너 장식 */
+        .pixel-corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--neon-green);
+            z-index: 10;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        .top-left { top: 80px; left: 80px; border-right: none; border-bottom: none; }
+        .top-right { top: 80px; right: 80px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 80px; left: 80px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 80px; right: 80px; border-left: none; border-top: none; }
+
+        /* 스테이지 표시 */
+        .stage-indicator {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 32px;
+            color: var(--pastel-yellow);
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 0 #333;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        /* 메인 타이틀 */
+        .section-title {
+            font-size: 90px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 0;
+            text-shadow: 6px 6px 0 #333, 0 0 30px rgba(57, 255, 20, 0.3);
+            display: flex;
+            align-items: center;
+            z-index: 5;
+        }
+
+        /* 커서 애니메이션 */
+        .cursor-blink {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: var(--neon-green);
+            margin-left: 15px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 하단 보조 텍스트 */
+        .sub-text {
+            margin-top: 60px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--pastel-blue);
+            text-align: center;
+            opacity: 0;
+            letter-spacing: 2px;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* 장식용 라인 */
+        .deco-line-horizontal {
+            width: 0;
+            height: 2px;
+            background-color: var(--neon-green);
+            margin: 30px 0;
+            box-shadow: 0 0 10px var(--neon-green);
+            transition: width 1s ease-out;
+        }
+        
+        .deco-expanded {
+            width: 600px;
+        }
+
+        /* 배경 장식용 원형 도트 */
+        .bg-circle-deco {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border: 2px dashed #333;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 텍스트 래퍼 */
+        .text-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            backdrop-filter: blur(2px);
+            z-index: 2;
+        }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<!-- 배경 장식 -->
+<div class="bg-circle-deco"></div>
+<!-- 코너 장식 -->
+<div class="pixel-corner top-left"></div>
+<div class="pixel-corner top-right"></div>
+<div class="pixel-corner bottom-left"></div>
+<div class="pixel-corner bottom-right"></div>
+<div class="container-frame">
+<div class="text-wrapper">
+<p class="stage-indicator" id="stageIndicator">STAGE 01</p>
+<div class="deco-line-horizontal" id="topLine"></div>
+<h1 class="section-title" id="sectionTitle"></h1>
+<div class="deco-line-horizontal" id="bottomLine"></div>
+<p class="sub-text" id="subText">&gt; CHOOSE YOUR HERO_</p>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "플레이어 선택";
+            const titleElement = document.getElementById('sectionTitle');
+            const stageIndicator = document.getElementById('stageIndicator');
+            const subText = document.getElementById('subText');
+            const topLine = document.getElementById('topLine');
+            const bottomLine = document.getElementById('bottomLine');
+
+            // 초기화
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            
+            // 1. 스테이지 표시 등장
+            setTimeout(() => {
+                stageIndicator.style.opacity = '1';
+                stageIndicator.style.transform = 'translateY(0)';
+            }, 300);
+
+            // 2. 라인 확장
+            setTimeout(() => {
+                topLine.classList.add('deco-expanded');
+                bottomLine.classList.add('deco-expanded');
+            }, 800);
+
+            // 3. 타이틀 타이핑
+            setTimeout(() => {
+                let charIndex = 0;
+                
+                function typeWriter() {
+                    if (charIndex < titleText.length) {
+                        const currentText = titleText.substring(0, charIndex + 1);
+                        titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                        charIndex++;
+                        setTimeout(typeWriter, 150);
+                    } else {
+                        // 4. 하단 텍스트 등장
+                        setTimeout(() => {
+                            subText.style.opacity = '1';
+                        }, 500);
+                    }
+                }
+                typeWriter();
+            }, 1500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "4.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "2.html";
+            }
+        });
+    </script>
+</body>
+</html>
