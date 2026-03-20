@@ -1,13 +1,10 @@
 package com.kosta.console_rpg.view;
 
 import java.util.List;
-import java.util.Scanner;
 import com.kosta.console_rpg.controller.SkillController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
-import com.kosta.console_rpg.model.dto.SkillDTO;
-import com.kosta.console_rpg.model.service.SkillService;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
 
@@ -20,13 +17,6 @@ import com.kosta.console_rpg.util.InputUtil;
  * 최종 수정일 : 
  */
 public class HeroView {
-
-//	public static void main(String[] args) {
-//
-//		HeroView view = new HeroView();
-//        view.start();
-//    }
-
 
     public void start() {
 		SkillUpgradeView sv = new SkillUpgradeView();
@@ -54,35 +44,6 @@ public class HeroView {
 
 		List<HeroSkillDTO> skillList = skillController.selectHeroSkills();
 	    StringBuilder sb = new StringBuilder();
-
-	    // 예시 데이터 (실제로는 필드로 두면 된다)
-	    String name = "히어로짱";
-	    int gem = 128;
-
-	    int level = 7;
-	    int hp = 95;
-	    int maxHp = 120;
-	    int mp = 40;
-	    int maxMp = 60;
-	    int attack = 18;
-	    int defense = 12;
-	    int exp = 140;
-	    int maxExp = 200;
-
-	    String skill1 = "Fire Slash";
-	    int skill1Lv = 2;
-	    String skill1Desc = "적에게 강한 화염 공격";
-	    int skill1Mp = 10;
-
-	    String skill2 = "Guard Break";
-	    int skill2Lv = 1;
-	    String skill2Desc = "적 방어력 감소 공격";
-	    int skill2Mp = 8;
-
-	    String skill3 = "Healing Light";
-	    int skill3Lv = 1;
-	    String skill3Desc = "HP 회복";
-	    int skill3Mp = 12;
 
 	    sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
 	    sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
@@ -114,7 +75,6 @@ public class HeroView {
 	    sb.append("────────────────── MENU ──────────────────\n\n");
 	    sb.append(" [S] 스킬 강화\n");
 	    sb.append(" [0] 뒤로가기\n\n");
-	    //sb.append("선택 ▶ ");
 
         return sb.toString();
 	}

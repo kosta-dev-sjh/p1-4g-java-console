@@ -1,10 +1,8 @@
 package com.kosta.console_rpg.controller;
 
 import com.kosta.console_rpg.exception.GameException;
-import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.QuestDTO;
 import com.kosta.console_rpg.model.service.QuestService;
-import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.view.FailView;
 import com.kosta.console_rpg.view.QuestView;
 
@@ -24,8 +22,7 @@ public class QuestController {
 
     public void selectQuestsByHeroId(int heroId) {
         try{
-            List<QuestDTO> questList = questService.selectQuestsByHeroId(heroId);
-            //System.out.println(questList);
+            questService.selectQuestsByHeroId(heroId);
         } catch (SQLException e) {           
             FailView.errorMessage(e.getMessage());
         }
