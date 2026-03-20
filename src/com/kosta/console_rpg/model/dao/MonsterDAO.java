@@ -1,7 +1,6 @@
 package com.kosta.console_rpg.model.dao;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import com.kosta.console_rpg.model.dto.MonsterDTO;
 

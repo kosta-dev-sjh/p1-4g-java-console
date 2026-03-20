@@ -423,12 +423,6 @@ public class ShopView {
 	        System.out.println("현재 보유 Gem : " + afterGem);
 	    }
 	}
-	
-	public static void main(String[] args) {
-		ShopView view = new ShopView();
-		view.start();
-		view.showShop();
-	}
 
 	public void start() {
 		System.out.println(this);

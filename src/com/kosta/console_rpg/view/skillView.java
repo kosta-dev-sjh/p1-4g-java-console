@@ -18,12 +18,6 @@ public class skillView {
 
     private static Scanner sc = new Scanner(System.in);
     private static SkillController skillController = new SkillController();
-    
-	public static void main(String[] args) {
-		skillView view = new skillView();
-        view.start();
-    }
-
 
     public static void start() {
     	
@@ -119,7 +113,6 @@ public class skillView {
 	
 	
 	public static void skillMenu() {
-		int heroId = LoginSession.getInstance().getCurrentHero().getHeroId();
 
 	    while (true) {
 	        System.out.println("\n===== [ 스킬 메뉴 ] =====");

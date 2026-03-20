@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kosta.console_rpg.exception.GameException;
-import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.util.DBManager;
 
@@ -180,7 +179,7 @@ public class ShopDAOImpl implements ShopDAO {
 			ps.setInt(1, heroId);
 			ps.setInt(2, itemId);
 			
-			int result = ps.executeUpdate();
+			ps.executeUpdate();
 			
 			String deleteSql = "delete from inventory where fk_hero_id = ? and fk_item_id = ? and inventory_quantity = 0";
 			

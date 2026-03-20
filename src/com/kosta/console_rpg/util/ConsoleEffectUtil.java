@@ -1,6 +1,6 @@
-package com.kosta.console_rpg.test;
+package com.kosta.console_rpg.util;
 
-public class ConsoleEffectTest {
+public class ConsoleEffectUtil {
 
 	public static final String RESET = "\u001B[0m";
 	//public static final String RED = "\u001B[31m";

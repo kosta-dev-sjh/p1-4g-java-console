@@ -1,8 +1,5 @@
 package com.kosta.console_rpg.util;
 
-import static com.kosta.console_rpg.test.ConsoleEffectTest.WHITE_BG;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.BLACK;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
 
 public class ConsoleUtils {
 	// 공통 상수 정의 (이미 정의되어 있다면 생략 가능)
@@ -23,9 +20,9 @@ public class ConsoleUtils {
         String centeredMenu = " ".repeat(padding) + title;
 
         // 2. 타이틀 바 조립
-        sb.append("\n"+WHITE_BG).append(BLACK)
+        sb.append("\n"+ConsoleEffectUtil.WHITE_BG).append(ConsoleEffectUtil.BLACK)
           .append(String.format("%-" + WIDTH + "s", centeredMenu))
-          .append(RESET).append("\n\n");
+          .append(ConsoleEffectUtil.RESET).append("\n\n");
 
         // 3. 출력
         System.out.print(sb.toString());
