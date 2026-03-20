@@ -11,6 +11,7 @@ import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.InputUtil;
+import com.kosta.console_rpg.util.ConsoleUtils;
 
 public class ShopView {
 	private static ShopController shopController = new ShopController();
@@ -50,8 +51,7 @@ public class ShopView {
 	    int gem = LoginSession.getInstance()
 	            .getCurrentHero()
 	            .getHeroGem();
-
-	    System.out.println("\n__________________________┌ SHOP BUY ┐__________________________\n");
+	    ConsoleUtils.printTitleBar("SHOP BUY");
 	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
 	    System.out.println("──────────────────────── POTION ────────────────────────\n");

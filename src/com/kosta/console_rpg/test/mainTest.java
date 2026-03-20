@@ -4,6 +4,7 @@ import com.kosta.console_rpg.controller.QuestController;
 import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.view.*;
 
@@ -27,15 +28,12 @@ public class mainTest {
         
         while (true) {
             try {
-                System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
-
+                //System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
+                // 유틸리티 메서드 호출
                 boolean isLogin = LoginSession.getInstance().isLogin();
                 HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
                 if (!isLogin) {     //로그인 되지않았을경우
-//                    System.out.println("▸[1] 회원가입");
-//                    System.out.println("▸[2] 로그인");
-//                    System.out.println("▸[0] 종료");
                     StartView startView = new StartView();
                     startView.start();
                 } else if (hero == null) {  //로그인은 됐지만, 아직 히어로 생성은 하지않은 경우
@@ -43,6 +41,7 @@ public class mainTest {
                     System.out.println("▸[2] 히어로 생성");
                     System.out.println("▸[0] 종료");
                 } else {    //히어로 생성 및 로그인 완료
+                	ConsoleUtils.printTitleBar("Main Menu");
                     mainView.start();
                 }
 
