@@ -12,6 +12,10 @@ import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.ConsoleUtils;
 
+import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
+
 /**
  * 게임 샵 정보 뷰
  *
@@ -60,15 +64,15 @@ public class ShopView {
 	    System.out.println(" ◈ 보유 Gem(" + gem + ") ◈\n");
 
 	    System.out.println("──────────────────────── POTION ────────────────────────\n");
-	    System.out.println("[1] 포션");
+	    System.out.println(" [1] 포션");
 
 	    System.out.println("\n─────────────────────── EQUIPMENT ───────────────────────\n");
-	    System.out.println("[2] 장비");
-	    System.out.println(" - 무기");
-	    System.out.println(" - 갑옷");
+	    System.out.println(" [2] 장비");
+	    System.out.println("  - 무기");
+	    System.out.println("  - 갑옷");
 
 	    System.out.println("\n─────────────────────────────────────────────────────────");
-	    System.out.println("[0] 뒤로가기");
+	    System.out.println(" [0] 뒤로가기 \n");
 	    System.out.print("선택 ▶ ");
 
 	    int select = sc.nextInt();
@@ -103,10 +107,10 @@ public class ShopView {
 
 	        if(item.getItemType().equals("potion")) {
 
-	            System.out.println("[" + no + "] " + item.getItemName());
-	            System.out.println("효과 : HP +" + item.getItemEffectHp());
-	            System.out.println("효과 : MP +" + item.getItemEffectMp());
-	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+	            System.out.println(" [" + no + "] " + item.getItemName());
+	            System.out.println("   ▸ 효과 : " + GREEN + "HP +" + item.getItemEffectHp() + RESET);
+	            System.out.println("   ▸ 효과 : " + GREEN + "MP +" + item.getItemEffectMp() + RESET);
+	            System.out.println("   ▸ 가격 : " + RED + item.getItemPriceBuy() + "Gem\n" + RESET);
 
 	            menuMap.put(no, item);
 	            no++;
@@ -162,9 +166,9 @@ public class ShopView {
 
 	        if(item.getItemType().equals("weapon")) {
 
-	            System.out.println("[" + no + "] " + item.getItemName());
-	            System.out.println("공격력 : +" + item.getItemAtkBonus());
-	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+	            System.out.println(" [" + no + "] " + item.getItemName());
+	            System.out.println(" ▸ 공격력 : " + GREEN + "+" + item.getItemAtkBonus() + RESET);
+	            System.out.println(" ▸ 가격 : " + RED +item.getItemPriceBuy() + " Gem\n" + RESET);
 
 	            menuMap.put(no, item);
 	            no++;
@@ -177,9 +181,9 @@ public class ShopView {
 
 	        if(item.getItemType().equals("armor")) {
 
-	            System.out.println("[" + no + "] " + item.getItemName());
-	            System.out.println("방어력 : +" + item.getItemDefBonus());
-	            System.out.println("가격 : " + item.getItemPriceBuy() + " Gem\n");
+	            System.out.println(" [" + no + "] " + item.getItemName());
+	            System.out.println(" ▸ 방어력 : " + GREEN + "+" +item.getItemDefBonus() + RESET);
+	            System.out.println(" ▸ 가격 : " + RED + item.getItemPriceBuy() + "Gem\n" + RESET);
 
 	            menuMap.put(no, item);
 	            no++;
@@ -319,7 +323,6 @@ public class ShopView {
 	
 
     private static final int WIDTH = 33;
-    
     private String center(String text, int width) {
         int padding = width - text.length();
         int left = padding / 2;
@@ -332,24 +335,25 @@ public class ShopView {
 	public String toString() {
 
 	    StringBuilder sb = new StringBuilder();
-
+	    
         int gem = LoginSession.getInstance()
                 .getCurrentHero()
                 .getHeroGem();
-
-	    sb.append("_________________________________┌ ITEM SHOP ┐_________________________________\n\n");
+        ConsoleUtils.printTitleBar("ITEM SHOP");
 
 	    sb.append(String.format(" ◈ 보유 Gem(%d) ◈\n\n", gem));
-
-        sb.append(String.format("\n", center("┌─────────── MENU ───────────┐", WIDTH - 2)));
-        
-	    sb.append("┌─────────── MENU ───────────┐\n\n");
-
-	    sb.append("    [1] 아이템 구매\n");
+        //sb.append(String.format("\n", center("┌─────────── MENU ───────────┐", WIDTH - 2)));
+	    
+	    sb.append(ConsoleUtils.center("┌─────────── MENU ───────────┐\n\n", WIDTH));
+	    sb.append("   [1] 아이템 구매\n");
 	    sb.append("    [2] 아이템 판매\n");
 	    sb.append("    [0] 상점 나가기\n\n");
+        
+	    //sb.append(ConsoleUtils.center("    [1] 아이템 구매\n", WIDTH));
+	    //sb.append(ConsoleUtils.center("    [2] 아이템 판매\n", WIDTH));
+	    //sb.append(ConsoleUtils.center("    [0] 상점 나가기\n\n", WIDTH));
 
-	    sb.append("└────────────────────────────┘\n\n");
+	    sb.append(ConsoleUtils.center("└────────────────────────────┘\n\n", WIDTH));
 
 	    sb.append("선택 ▶ ");
 
