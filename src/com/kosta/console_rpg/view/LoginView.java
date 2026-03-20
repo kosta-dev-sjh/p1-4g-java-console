@@ -75,12 +75,11 @@ public class LoginView {
             if (hero == null) {
                 System.out.println("히어로 정보가 없습니다.");
                 createHeroTest();
-                continue;
+                return;
             }
 
             //  로그인 성공 + hero 있음
             System.out.println("현재 캐릭터명 : " + hero.getHeroName());
-            System.out.println("현재 로그인 유저 : " + user.getUserName());
             break;
         }
 

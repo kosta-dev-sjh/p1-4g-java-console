@@ -56,7 +56,7 @@ public class HeroSkillDTO {
 		return """
 				%s
 				▸ 레벨 : %d
-				▸ 대미지 : %d
+				▸ 데미지 : %d
 				▸ MP 소모 : %d
 				▸ 강화 비용 : %dG
 				"""
@@ -72,7 +72,7 @@ public class HeroSkillDTO {
 		return """
 				%s
 				   ▸ 레벨 : %d
-				   ▸ 대미지 : %d
+				   ▸ 데미지 : %d
 				   ▸ MP 소모 : %d
 				"""
 				.formatted(

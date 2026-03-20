@@ -1,16 +1,8 @@
 package com.kosta.console_rpg.view;
 
-import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.session.LoginSession;
-import com.kosta.console_rpg.util.InputUtil;
-
-import static com.kosta.console_rpg.test.BattleTest.startBattle;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
+import com.kosta.console_rpg.util.ConsoleEffectUtil;
 
 /**
  *  스테이지 선택을 위한 스테이지 출력
@@ -33,7 +25,7 @@ public class StageView {
 //            }
 //        }
         int isStageCleared = hero.getHeroMaxClearStage();
-        String clearedText = GREEN + " (Cleared)" + RESET;
+        String clearedText = ConsoleEffectUtil.GREEN + " (Cleared)" + ConsoleEffectUtil.RESET;
         String message1 = "";
         String message2 = "";
         String message3 = "";

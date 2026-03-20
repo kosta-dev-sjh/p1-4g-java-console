@@ -1,10 +1,6 @@
 package com.kosta.console_rpg.view;
 
-import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;
-import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
+import com.kosta.console_rpg.util.ConsoleEffectUtil;
 
 /**
  * 게임 시작 뷰
@@ -15,11 +11,6 @@ import static com.kosta.console_rpg.test.ConsoleEffectTest.RESET;
  * 최종 수정일 : 
  */
 public class StartView {
-	
-	public static void main(String[] args) {
-        StartView view = new StartView();
-        view.start();
-    }
 
     public void start() {
         System.out.println(this);
@@ -29,7 +20,7 @@ public class StartView {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(GREEN);
+        sb.append(ConsoleEffectUtil.GREEN);
         sb.append("╔══════════════════════════════════════════════════════════╗\n");
         sb.append("║                                                          ║\n");
         sb.append("║    ███████   ██╗   ██╗  ███████╗   ██╗       ██╗         ║\n");
@@ -59,7 +50,7 @@ public class StartView {
         sb.append("║          Press number to begin your adventure...         ║\n");
         sb.append("║                                                          ║\n");
         sb.append("╚══════════════════════════════════════════════════════════╝\n");
-        sb.append(RESET);
+        sb.append(ConsoleEffectUtil.RESET);
 
         return sb.toString();
     }
