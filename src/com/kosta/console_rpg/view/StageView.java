@@ -7,6 +7,7 @@ import com.kosta.console_rpg.util.InputUtil;
 
 import static com.kosta.console_rpg.test.BattleTest.startBattle;
 import static com.kosta.console_rpg.test.ConsoleEffectTest.GREEN;
+import static com.kosta.console_rpg.test.ConsoleEffectTest.BLACK_BG;
 import static com.kosta.console_rpg.test.ConsoleEffectTest.RED;
 import static com.kosta.console_rpg.test.ConsoleEffectTest.YELLOW;
 import static com.kosta.console_rpg.test.ConsoleEffectTest.CYAN;

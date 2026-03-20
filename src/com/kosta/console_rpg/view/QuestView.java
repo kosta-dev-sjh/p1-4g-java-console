@@ -36,16 +36,16 @@ public class QuestView {
         System.out.println(quest.getQuestId()+"/"+quest.getQuestName()+"/"+quest.getQuestType()+"/"+quest.getQuestInfo()+"/"+quest.getQuestIngProgress()+"/"+quest.getQuestTarget());
     }
     public static void selectQuestIng(List<QuestDTO> questList){
-        System.out.println(ConsoleUtils.center("──────────────── IN PROGRESS QUEST ─────────────────", WIDTH));
+        System.out.println("\n──────────────── IN PROGRESS QUEST ─────────────────\n");
         for (QuestDTO q : questList) {
-            System.out.println("▸ " + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
+            System.out.println(" ▸ " + q.getQuestName() + "(" + q.getQuestIngProgress() + "/" + q.getQuestTarget() + ")");
         }
     }
     public static void selectQuestEnd(List<QuestDTO> questList){
-        System.out.println(ConsoleUtils.center("──────────────── COMPLETE QUEST ──────────────────\n", WIDTH));
+        System.out.println("──────────────── COMPLETE QUEST ──────────────────\n");
         //업적 이름만 출력
             questList.stream()
-                    .map(quest -> "□ " + quest.getQuestName())
+                    .map(quest -> " □ " + quest.getQuestName())
                     .forEach(System.out::println);
     }
     public static void updateQuestProgress(QuestDTO quest) {

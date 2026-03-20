@@ -8,6 +8,7 @@ import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.service.InventoryService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 
 public class InventoryView {
 
@@ -41,15 +42,16 @@ public class InventoryView {
             var hero = LoginSession.getInstance().getCurrentHero();
 
             sb.append("\n");
-            sb.append("-------------------- [ INVENTORY ] --------------------\n\n");
+            ConsoleUtils.printTitleBar("INVENTORY");
+            //sb.append("-------------------- [ INVENTORY ] --------------------\n\n");
 
-            sb.append(String.format("Hero : %s\n", hero.getHeroName()));
-            sb.append(String.format("보유 Gem : %d\n\n", hero.getHeroGem()));
+            sb.append(String.format(" Hero : %s\n", hero.getHeroName()));
+            sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));
 
-            sb.append("인벤토리가 비어있습니다.\n\n");
+            sb.append(" 인벤토리가 비어있습니다.\n\n");
 
-            sb.append("---------------------- MENU ----------------------\n");
-            sb.append("[0] 뒤로가기\n\n");
+            sb.append("────────────────── MENU ──────────────────\n");
+            sb.append(" [0] 뒤로가기\n\n");
 
             return sb.toString(); 
         }
@@ -60,7 +62,7 @@ public class InventoryView {
         int gem = hero.getHeroGem();
 
         sb.append("\n");
-        sb.append("-------------------- [ INVENTORY ] --------------------\n\n");
+        ConsoleUtils.printTitleBar("INVENTORY");
         
         sb.append("\n");
         sb.append(String.format("Hero : %s\n", name));

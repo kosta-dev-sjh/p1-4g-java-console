@@ -9,6 +9,7 @@ import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.model.dto.SkillDTO;
 import com.kosta.console_rpg.model.service.SkillService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 
 /**
@@ -84,7 +85,7 @@ public class HeroView {
 	    String skill3Desc = "HP 회복";
 	    int skill3Mp = 12;
 
-	    sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
+        ConsoleUtils.printTitleBar("HERO STATUS");
 	    sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
 	    sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));
 
