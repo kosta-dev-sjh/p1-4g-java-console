@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - 프로젝트 회고</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #39FF14;
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px #39FF14;
+        }
+        
+        .retro-box {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .retro-box:hover {
+            transform: scale(1.01);
+        }
+        
+        .log-text {
+            font-family: 'Paperlogy', 'Noto Sans KR', sans-serif;
+            font-size: 22px;
+            color: #DDDDDD;
+            line-height: 1.6;
+        }
+        
+        .log-prefix {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Patterns -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 1;"></div>
+        <!-- Header Section -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 50px; width: 200px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: #FEF08A; letter-spacing: 2px;">STAGE 12</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 90px; width: 1100px; height: 70px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', 'Noto Sans KR', sans-serif; font-size: 50px; font-weight: 900; color: #FFFFFF; text-shadow: 2px 2px 0 #333333;">프로젝트 회고<span class="typing-cursor"></span></p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 170px; width: 600px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; color: #666666; font-size: 14px;">&gt; LOG: PROJECT_RETROSPECTIVE_EVALUATED</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 210px; width: 1720px; height: 2px; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; z-index: 1;"></div>
+        <!-- ================= BOX 1: 느낀점 (Green) ================= -->
+        <div class="retro-box" data-object="true" data-object-type="shape" style="position: absolute; left: 150px; top: 260px; width: 1620px; height: 380px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #333333; border-top: 4px solid #39FF14; z-index: 2;"></div>
+        <!-- Box 1 Header -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 152px; top: 262px; width: 1616px; height: 40px; background-color: #111111; border-bottom: 1px solid #333333; z-index: 3;"></div>
+        <div data-object="true" data-object-type="icon" style="position: absolute; left: 170px; top: 270px; width: 24px; height: 24px; z-index: 10; display: flex; justify-content: center; align-items: center;">
+            <i class="fas fa-lightbulb" style="font-size: 20px; color: #39FF14;"></i>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 210px; top: 268px; width: 600px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', 'Noto Sans KR', sans-serif; font-size: 22px; font-weight: 800; color: #39FF14;">1_ 프로젝트 느낀점</p>
+        </div>
+        <!-- Box 1 Logs -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 330px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #39FF14;">&gt; SYS.LOG[01]:</span><span style="color: #FEF08A; font-weight: bold; margin-right: 15px;">[설계 중요성]</span>초기 객체지향 설계와 마스터 데이터 구조화가 이후 확장성과 유지보수에 미치는 긍정적 영향을 강하게 체감함.</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 400px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #39FF14;">&gt; SYS.LOG[02]:</span><span style="color: #FEF08A; font-weight: bold; margin-right: 15px;">[팀 협업의 가치]</span>Git/GitHub를 통한 버전 관리와 지속적인 PR 리뷰 문화가 코드 품질 향상 및 충돌 방지에 핵심적임을 확인.</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 470px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #39FF14;">&gt; SYS.LOG[03]:</span><span style="color: #FEF08A; font-weight: bold; margin-right: 15px;">[문제 해결 경험]</span>DB 트랜잭션 동시성 제어와 세션 관리 이슈를 디버깅하며 백엔드 시스템의 코어 로직과 안정성을 깊이 이해함.</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 540px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #39FF14;">&gt; SYS.LOG[04]:</span><span style="color: #FEF08A; font-weight: bold; margin-right: 15px;">[성장 실감]</span>단순한 문법 학습을 넘어, 기획부터 DB 설계, 구현, 배포까지 전체 사이클을 경험하며 개발자로서의 시야가 크게 확장됨.</p>
+        </div>
+        <!-- Box 1 Pixel Corners -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 148px; top: 258px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1766px; top: 258px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 148px; top: 636px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1766px; top: 636px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <!-- ================= BOX 2: 향후 발전 방향 (Blue) ================= -->
+        <div class="retro-box" data-object="true" data-object-type="shape" style="position: absolute; left: 150px; top: 670px; width: 1620px; height: 320px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #333333; border-top: 4px solid #BFDBFE; z-index: 2;"></div>
+        <!-- Box 2 Header -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 152px; top: 672px; width: 1616px; height: 40px; background-color: #111111; border-bottom: 1px solid #333333; z-index: 3;"></div>
+        <div data-object="true" data-object-type="icon" style="position: absolute; left: 170px; top: 680px; width: 24px; height: 24px; z-index: 10; display: flex; justify-content: center; align-items: center;">
+            <i class="fas fa-rocket" style="font-size: 20px; color: #BFDBFE;"></i>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 210px; top: 678px; width: 600px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', 'Noto Sans KR', sans-serif; font-size: 22px; font-weight: 800; color: #BFDBFE;">2_ 향후 발전 방향 (Future Directions)</p>
+        </div>
+        <!-- Box 2 Logs -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 740px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #BFDBFE;">&gt; UPDATE.PLAN[V2.0]:</span><span style="color: #FF6B6B; font-weight: bold; margin-right: 15px;">[웹 기반 확장]</span>Spring Boot를 도입하여 현재의 콘솔 CLI 환경을 웹 브라우저 기반의 GUI 서비스로 마이그레이션.</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 810px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #BFDBFE;">&gt; UPDATE.PLAN[V2.1]:</span><span style="color: #FF6B6B; font-weight: bold; margin-right: 15px;">[멀티플레이어]</span>WebSocket 기반 실시간 통신을 적용하여 유저 간 채팅, 파티 사냥(Raid), PvP 대전 시스템 도입.</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 880px; width: 1540px; height: 70px; z-index: 10;">
+            <p class="log-text"><span class="log-prefix" style="color: #BFDBFE;">&gt; UPDATE.PLAN[V2.2]:</span><span style="color: #FF6B6B; font-weight: bold; margin-right: 15px;">[AI 적응형 난이도]</span>유저의 누적 플레이 패턴 및 스펙 데이터를 실시간 분석하여 몬스터의 능력치와 행동 패턴이 동적으로 변하는 AI 적용.</p>
+        </div>
+        <!-- Box 2 Pixel Corners -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 148px; top: 668px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1766px; top: 668px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 148px; top: 986px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1766px; top: 986px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 5;"></div>
+    </div>
+
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowRight") {
+            window.location.href = "23.html";
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "21.html";
+        }
+    });
+</script>
+
+</html>

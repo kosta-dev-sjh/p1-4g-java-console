@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - 클래스 다이어그램 상세</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #39FF14;
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px #39FF14;
+        }
+        
+        .retro-box {
+            transition: all 0.3s ease;
+        }
+        
+        .retro-box:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Patterns -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3; z-index: 1;">
+            <p>
+                각 슬라이드 타이틀이 번호가 붙은 게 있고 없고 일관성이 없어서 모든 슬라이드 번호 업데이트를 해줘. 그리고 추가된 페이지가 있다면 목차도 업데이트 한다.
+            </p>
+            <p>프로젝트 회고 이전 슬라이드에 느낀점 슬라이드를 추가한다. 내용은 다음과 같다</p>
+
+            <p>
+                정현: 깃허브로 협업은 처음이었는데 심한 충돌 예방차 머지 규칙을 만들어두니 트러블 시 복구 및 추적에 용이했습니다.
+            </p>
+
+            <p>
+                진주: 첫번째 프로젝트를 통해 처음 경험해 보는 것들이 많아 신선했습니다. 팀원들과 소통하면서 설계 단계부터 구현까지 쉬운 것은 없었지만 정해진 시간 안에 결과물을 만들어 낼 수 있게 되어 뜻깊은 시간이었고, 설계가 중요한 이유가 더 명확하게 다가왔습니다.
+            </p>
+
+            <p>
+                준화: 이번 프로젝트에서는 설계 단계부터 팀원들과 디테일하게 구조를 잡고 시작해서, 구현 과정이 훨씬 수월했습니다.
+            </p>
+            <p>
+                또한 Slack, Jira, GitHub를 함께 활용하면서 실제 협업 환경을 경험할 수 있었던 점이 인상 깊었습니다.
+            </p>
+            <p>
+                DB 연동과 세팅, 상점, 인벤토리 기능을 구현하면서 FK로 얽힌 구조에서 어려움을 겪었지만, 디버깅과 팀원 피드백을 통해 해결하며 마무리할 수 있었습니다.
+            </p>
+
+            <p>
+                재민: 프로젝트를 진행하며 팀원들과의 소통과 역할 분담의 중요성을 깊이 느꼈습니다. 개인 프로젝트와 달리, 협업에서는 코드 작성뿐 아니라 일정 공유와 의견 조율이 결과에 큰 영향을 미쳤습니다. 이를 통해 혼자서는 얻기 어려운 업무 효율성과 효율적인 개발 과정을 경험할 수 있었습니다.
+            </p>
+
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 1;"></div>
+        <!-- Header Section: Stage Label -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 50px; width: 200px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: #FEF08A; letter-spacing: 2px;">STAGE 06</p>
+        </div>
+        <!-- Header Section: Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 90px; width: 1100px; height: 70px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 50px; font-weight: 900; color: #FFFFFF; text-shadow: 2px 2px 0 #333333;">클래스 다이어그램 (Class Diagram)<span class="typing-cursor"></span></p>
+        </div>
+        <!-- Header Section: Subtitle/Log -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 170px; width: 600px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; color: #666666; font-size: 14px;">&gt; LOG: SYSTEM_CLASS_ARCHITECTURE_LOADED</p>
+        </div>
+        <!-- Header Section: Description -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 920px; top: 165px; width: 900px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 22px; color: #BFDBFE; text-align: right; font-weight: 500;">&gt; 핵심 시스템별 클래스 구조 및 의존성 관계 설계</p>
+        </div>
+        <!-- Header Line -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 210px; width: 1720px; height: 2px; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; z-index: 1;"></div>
+        <!-- ================= COLUMN 1: BATTLE SYSTEM ================= -->
+        <!-- Tab -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 240px; width: 260px; height: 36px; background-color: #FF3131; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 110px; top: 250px; width: 240px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #FFFFFF;">&gt; 01. BATTLE</p>
+        </div>
+        <!-- Main Box -->
+        <div class="retro-box" data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 276px; width: 540px; height: 724px; background-color: rgba(20, 20, 20, 0.95); border: 2px solid #444444; border-top: 4px solid #FF3131; z-index: 1;">
+            <p>전투 로직과 결과 데이터를</p>
+            <p>역할별로 분리하여</p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 296px; width: 500px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 24px; font-weight: 800; color: #FF3131;">Battle 시스템</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 120px; top: 336px; width: 500px; height: 1px; background-color: #333333; z-index: 2;"></div>
+        <!-- Image Background (White) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute;left: 120px;top: 356px;width: 500px;height: 620px;/* background-color: #FFFFFF; */border-radius: 4px;box-shadow: inset 0 0 10px rgba(0,0,0,0.1);z-index: 4;">
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(-4.02e-05px, 550.717px);">전투 로직과 결과 데이터를 역할별로 분리하여&nbsp;</p>
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(-2.5033px, 550.717px);">컨트롤러 중심의 흐름을 명확하게 구성</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <!-- Image -->
+        <img alt="Battle System Class Diagram" data-object="true" data-object-type="image" src="https://www.genspark.ai/api/files/s/IxIIOSts" style="position: absolute; left: 130px; top: 366px; width: 519.136px; height: 648.914px; object-fit: contain; z-index: 5; transform: translate(-8.76141px, -77.601px);"
+            data-height-listener-added="true">
+        <!-- Pixel Corners -->
+
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 636px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 636px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <!-- ================= COLUMN 2: GROWTH SYSTEM ================= -->
+        <!-- Tab -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 690px; top: 240px; width: 260px; height: 36px; background-color: #FEF08A; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 700px; top: 250px; width: 240px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #050505;">&gt; 02. GROWTH</p>
+        </div>
+        <!-- Main Box -->
+        <div class="retro-box" data-object="true" data-object-type="shape" style="position: absolute; left: 690px; top: 276px; width: 540px; height: 724px; background-color: rgba(20, 20, 20, 0.95); border: 2px solid #444444; border-top: 4px solid #FEF08A; z-index: 1;">
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(2.50326px, 624.563px);">캐릭터 상태 · 스킬 성장 아이템 데이터를&nbsp;</p>
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(2.50326px, 627.066px);">DTO 단위로 분리</p>
+        </div>
+        <!-- Inner Header -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 710px; top: 296px; width: 500px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 24px; font-weight: 800; color: #FEF08A;"><i class="fas fa-arrow-up-right-dots" style="margin-right: 10px;"></i>Growth 시스템</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 710px; top: 336px; width: 500px; height: 1px; background-color: #333333; z-index: 2;"></div>
+        <!-- Image Background (White) -->
+
+        <!-- Image -->
+        <img alt="Growth System Class Diagram" data-object="true" data-object-type="image" src="https://www.genspark.ai/api/files/s/eFOp6m4L" style="position: absolute; left: 720px; top: 366px; width: 480px; height: 600px; object-fit: contain; z-index: 5; transform: translate(-2.50326px, -83.8592px);"
+            data-height-listener-added="true">
+        <!-- Pixel Corners -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 688px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1226px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 688px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1226px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <!-- ================= COLUMN 3: SESSION SYSTEM ================= -->
+        <!-- Tab -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1280px; top: 240px; width: 260px; height: 36px; background-color: #39FF14; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1290px; top: 250px; width: 240px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #050505;">&gt; 03. SESSION</p>
+        </div>
+        <!-- Main Box -->
+        <div class="retro-box" data-object="true" data-object-type="shape" style="position: absolute; left: 1280px; top: 276px; width: 540px; height: 724px; background-color: rgba(20, 20, 20, 0.95); border: 2px solid #444444; border-top: 4px solid #39FF14; z-index: 1;">
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(-2.50326px, 629.569px);">로그인 이후 사용자 및&nbsp;</p>
+            <p style="font-family: Paperlogy, sans-serif; font-size: 18px; color: rgb(191, 219, 254); text-align: center; line-height: 1.5; word-break: keep-all; position: relative; transform: translate(-3.75489px, 628.318px);">캐릭터 상태를세션으로 관리</p>
+        </div>
+        <!-- Inner Header -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1300px; top: 296px; width: 500px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 24px; font-weight: 800; color: #39FF14;"><i class="fas fa-user-shield" style="margin-right: 10px;"></i>Session / Login</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1300px; top: 336px; width: 500px; height: 1px; background-color: #333333; z-index: 2;"></div>
+        <!-- Image Background (White) -->
+
+        <!-- Image -->
+        <img alt="Session System Class Diagram" data-object="true" data-object-type="image" src="https://www.genspark.ai/api/files/s/pZYPRN2f" style="position: absolute; left: 1310px; top: 366px; width: 425.151px; height: 531.457px; object-fit: contain; z-index: 5; transform: translate(31.2907px, -22.5294px);"
+            data-height-listener-added="true">
+        <!-- Pixel Corners -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1278px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1816px; top: 274px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1278px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1816px; top: 996px; width: 6px; height: 6px; background-color: #FFFFFF; z-index: 10;"></div>
+    </div>
+
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowRight") {
+            window.location.href = "16.html";
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "14.html";
+        }
+    });
+</script>
+
+</html>

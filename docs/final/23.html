@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - Stage Cleared Ending</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #FEF08A;
+            margin-left: 15px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 15px #FEF08A;
+        }
+        
+        .btn-restart,
+        .btn-exit {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-restart:hover {
+            background-color: #39FF14 !important;
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .btn-restart:hover p,
+        .btn-restart:hover i {
+            color: #050505 !important;
+        }
+        
+        .btn-exit:hover {
+            background-color: #FF3131 !important;
+            box-shadow: 0 0 30px rgba(255, 49, 49, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .btn-exit:hover p,
+        .btn-exit:hover i {
+            color: #050505 !important;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .floating-star {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Patterns -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 1;"></div>
+        <!-- Decorative Corner Brackets (Pixel Art Style) -->
+        <!-- Top Left -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 60px; top: 60px; width: 120px; height: 8px; background-color: #444444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 60px; top: 60px; width: 8px; height: 120px; background-color: #444444; z-index: 2;"></div>
+        <!-- Top Right -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1740px; top: 60px; width: 120px; height: 8px; background-color: #444444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1852px; top: 60px; width: 8px; height: 120px; background-color: #444444; z-index: 2;"></div>
+        <!-- Bottom Left -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 60px; top: 1012px; width: 120px; height: 8px; background-color: #444444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 60px; top: 900px; width: 8px; height: 120px; background-color: #444444; z-index: 2;"></div>
+        <!-- Bottom Right -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1740px; top: 1012px; width: 120px; height: 8px; background-color: #444444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1852px; top: 900px; width: 8px; height: 120px; background-color: #444444; z-index: 2;"></div>
+        <!-- Victory Floating Pixel Stars -->
+        <div class="floating-star" data-object="true" data-object-type="shape" style="position: absolute; left: 250px; top: 280px; width: 24px; height: 24px; background-color: #FEF08A; box-shadow: 0 0 20px #FEF08A; z-index: 3; transform: rotate(45deg);"></div>
+        <div class="floating-star" data-object="true" data-object-type="shape" style="position: absolute; left: 1600px; top: 220px; width: 16px; height: 16px; background-color: #39FF14; box-shadow: 0 0 20px #39FF14; z-index: 3; transform: rotate(15deg); animation-delay: 1s;"></div>
+        <div class="floating-star" data-object="true" data-object-type="shape" style="position: absolute; left: 320px; top: 680px; width: 18px; height: 18px; background-color: #FF3131; box-shadow: 0 0 20px #FF3131; z-index: 3; transform: rotate(-20deg); animation-delay: 0.5s;"></div>
+        <div class="floating-star" data-object="true" data-object-type="shape" style="position: absolute; left: 1550px; top: 650px; width: 22px; height: 22px; background-color: #BFDBFE; box-shadow: 0 0 20px #BFDBFE; z-index: 3; transform: rotate(30deg); animation-delay: 1.5s;"></div>
+        <!-- Main Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 300px; width: 1720px; height: 150px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 80px; color: #FEF08A; text-align: center; text-shadow: 8px 8px 0px #FF3131; margin: 0; line-height: 150px; letter-spacing: -2px;">STAGE CLEARED<span class="typing-cursor"></span></p>
+        </div>
+        <!-- Congratulatory Message -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 520px; width: 1720px; height: 60px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 26px; color: #FFFFFF; text-align: center; margin: 0; line-height: 60px; text-shadow: 2px 2px 0px #333333;">CONGRATULATIONS! YOU'VE COMPLETED ALL STAGES!</p>
+        </div>
+        <!-- Team Name -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 620px; width: 1720px; height: 50px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: #BFDBFE; text-align: center; margin: 0; letter-spacing: 4px;">&gt; MISSION ACCOMPLISHED BY TEAM 4G &lt;</p>
+        </div>
+        <!-- Action Buttons -->
+        <!-- Button 1: Restart -->
+        <div class="btn-restart" data-object="true" data-object-type="textbox" style="position: absolute; left: 510px; top: 820px; width: 420px; height: 80px; z-index: 10; background-color: rgba(5, 5, 5, 0.8); border: 4px solid #39FF14; display: flex; justify-content: center; align-items: center; box-sizing: border-box; backdrop-filter: blur(4px);">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 26px; font-weight: 800; color: #39FF14; margin: 0; display: flex; align-items: center;"><i class="fas fa-play" style="margin-right: 15px; font-size: 22px; color: #39FF14;"></i>게임 다시 시작 (Restart)</p>
+        </div>
+        <!-- Button 2: Exit -->
+        <div class="btn-exit" data-object="true" data-object-type="textbox" style="position: absolute; left: 990px; top: 820px; width: 420px; height: 80px; z-index: 10; background-color: rgba(5, 5, 5, 0.8); border: 4px solid #FF3131; display: flex; justify-content: center; align-items: center; box-sizing: border-box; backdrop-filter: blur(4px);">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 26px; font-weight: 800; color: #FF3131; margin: 0; display: flex; align-items: center;"><i class="fas fa-power-off" style="margin-right: 15px; font-size: 22px; color: #FF3131;"></i>게임 종료 (Exit)</p>
+        </div>
+    </div>
+
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "21.html";
+        }
+    });
+</script>
+
+</html>

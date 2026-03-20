@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Shell Hero - 주제 선정 배경 표지</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet" />
+    <style>
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .cursor-blink {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #39FF14;
+            margin-left: 15px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px #39FF14;
+        }
+        
+        #bgCircle {
+            animation: rotate 20s linear infinite;
+        }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 0; overflow: hidden; background-color: #050505;">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden;">
+        <!-- Background Grid -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; z-index: 1; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3;"></div>
+        <!-- Background Scanlines -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; z-index: 1; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none;"></div>
+        <!-- Rotating Dashed Circle -->
+        <div data-object="true" data-object-type="shape" id="bgCircle" style="position: absolute; top: 240px; left: 660px; width: 600px; height: 600px; z-index: 1; border: 2px dashed #333333; border-radius: 50%; opacity: 0.5;"></div>
+        <!-- Pixel Corner Decorations -->
+        <!-- Top Left -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 80px; left: 80px; width: 60px; height: 60px; z-index: 1; border: 6px solid #39FF14; border-right: none; border-bottom: none; box-shadow: 0 0 15px #39FF14;"></div>
+        <!-- Top Right -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 80px; left: 1780px; width: 60px; height: 60px; z-index: 1; border: 6px solid #39FF14; border-left: none; border-bottom: none; box-shadow: 0 0 15px #39FF14;"></div>
+        <!-- Bottom Left -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 940px; left: 80px; width: 60px; height: 60px; z-index: 1; border: 6px solid #39FF14; border-right: none; border-top: none; box-shadow: 0 0 15px #39FF14;"></div>
+        <!-- Bottom Right -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 940px; left: 1780px; width: 60px; height: 60px; z-index: 1; border: 6px solid #39FF14; border-left: none; border-top: none; box-shadow: 0 0 15px #39FF14;"></div>
+        <!-- Content Background Box -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; top: 320px; left: 460px; width: 1000px; height: 440px; z-index: 1; background-color: rgba(0, 0, 0, 0.7); border: 1px solid #333333; backdrop-filter: blur(2px);"></div>
+        <!-- Stage Indicator -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; top: 370px; left: 0px; width: 1920px; height: 50px; z-index: 10;">
+            <p id="stageIndicator" style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 32px; color: #FEF08A; text-align: center; letter-spacing: 4px; text-shadow: 4px 4px 0 #333333; opacity: 0; transform: translateY(-20px); transition: opacity 0.5s, transform 0.5s;">STAGE 02</p>
+        </div>
+        <!-- Top Deco Line -->
+        <div data-object="true" data-object-type="shape" id="topLine" style="position: absolute; top: 460px; left: 960px; width: 0px; height: 2px; z-index: 10; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; transition: all 1s ease-out;"></div>
+        <!-- Main Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; top: 490px; left: 0px; width: 1920px; height: 110px; z-index: 10;">
+            <p id="sectionTitle" style="margin: 0; font-family: 'Paperlogy', sans-serif; font-size: 70px; font-weight: 900; color: #FFFFFF; text-align: center; text-shadow: 6px 6px 0 #333333, 0 0 30px rgba(57, 255, 20, 0.3); display: flex; justify-content: center; align-items: center;"></p>
+        </div>
+        <!-- Bottom Deco Line -->
+        <div data-object="true" data-object-type="shape" id="bottomLine" style="position: absolute; top: 620px; left: 960px; width: 0px; height: 2px; z-index: 10; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; transition: all 1s ease-out;"></div>
+        <!-- Sub Text -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; top: 680px; left: 0px; width: 1920px; height: 50px; z-index: 10;">
+            <p id="subText" style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 24px; color: #BFDBFE; text-align: center; letter-spacing: 2px; opacity: 0; transition: opacity 1s ease-in-out;">&gt; PROJECT_BACKGROUND_</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "주제 선정 배경";
+            const titleElement = document.getElementById('sectionTitle');
+            const stageIndicator = document.getElementById('stageIndicator');
+            const subText = document.getElementById('subText');
+            const topLine = document.getElementById('topLine');
+            const bottomLine = document.getElementById('bottomLine');
+
+            // Initial cursor state
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+
+            // 1. Stage Indicator Slide Down
+            setTimeout(() => {
+                stageIndicator.style.opacity = '1';
+                stageIndicator.style.transform = 'translateY(0)';
+            }, 300);
+
+            // 2. Lines Expand from Center
+            setTimeout(() => {
+                topLine.style.width = '1000px';
+                topLine.style.left = '460px'; // 960 - 500
+                bottomLine.style.width = '1000px';
+                bottomLine.style.left = '460px';
+            }, 800);
+
+            // 3. Title Typing Animation
+            setTimeout(() => {
+                let charIndex = 0;
+
+                function typeWriter() {
+                    if (charIndex < titleText.length) {
+                        const currentText = titleText.substring(0, charIndex + 1);
+                        titleElement.innerHTML = '<span style="display:inline-block; vertical-align:middle;">' + currentText + '</span><span class="cursor-blink"></span>';
+                        charIndex++;
+                        setTimeout(typeWriter, 120);
+                    } else {
+                        // 4. Sub Text Fade In
+                        setTimeout(() => {
+                            subText.style.opacity = '1';
+                        }, 500);
+                    }
+                }
+                typeWriter();
+            }, 1500);
+        });
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowRight") {
+                window.location.href = "7.html";
+            }
+        });
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "5.html";
+            }
+        });
+    </script>
+</body>
+
+</html>

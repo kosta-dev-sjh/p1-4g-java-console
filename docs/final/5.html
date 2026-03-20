@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Shell Hero - Team Members</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+         :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --card-border: #333;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+        }
+        
+        p {
+            margin: 0;
+        }
+        /* Generic transition class for all card elements */
+        
+        .card-el {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* Hover animations using :has() on the container */
+        /* Card 1 */
+        
+        .slide-container:has(.ht-1:hover) .c-1 {
+            transform: translateY(-20px);
+        }
+        
+        .slide-container:has(.ht-1:hover) .cb-1 {
+            border-color: var(--neon-green);
+            background-color: rgba(20, 40, 20, 0.9);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+        }
+        
+        .slide-container:has(.ht-1:hover) .cursor-1 {
+            opacity: 1;
+            top: 250px !important;
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        .slide-container:has(.ht-1:hover) .svg-img-1 {
+            animation: hop 0.5s infinite steps(2);
+        }
+        /* Card 2 */
+        
+        .slide-container:has(.ht-2:hover) .c-2 {
+            transform: translateY(-20px);
+        }
+        
+        .slide-container:has(.ht-2:hover) .cb-2 {
+            border-color: var(--neon-green);
+            background-color: rgba(20, 40, 20, 0.9);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+        }
+        
+        .slide-container:has(.ht-2:hover) .cursor-2 {
+            opacity: 1;
+            top: 250px !important;
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        .slide-container:has(.ht-2:hover) .svg-img-2 {
+            animation: hop 0.5s infinite steps(2);
+        }
+        /* Card 3 */
+        
+        .slide-container:has(.ht-3:hover) .c-3 {
+            transform: translateY(-20px);
+        }
+        
+        .slide-container:has(.ht-3:hover) .cb-3 {
+            border-color: var(--neon-green);
+            background-color: rgba(20, 40, 20, 0.9);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+        }
+        
+        .slide-container:has(.ht-3:hover) .cursor-3 {
+            opacity: 1;
+            top: 250px !important;
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        .slide-container:has(.ht-3:hover) .svg-img-3 {
+            animation: hop 0.5s infinite steps(2);
+        }
+        /* Card 4 */
+        
+        .slide-container:has(.ht-4:hover) .c-4 {
+            transform: translateY(-20px);
+        }
+        
+        .slide-container:has(.ht-4:hover) .cb-4 {
+            border-color: var(--neon-green);
+            background-color: rgba(20, 40, 20, 0.9);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+        }
+        
+        .slide-container:has(.ht-4:hover) .cursor-4 {
+            opacity: 1;
+            top: 250px !important;
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        .slide-container:has(.ht-4:hover) .svg-img-4 {
+            animation: hop 0.5s infinite steps(2);
+        }
+        
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes hop {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        /* Role box styling */
+        
+        .role-box {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+            color: var(--neon-green);
+            font-family: 'Paperlogy', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            border-radius: 2px;
+        }
+        /* SVG container styling */
+        
+        .svg-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .svg-container svg {
+            width: 160px;
+            height: 160px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: var(--bg-black);">
+        <!-- Background Grid -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; z-index: 1; opacity: 0.3; background-image: url(&quot;data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+        <!-- Background Scanlines -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; z-index: 2; opacity: 0.3; pointer-events: none; background-image: url(&quot;data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='1'/%3E%3C/svg%3E&quot;);"></div>
+        <!-- Main Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 140px; top: 80px; width: 1640px; height: 80px; z-index: 10; text-align: center;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 60px; font-weight: 900; color: var(--text-white); text-shadow: 4px 4px 0 #333; margin: 0;">TEAM MEMBERS<span style="display: inline-block; width: 36px; height: 60px; background-color: var(--neon-green); margin-left: 10px; animation: blink 1s step-end infinite; vertical-align: text-bottom;"></span></p>
+        </div>
+        <!-- Sub Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 140px; top: 180px; width: 1640px; height: 40px; z-index: 10; text-align: center;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 24px; color: var(--pastel-blue); font-weight: 500; margin: 0;">&gt; Select your developer to see details_</p>
+        </div>
+        <!-- ==================== CARD 1 ==================== -->
+        <!-- Hover Target 1 -->
+        <div class="ht-1" data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 300px; width: 400px; height: 600px; z-index: 50; cursor: pointer; background-color: transparent;"></div>
+        <!-- Card 1 BG -->
+        <div class="card-el c-1 cb-1" data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 300px; width: 400px; height: 600px; z-index: 10; background-color: var(--card-bg); border: 4px solid var(--card-border); box-sizing: border-box;"></div>
+        <!-- Card 1 Selection Cursor -->
+        <div class="card-el cursor-1" data-object="true" data-object-type="textbox" style="position: absolute; left: 280px; top: 270px; width: 40px; height: 40px; z-index: 12; opacity: 0; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 24px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">▼</p>
+        </div>
+        <!-- Card 1 Icon BG -->
+        <div class="card-el c-1" data-object="true" data-object-type="shape" style="position: absolute; left: 180px; top: 340px; width: 240px; height: 240px; z-index: 11; background-color: #111; border: 2px solid #444; box-sizing: border-box;"></div>
+        <!-- Card 1 Icon SVG -->
+        <div class="card-el c-1" data-object="true" data-object-type="textbox" style="position: absolute; left: 180px; top: 340px; width: 240px; height: 240px; z-index: 12; pointer-events: none;">
+            <div class="svg-container svg-img-1">
+                <svg viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2h8v4h-8z" fill="#e74c3c"></path>
+<path d="M14 6h4v4h-4z" fill="#f1c40f"></path>
+<path d="M10 10h12v10h-12z" fill="#3498db"></path>
+<path d="M8 12h2v6H8z M22 12h2v6h-2z" fill="#bdc3c7"></path>
+<path d="M10 20h4v10h-4z M18 20h4v10h-4z" fill="#7f8c8d"></path>
+<path d="M6 8h2v14H6z" fill="#ecf0f1"></path>
+<path d="M5 22h4v2H5z" fill="#2c3e50"></path>
+</svg>
+            </div>
+        </div>
+        <!-- Card 1 Name -->
+        <div class="card-el c-1" data-object="true" data-object-type="textbox" style="position: absolute; left: 130px; top: 610px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white);">송정현</p>
+        </div>
+        <!-- Card 1 Role -->
+        <div class="card-el c-1" data-object="true" data-object-type="textbox" style="position: absolute; left: 130px; top: 670px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p><span class="role-box">팀장 / 전투시스템</span></p>
+        </div>
+        <!-- Card 1 Desc -->
+        <div class="card-el c-1" data-object="true" data-object-type="textbox" style="position: absolute; left: 140px; top: 740px; width: 320px; height: 120px; z-index: 12; text-align: center; pointer-events: none; border-top: 1px dashed #555; padding-top: 20px; box-sizing: border-box;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 16px; color: #ccc; line-height: 1.6; word-break: keep-all;">전투 로직 설계 및 프로젝트 총괄.<br/>회원 기능과 로그인 시스템을 담당하며<br/>전체 설계 방향을 제시합니다.</p>
+        </div>
+        <!-- ==================== CARD 2 ==================== -->
+        <!-- Hover Target 2 -->
+        <div class="ht-2" data-object="true" data-object-type="shape" style="position: absolute; left: 540px; top: 300px; width: 400px; height: 600px; z-index: 50; cursor: pointer; background-color: transparent;"></div>
+        <!-- Card 2 BG -->
+        <div class="card-el c-2 cb-2" data-object="true" data-object-type="shape" style="position: absolute; left: 540px; top: 300px; width: 400px; height: 600px; z-index: 10; background-color: var(--card-bg); border: 4px solid var(--card-border); box-sizing: border-box;"></div>
+        <!-- Card 2 Selection Cursor -->
+        <div class="card-el cursor-2" data-object="true" data-object-type="textbox" style="position: absolute; left: 720px; top: 270px; width: 40px; height: 40px; z-index: 12; opacity: 0; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 24px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">▼</p>
+        </div>
+        <!-- Card 2 Icon BG -->
+        <div class="card-el c-2" data-object="true" data-object-type="shape" style="position: absolute; left: 620px; top: 340px; width: 240px; height: 240px; z-index: 11; background-color: #111; border: 2px solid #444; box-sizing: border-box;"></div>
+        <!-- Card 2 Icon SVG -->
+        <div class="card-el c-2" data-object="true" data-object-type="textbox" style="position: absolute; left: 620px; top: 340px; width: 240px; height: 240px; z-index: 12; pointer-events: none;">
+            <div class="svg-container svg-img-2">
+                <svg viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 4h12v4h-12z" fill="#27ae60"></path>
+<path d="M12 8h8v4h-8z" fill="#f1c40f"></path>
+<path d="M10 12h12v10h-12z" fill="#2ecc71"></path>
+<path d="M6 12h4v8H6z" fill="#16a085"></path>
+<path d="M11 22h4v10h-4z M17 22h4v10h-4z" fill="#95a5a6"></path>
+<path d="M4 10h4v12H4z" fill="#7f8c8d"></path>
+</svg>
+            </div>
+        </div>
+        <!-- Card 2 Name -->
+        <div class="card-el c-2" data-object="true" data-object-type="textbox" style="position: absolute; left: 570px; top: 610px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white);">홍준화</p>
+        </div>
+        <!-- Card 2 Role -->
+        <div class="card-el c-2" data-object="true" data-object-type="textbox" style="position: absolute; left: 570px; top: 670px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p><span class="role-box">부팀장 / 성장시스템</span></p>
+        </div>
+        <!-- Card 2 Desc -->
+        <div class="card-el c-2" data-object="true" data-object-type="textbox" style="position: absolute; left: 580px; top: 740px; width: 320px; height: 120px; z-index: 12; text-align: center; pointer-events: none; border-top: 1px dashed #555; padding-top: 20px; box-sizing: border-box;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 16px; color: #ccc; line-height: 1.6; word-break: keep-all;">인벤토리 및 상점 시스템 구현.<br/>초기 DB 세팅 및 샘플 데이터를 구성하고<br/>AWS 배포 환경 설정을 맡습니다.</p>
+        </div>
+        <!-- ==================== CARD 3 ==================== -->
+        <!-- Hover Target 3 -->
+        <div class="ht-3" data-object="true" data-object-type="shape" style="position: absolute; left: 980px; top: 300px; width: 400px; height: 600px; z-index: 50; cursor: pointer; background-color: transparent;"></div>
+        <!-- Card 3 BG -->
+        <div class="card-el c-3 cb-3" data-object="true" data-object-type="shape" style="position: absolute; left: 980px; top: 300px; width: 400px; height: 600px; z-index: 10; background-color: var(--card-bg); border: 4px solid var(--card-border); box-sizing: border-box;"></div>
+        <!-- Card 3 Selection Cursor -->
+        <div class="card-el cursor-3" data-object="true" data-object-type="textbox" style="position: absolute; left: 1160px; top: 270px; width: 40px; height: 40px; z-index: 12; opacity: 0; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 24px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">▼</p>
+        </div>
+        <!-- Card 3 Icon BG -->
+        <div class="card-el c-3" data-object="true" data-object-type="shape" style="position: absolute; left: 1060px; top: 340px; width: 240px; height: 240px; z-index: 11; background-color: #111; border: 2px solid #444; box-sizing: border-box;"></div>
+        <!-- Card 3 Icon SVG -->
+        <div class="card-el c-3" data-object="true" data-object-type="textbox" style="position: absolute; left: 1060px; top: 340px; width: 240px; height: 240px; z-index: 12; pointer-events: none;">
+            <div class="svg-container svg-img-3">
+                <svg viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 2h12v6h-12z" fill="#9b59b6"></path>
+<path d="M12 8h8v4h-8z" fill="#f1c40f"></path>
+<path d="M8 12h16v14H8z" fill="#8e44ad"></path>
+<path d="M24 10h4v4h-4z" fill="#2ecc71"></path>
+<path d="M25 14h2v16h-2z" fill="#8d6e63"></path>
+</svg>
+            </div>
+        </div>
+        <!-- Card 3 Name -->
+        <div class="card-el c-3" data-object="true" data-object-type="textbox" style="position: absolute; left: 1010px; top: 610px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white);">이진주</p>
+        </div>
+        <!-- Card 3 Role -->
+        <div class="card-el c-3" data-object="true" data-object-type="textbox" style="position: absolute; left: 1010px; top: 670px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p><span class="role-box">데이터베이스 / UI</span></p>
+        </div>
+        <!-- Card 3 Desc -->
+        <div class="card-el c-3" data-object="true" data-object-type="textbox" style="position: absolute; left: 1020px; top: 740px; width: 320px; height: 120px; z-index: 12; text-align: center; pointer-events: none; border-top: 1px dashed #555; padding-top: 20px; box-sizing: border-box;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 16px; color: #ccc; line-height: 1.6; word-break: keep-all;">Figma UI 설계 및 콘솔 View 연출 구현.<br/>스킬 시스템 로직과 사용자 입력에 따른<br/>게임의 전반적 흐름을 구성합니다.</p>
+        </div>
+        <!-- ==================== CARD 4 ==================== -->
+        <!-- Hover Target 4 -->
+        <div class="ht-4" data-object="true" data-object-type="shape" style="position: absolute; left: 1420px; top: 300px; width: 400px; height: 600px; z-index: 50; cursor: pointer; background-color: transparent;"></div>
+        <!-- Card 4 BG -->
+        <div class="card-el c-4 cb-4" data-object="true" data-object-type="shape" style="position: absolute; left: 1420px; top: 300px; width: 400px; height: 600px; z-index: 10; background-color: var(--card-bg); border: 4px solid var(--card-border); box-sizing: border-box;"></div>
+        <!-- Card 4 Selection Cursor -->
+        <div class="card-el cursor-4" data-object="true" data-object-type="textbox" style="position: absolute; left: 1600px; top: 270px; width: 40px; height: 40px; z-index: 12; opacity: 0; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 24px; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">▼</p>
+        </div>
+        <!-- Card 4 Icon BG -->
+        <div class="card-el c-4" data-object="true" data-object-type="shape" style="position: absolute; left: 1500px; top: 340px; width: 240px; height: 240px; z-index: 11; background-color: #111; border: 2px solid #444; box-sizing: border-box;"></div>
+        <!-- Card 4 Icon SVG -->
+        <div class="card-el c-4" data-object="true" data-object-type="textbox" style="position: absolute; left: 1500px; top: 340px; width: 240px; height: 240px; z-index: 12; pointer-events: none;">
+            <div class="svg-container svg-img-4">
+                <svg viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 4h12v4h-12z" fill="#e67e22"></path>
+<path d="M12 8h8v4h-8z" fill="#f1c40f"></path>
+<path d="M10 12h12v10h-12z" fill="#d35400"></path>
+<path d="M8 14h2v6H8z M22 14h2v6h-2z" fill="#f39c12"></path>
+<path d="M11 22h4v10h-4z M17 22h4v10h-4z" fill="#2c3e50"></path>
+<path d="M24 18h6v6h-6z" fill="#f1c40f"></path>
+</svg>
+            </div>
+        </div>
+        <!-- Card 4 Name -->
+        <div class="card-el c-4" data-object="true" data-object-type="textbox" style="position: absolute; left: 1450px; top: 610px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white);">김재민</p>
+        </div>
+        <!-- Card 4 Role -->
+        <div class="card-el c-4" data-object="true" data-object-type="textbox" style="position: absolute; left: 1450px; top: 670px; width: 340px; height: 50px; z-index: 12; text-align: center; pointer-events: none;">
+            <p><span class="role-box">세션관리 / 몬스터</span></p>
+        </div>
+        <!-- Card 4 Desc -->
+        <div class="card-el c-4" data-object="true" data-object-type="textbox" style="position: absolute; left: 1460px; top: 740px; width: 320px; height: 120px; z-index: 12; text-align: center; pointer-events: none; border-top: 1px dashed #555; padding-top: 20px; box-sizing: border-box;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 16px; color: #ccc; line-height: 1.6; word-break: keep-all;">세션 상태 관리 및 몬스터 로직 구현.<br/>게임 스토리 구성과 세부 전투 규칙을<br/>정의하며 디버깅을 전담합니다.</p>
+        </div>
+        <!-- Key Guide -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 0px; top: 960px; width: 1920px; height: 40px; z-index: 10; text-align: center;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 16px; color: #666;">
+                [<span style="display: inline-block; padding: 5px 10px; border: 2px solid #666; border-radius: 4px; margin: 0 5px; background-color: #222;">MOUSE</span>] HOVER TO SELECT
+            </p>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowRight") {
+            window.location.href = "6.html";
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "4.html";
+        }
+    });
+</script>
+
+</html>
