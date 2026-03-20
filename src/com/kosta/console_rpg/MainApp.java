@@ -30,8 +30,6 @@ public class MainApp {
         
         while (true) {
             try {
-                //System.out.println("____________________________┌ Main Menu ┐_______________________________\n");
-                // 유틸리티 메서드 호출
                 boolean isLogin = LoginSession.getInstance().isLogin();
                 HeroDTO hero = LoginSession.getInstance().getCurrentHero();
 
