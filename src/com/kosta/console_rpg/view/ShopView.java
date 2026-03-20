@@ -431,14 +431,6 @@ public class ShopView {
 
     private static final int WIDTH = 33;
     
-    private String center(String text, int width) {
-        int padding = width - text.length();
-        int left = padding / 2;
-        int right = padding - left;
-
-        return " ".repeat(left) + text + " ".repeat(right);
-    }
-    
 	@Override
 	public String toString() {
 
@@ -448,19 +440,15 @@ public class ShopView {
                 .getCurrentHero()
                 .getHeroGem();
 
-	    sb.append("_________________________________┌ ITEM SHOP ┐_________________________________\n\n");
+	    ConsoleUtils.printTitleBar("ITEM SHOP");
 
 	    sb.append(String.format(" ◈ 보유 Gem(%d) ◈\n\n", gem));
-
-        sb.append(String.format("\n", center("┌─────────── MENU ───────────┐", WIDTH - 2)));
         
-	    sb.append("┌─────────── MENU ───────────┐\n\n");
-
-	    sb.append("    [1] 아이템 구매\n");
+	    sb.append(ConsoleUtils.center("┌─────────── MENU ───────────┐\n\n", WIDTH));
+	    sb.append("   [1] 아이템 구매\n");
 	    sb.append("    [2] 아이템 판매\n");
 	    sb.append("    [0] 상점 나가기\n\n");
-
-	    sb.append("└────────────────────────────┘\n\n");
+	    sb.append(ConsoleUtils.center("└────────────────────────────┘\n\n", WIDTH));
 
 	    sb.append("선택 ▶ ");
 

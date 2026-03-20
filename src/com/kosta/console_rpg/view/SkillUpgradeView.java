@@ -5,6 +5,7 @@ import com.kosta.console_rpg.exception.GameException;
 import com.kosta.console_rpg.model.dto.HeroDTO;
 import com.kosta.console_rpg.model.dto.HeroSkillDTO;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class SkillUpgradeView {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("____________________________┌ HERO STATUS ┐_______________________________\n\n");
+		ConsoleUtils.printTitleBar("HERO STATUS");
 		sb.append(String.format(" 히어로 : %s\n", hero.getHeroName()));
 		sb.append(String.format(" 현재 Level : %d\n", hero.getHeroLevel()));
 		sb.append(String.format(" 보유 Gem : %d\n\n", hero.getHeroGem()));

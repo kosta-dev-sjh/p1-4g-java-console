@@ -7,6 +7,7 @@ import com.kosta.console_rpg.model.dto.InventoryDTO;
 import com.kosta.console_rpg.model.dto.ItemDTO;
 import com.kosta.console_rpg.model.service.InventoryService;
 import com.kosta.console_rpg.session.LoginSession;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 import com.kosta.console_rpg.exception.GameException;
 
@@ -45,7 +46,7 @@ public class InventoryView {
         var hero = LoginSession.getInstance().getCurrentHero();
 
         sb.append("\n");
-        sb.append("-------------------- [ INVENTORY ] --------------------\n\n");
+        ConsoleUtils.printTitleBar("INVENTORY");
         sb.append(String.format("Hero : %s\n", hero.getHeroName()));
         sb.append(String.format("보유 Gem : %d\n\n", hero.getHeroGem()));
 

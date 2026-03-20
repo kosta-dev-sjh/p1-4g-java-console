@@ -53,6 +53,7 @@ public class MainView {
         sb.append(ConsoleEffectUtil.RESET);
         sb.append("║────────────────────────────────────────────────────────────────────║\n");
         sb.append(String.format(" %-"+WIDTH+"s \n", ""));
+        sb.append(String.format(" %-"+(WIDTH-1)+"s \n", "선택 ▶"));
 
         return sb.toString();
     }
