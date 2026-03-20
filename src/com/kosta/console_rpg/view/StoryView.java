@@ -186,6 +186,42 @@ public class StoryView {
         String story = sb.toString();
         ConsoleEffectUtil.slowPrint(story,60);
         
+        endingCredit();
+        
+    }
+    
+    public static void endingCredit() throws Exception {
+
+        String[] credits = {
+                "",
+                "==============================",
+                "          CREDITS",
+                "==============================",
+                "",
+                "         HERO NAME",
+                "           " + LoginSession.getInstance().getCurrentHero().getHeroName(),
+                "",
+                "------------------------------",
+                "         DEVELOPED BY",
+                "     	    김재민",
+                "            송정현",
+                "     	    이진주",
+                "            홍준화",
+                "------------------------------",
+                "",
+                "        SPECIAL THANKS",
+                "            PLAYER",
+                "",
+                "==============================",
+                "          THE END",
+                "==============================",
+                ""
+        };
+
+        for (String line : credits) {
+            System.out.println(ConsoleEffectUtil.YELLOW + line + ConsoleEffectUtil.RESET);
+            Thread.sleep(500);
+        }
     }
     
     public static void printStageEndStory(int stage) throws Exception {
