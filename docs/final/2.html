@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Shell Hero - 목차</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet" />
+    <style>
+         :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+        }
+        /* TOC Item Base Styles */
+        
+        .toc-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 25px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+            opacity: 0;
+            transform: translateY(20px);
+            box-sizing: border-box;
+        }
+        
+        .toc-item:hover {
+            border: 1px solid var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+            transform: translateX(15px);
+        }
+        
+        .toc-number {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--pastel-blue);
+            margin-right: 40px;
+            min-width: 90px;
+            transition: color 0.3s;
+            margin-top: 5px;
+        }
+        
+        .toc-item:hover .toc-number {
+            color: var(--neon-green);
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+        }
+        
+        .toc-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .toc-sub-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .sub-item {
+            font-family: 'Paperlogy', sans-serif;
+            font-size: 20px;
+            color: #aaa;
+            background-color: #222;
+            padding: 8px 18px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            transition: all 0.2s;
+            margin: 0;
+        }
+        
+        .toc-item:hover .sub-item {
+            border-color: var(--pastel-yellow);
+            color: var(--pastel-yellow);
+        }
+        
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 15px;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .blink-text {
+            animation: blink 1.5s step-end infinite;
+        }
+        
+        .show-element {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Grid -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 1; background-image: url(&quot;data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E&quot;); opacity: 0.3;"></div>
+        <!-- Background Scanlines -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 1; background-image: url(&quot;data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E&quot;); pointer-events: none;"></div>
+        <!-- Header Section -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 80px; width: 1000px; height: 80px; z-index: 10; border-bottom: 2px solid #39FF14; display: flex; align-items: flex-end; padding-bottom: 15px; box-sizing: border-box;">
+            <p id="pageTitle" style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 60px; font-weight: 900; color: #FFFFFF; text-shadow: 4px 4px 0 #333; line-height: 1;"></p>
+        </div>
+        <!-- System Status Deco -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1520px; top: 60px; width: 280px; height: 110px; z-index: 10; border: 1px solid #333; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; background-color: rgba(0,0,0,0.5);">
+            <p style="margin: 0 0 4px 0; font-family: monospace; font-size: 14px; color: #39FF14; opacity: 0.7;">&gt; SYSTEM CHECK...</p>
+            <p style="margin: 0 0 4px 0; font-family: monospace; font-size: 14px; color: #39FF14; opacity: 0.7;">&gt; LOADING MODULES...</p>
+            <p style="margin: 0 0 4px 0; font-family: monospace; font-size: 14px; color: #39FF14; opacity: 0.7;">&gt; STATUS: OK</p>
+            <p class="blink-text" style="margin: 0; font-family: monospace; font-size: 14px; color: #39FF14;">&gt; WAITING INPUT_</p>
+        </div>
+        <!-- TOC Item 1 -->
+        <div class="toc-item" data-object="true" data-object-type="textbox" id="toc1" style="position: absolute; left: 120px; top: 200px; width: 1680px; height: 160px; z-index: 10;">
+            <p class="toc-number" style="margin: 0 40px 0 0;">01</p>
+            <div class="toc-content">
+                <p style="margin: 0 0 15px 0; font-family: 'Paperlogy', sans-serif; font-size: 36px; font-weight: 700; color: #FFFFFF;">프로젝트 개요</p>
+                <div class="toc-sub-items">
+                    <p class="sub-item">&lt;STAGE 01. 팀 소개 / 프로젝트 소개&gt;</p>
+                    <p class="sub-item">&lt;STAGE 02. 주제 선정 배경&gt;</p>
+                    <p class="sub-item">&lt;STAGE 03. 핵심 서비스&gt;</p>
+                </div>
+            </div>
+        </div>
+        <!-- TOC Item 2 -->
+        <div class="toc-item" data-object="true" data-object-type="textbox" id="toc2" style="position: absolute; left: 120px; top: 380px; width: 1680px; height: 160px; z-index: 10;">
+            <p class="toc-number" style="margin: 0 40px 0 0;">02</p>
+            <div class="toc-content">
+                <p style="margin: 0 0 15px 0; font-family: 'Paperlogy', sans-serif; font-size: 36px; font-weight: 700; color: #FFFFFF;">시스템 아키텍처</p>
+                <div class="toc-sub-items">
+                    <p class="sub-item">&lt;STAGE 04. Database&gt;</p>
+                    <p class="sub-item">&lt;STAGE 05. 클래스 다이어그램&gt;</p>
+                    <p class="sub-item">&lt;STAGE 06. 클래스 다이어그램 상세&gt;</p>
+                </div>
+            </div>
+        </div>
+        <!-- TOC Item 3 -->
+        <div class="toc-item" data-object="true" data-object-type="textbox" id="toc3" style="position: absolute; left: 120px; top: 560px; width: 1680px; height: 160px; z-index: 10;">
+            <p class="toc-number" style="margin: 0 40px 0 0;">03</p>
+            <div class="toc-content">
+                <p style="margin: 0 0 15px 0; font-family: 'Paperlogy', sans-serif; font-size: 36px; font-weight: 700; color: #FFFFFF;">상세 설계 및 기능</p>
+                <div class="toc-sub-items">
+                    <p class="sub-item">&lt;STAGE 07. 마스터 데이터 설계&gt;</p>
+                    <p class="sub-item">&lt;STAGE 08. 주요 기능 및 기술력&gt;</p>
+                    <p class="sub-item">&lt;STAGE 08-B. 시연 영상&gt;</p>
+                </div>
+            </div>
+        </div>
+        <!-- TOC Item 4 -->
+        <div class="toc-item" data-object="true" data-object-type="textbox" id="toc4" style="position: absolute; left: 120px; top: 740px; width: 1680px; height: 160px; z-index: 10;">
+            <p class="toc-number" style="margin: 0 40px 0 0;">04</p>
+            <div class="toc-content">
+                <p style="margin: 0 0 15px 0; font-family: 'Paperlogy', sans-serif; font-size: 36px; font-weight: 700; color: #FFFFFF;">프로젝트 리뷰 및 엔딩</p>
+                <div class="toc-sub-items">
+                    <p class="sub-item">&lt;STAGE 09. 트러블슈팅&gt;</p>
+                    <p class="sub-item">&lt;STAGE 11. 협업 방식&gt;</p>
+                    <p class="sub-item">&lt;STAGE 12. 팀원별 느낀점&gt;</p>
+                    <p class="sub-item">&lt;STAGE 13. 프로젝트 회고&gt;</p>
+                    <p class="sub-item">&lt;FINAL. Stage Cleared&gt;</p>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Status Bar -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 980px; width: 1680px; height: 40px; z-index: 10; border-top: 1px solid #333; display: flex; justify-content: space-between; align-items: center; padding-top: 10px; box-sizing: border-box;">
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #39FF14;">TEAM 4G PRESENTATION</p>
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #39FF14;">USE ARROW KEYS TO NAVIGATE</p>
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #39FF14;">PAGE 02/23</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "INDEX_";
+            const titleElement = document.getElementById('pageTitle');
+            const tocItems = [
+                document.getElementById('toc1'),
+                document.getElementById('toc2'),
+                document.getElementById('toc3'),
+                document.getElementById('toc4')
+            ];
+
+            let charIndex = 0;
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    showTocItems();
+                }
+            }
+
+            function showTocItems() {
+                tocItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('show-element');
+                    }, index * 200 + 400);
+                });
+            }
+
+            setTimeout(typeWriter, 500);
+        });
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowRight") {
+                window.location.href = "3.html";
+            }
+        });
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "1.html";
+            }
+        });
+    </script>
+</body>
+
+</html>

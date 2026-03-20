@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - UI 설계 및 ANSI 색상</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #39FF14;
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Patterns -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 1;"></div>
+        <!-- Header Section -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 60px; width: 800px; height: 70px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 50px; font-weight: 900; color: #FFFFFF; text-shadow: 2px 2px 0 #333;">UI 설계 (Figma)<span class="typing-cursor"></span></p>
+        </div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 130px; width: 800px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; color: #666; font-size: 14px;">LOG: UI_UX_DESIGN_MODULE</p>
+        </div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 160px; width: 1720px; height: 2px; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; z-index: 1;"></div>
+        <!-- Left Media Placeholder (Figma Design) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 220px; width: 840px; height: 480px; background-color: rgba(30, 30, 30, 0.6); border: 2px solid #444; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 102px; top: 222px; width: 836px; height: 40px; background-color: #222; border-bottom: 1px solid #444; z-index: 1;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 232px; width: 400px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #BFDBFE;">FILE: FIGMA_DESIGN_VIEW.png</p>
+        </div>
+
+        <div data-object="true" data-object-type="icon" style="position: absolute; left: 496px; top: 420px; width: 48px; height: 48px; z-index: 10;">
+            <i class="fas fa-image" style="font-size: 48px; color: #666;"></i><span style="color: rgb(102, 102, 102); font-family: Paperlogy, sans-serif; font-size: 20px; font-weight: bold; text-align: center;">미지 첨부</span></div>
+        <!-- Corners for Left Media -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 218px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 932px; top: 218px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 692px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 932px; top: 692px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <!-- Right Media Placeholder (UI Demo Video) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 980px; top: 220px; width: 840px; height: 480px; background-color: rgba(30, 30, 30, 0.6); border: 2px solid #444; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 982px; top: 222px; width: 836px; height: 40px; background-color: #222; border-bottom: 1px solid #444; z-index: 1;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1000px; top: 232px; width: 400px; height: 20px; z-index: 10;">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #BFDBFE;">FILE:FIGMA_DESIGN_VIEW02.png</p>
+        </div>
+
+
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1020px; top: 480px; width: 760px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 20px; color: #666; text-align: center; font-weight: bold;">영상 첨부</p>
+        </div>
+        <!-- Corners for Right Media -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 978px; top: 218px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1812px; top: 218px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 978px; top: 692px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1812px; top: 692px; width: 10px; height: 10px; background-color: #FFFFFF; z-index: 2;"></div>
+        <!-- Bottom ANSI Box -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 740px; width: 1720px; height: 240px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #39FF14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.1); z-index: 1;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 150px; top: 780px; width: 400px; height: 40px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 32px; font-weight: 800; color: #FEF08A; margin: 0;">ANSI 색상 설계</p>
+        </div>
+        <!-- ANSI Color Legend -->
+        <!-- Green -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 150px; top: 850px; width: 24px; height: 24px; background-color: #39FF14; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 848px; width: 200px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 22px; color: #FFFFFF; margin: 0;">GREEN = 성공</p>
+        </div>
+        <!-- Red -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 150px; top: 910px; width: 24px; height: 24px; background-color: #FF3131; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 190px; top: 908px; width: 200px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 22px; color: #FFFFFF; margin: 0;">RED = 실패</p>
+        </div>
+        <!-- Yellow -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 420px; top: 850px; width: 24px; height: 24px; background-color: #FEF08A; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 460px; top: 848px; width: 200px; height: 30px; z-index: 10;">
+            <p style="font-family: 'Paperlogy', sans-serif; font-size: 22px; color: #FFFFFF; margin: 0;">YELLOW = 안내</p>
+        </div>
+        <!-- ANSI Code Snippet Box -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 700px; top: 770px; width: 1080px; height: 180px; background-color: #050505; border: 1px dashed #444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 740px; top: 810px; width: 1000px; height: 100px; z-index: 10;">
+            <p style="font-family: monospace; font-size: 22px; color: #cccccc; line-height: 1.8; margin: 0;">
+                System.out.println(<span style="color:#FF3131;">ANSI_RED</span> + "전투 실패" + <span style="color:#888;">ANSI_RESET</span>);<br> System.out.println(
+                <span style="color:#39FF14;">ANSI_GREEN</span> + "전투 승리" + <span style="color:#888;">ANSI_RESET</span>);
+            </p>
+        </div>
+        <!-- Corners for Bottom Box -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 738px; width: 10px; height: 10px; background-color: #39FF14; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1812px; top: 738px; width: 10px; height: 10px; background-color: #39FF14; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 972px; width: 10px; height: 10px; background-color: #39FF14; z-index: 2;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1812px; top: 972px; width: 10px; height: 10px; background-color: #39FF14; z-index: 2;"></div>
+        <img src="https://page.gensparksite.com/get_upload_url/6eef305959c963894c19bd0cff5f4b1b57a45abd2bce4e41d2847c59ff2cff34/default/a839c053-5775-43b1-bd33-d7654e330e58" alt="Uploaded Image" id="inserted-img-1773981856360-zdy2lu" data-object="true" style="position: absolute; width: 766.059px; height: 427.09px; max-width: 90%; z-index: 2023; left: 810px; top: 456.5px; transform: translate(-675.976px, -189.35px);"
+            data-height-listener-added="true"><img src="https://page.gensparksite.com/get_upload_url/6eef305959c963894c19bd0cff5f4b1b57a45abd2bce4e41d2847c59ff2cff34/default/4036ac1a-46c5-4171-ae66-366eb2bbfa1d" alt="Uploaded Image" id="inserted-img-1773981945750-snx4f1"
+            data-object="true" style="position: absolute; width: 780.427px; height: 434.1px; max-width: 90%; z-index: 2024; left: 810px; top: 456.5px; transform: translate(198.817px, -191.243px);" data-height-listener-added="true"></div>
+
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowRight") {
+            window.location.href = "11.html";
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "9.html";
+        }
+    });
+</script>
+
+</html>

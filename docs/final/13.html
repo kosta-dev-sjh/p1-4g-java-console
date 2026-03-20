@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shell Hero - 데이터 딕셔너리</title>
+    <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: #39FF14;
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px #39FF14;
+        }
+        
+        .console-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .console-table th {
+            background-color: rgba(57, 255, 20, 0.15);
+            border-bottom: 2px solid #39FF14;
+            padding: 16px 12px;
+            text-align: left;
+        }
+        
+        .console-table td {
+            padding: 20px 12px;
+            border-bottom: 1px dashed #444444;
+        }
+        
+        .alt-row td {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+        
+        .th-text {
+            margin: 0;
+            color: #39FF14;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            letter-spacing: -1px;
+        }
+        
+        .td-text {
+            margin: 0;
+            font-family: 'Paperlogy', sans-serif;
+            font-size: 20px;
+            color: #cccccc;
+        }
+        
+        .highlight-type {
+            color: #BFDBFE;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        
+        .highlight-key {
+            color: #FEF08A;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body style="">
+    <div class="slide-container" style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background-color: #050505;">
+        <!-- Background Patterns -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%231a1a1a\' fill-opacity=\'1\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\'/%3E%3C/g%3E%3C/svg%3E'); opacity: 0.3; z-index: 1;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background-image: url('data:image/svg+xml,%3Csvg width=\'1\' height=\'4\' viewBox=\'0 0 1 4\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect x=\'0\' y=\'2\' width=\'1\' height=\'2\' fill=\'%23000\' opacity=\'0.3\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 1;"></div>
+        <!-- Header Section: Title -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 60px; width: 1100px; height: 70px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Paperlogy', sans-serif; font-size: 50px; font-weight: 900; color: #FFFFFF; text-shadow: 2px 2px 0 #333333;">데이터 딕셔너리 (Data Dictionary)<span class="typing-cursor"></span></p>
+        </div>
+        <!-- Header Section: Subtitle/Log -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 100px; top: 140px; width: 600px; height: 20px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; color: #666666; font-size: 14px;">LOG: DATA_DICTIONARY_MODULE</p>
+        </div>
+        <!-- Header Section: Description -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 920px; top: 135px; width: 900px; height: 30px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Paperlogy', sans-serif; font-size: 22px; color: #BFDBFE; text-align: right; font-weight: 500;">&gt; 인증 정보와 게임 상태 데이터를 분리해 핵심 컬럼 설계</p>
+        </div>
+        <!-- Header Line -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 180px; width: 1720px; height: 2px; background-color: #39FF14; box-shadow: 0 0 10px #39FF14; z-index: 1;"></div>
+        <!-- ================= TABLE 1: USER ================= -->
+        <!-- Tab Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 220px; width: 180px; height: 40px; background-color: #39FF14; z-index: 2;"></div>
+        <!-- Tab Text -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 110px; top: 230px; width: 160px; height: 20px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #050505;">&gt; user_</p>
+        </div>
+        <!-- Box Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 260px; width: 840px; height: 280px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #444444; border-top-color: #39FF14; z-index: 1;"></div>
+        <!-- Pixel Corners (Left Top Box) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 258px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 934px; top: 258px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 534px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 934px; top: 534px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <!-- Table Content -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 290px; width: 800px; height: 220px; z-index: 10;">
+            <table class="console-table">
+                <thead>
+                    <tr>
+                        <th style="width: 35%">
+                            <p class="th-text">COLUMN</p>
+                        </th>
+                        <th style="width: 25%">
+                            <p class="th-text">TYPE</p>
+                        </th>
+                        <th style="width: 15%">
+                            <p class="th-text">KEY</p>
+                        </th>
+                        <th style="width: 25%">
+                            <p class="th-text">MEANING</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p class="td-text">user_login_id</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">VARCHAR(30)</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-key">UK</p>
+                        </td>
+                        <td>
+                            <p class="td-text">로그인 아이디</p>
+                        </td>
+                    </tr>
+                    <tr class="alt-row">
+                        <td>
+                            <p class="td-text">user_pwd</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">VARCHAR(64)</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">SHA-256 비번</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- ================= TABLE 2: INVENTORY ================= -->
+        <!-- Tab Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 580px; width: 250px; height: 40px; background-color: #39FF14; z-index: 2;"></div>
+        <!-- Tab Text -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 110px; top: 590px; width: 230px; height: 20px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #050505;">&gt; inventory_</p>
+        </div>
+        <!-- Box Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 100px; top: 620px; width: 840px; height: 240px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #444444; border-top-color: #39FF14; z-index: 1;"></div>
+        <!-- Pixel Corners (Left Bot Box) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 618px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 934px; top: 618px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 98px; top: 854px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 934px; top: 854px; width: 8px; height: 8px; background-color: #444444; z-index: 3;"></div>
+        <!-- Table Content -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 120px; top: 650px; width: 800px; height: 180px; z-index: 10;">
+            <table class="console-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">
+                            <p class="th-text">COLUMN</p>
+                        </th>
+                        <th style="width: 20%">
+                            <p class="th-text">TYPE</p>
+                        </th>
+                        <th style="width: 15%">
+                            <p class="th-text">KEY</p>
+                        </th>
+                        <th style="width: 25%">
+                            <p class="th-text">MEANING</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p class="td-text">inventory_quantity</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">INT</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">보유 수량</p>
+                        </td>
+                    </tr>
+                    <tr class="alt-row">
+                        <td>
+                            <p class="td-text">inventory_is_equipped</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">BOOLEAN</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">장착 여부</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- ================= TABLE 3: HERO ================= -->
+        <!-- Tab Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 980px; top: 220px; width: 180px; height: 40px; background-color: #FEF08A; z-index: 2;"></div>
+        <!-- Tab Text -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 990px; top: 230px; width: 160px; height: 20px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #050505;">&gt; hero_</p>
+        </div>
+        <!-- Box Shape -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 980px; top: 260px; width: 840px; height: 600px; background-color: rgba(20, 20, 20, 0.9); border: 2px solid #333333; border-top-color: #FEF08A; box-shadow: 0 0 20px rgba(254, 240, 138, 0.05); z-index: 1;"></div>
+        <!-- Pixel Corners (Right Box) -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 978px; top: 258px; width: 8px; height: 8px; background-color: #FEF08A; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1814px; top: 258px; width: 8px; height: 8px; background-color: #FEF08A; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 978px; top: 854px; width: 8px; height: 8px; background-color: #FEF08A; z-index: 3;"></div>
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1814px; top: 854px; width: 8px; height: 8px; background-color: #FEF08A; z-index: 3;"></div>
+        <!-- Table Content -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1000px; top: 290px; width: 800px; height: 380px; z-index: 10;">
+            <table class="console-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%; color: #FEF08A; border-bottom-color: #FEF08A; background-color: rgba(254, 240, 138, 0.1);">
+                            <p class="th-text" style="color: #FEF08A;">COLUMN</p>
+                        </th>
+                        <th style="width: 20%; color: #FEF08A; border-bottom-color: #FEF08A; background-color: rgba(254, 240, 138, 0.1);">
+                            <p class="th-text" style="color: #FEF08A;">TYPE</p>
+                        </th>
+                        <th style="width: 15%; color: #FEF08A; border-bottom-color: #FEF08A; background-color: rgba(254, 240, 138, 0.1);">
+                            <p class="th-text" style="color: #FEF08A;">KEY</p>
+                        </th>
+                        <th style="width: 25%; color: #FEF08A; border-bottom-color: #FEF08A; background-color: rgba(254, 240, 138, 0.1);">
+                            <p class="th-text" style="color: #FEF08A;">MEANING</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p class="td-text">hero_level</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">INT</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">성장 단계</p>
+                        </td>
+                    </tr>
+                    <tr class="alt-row">
+                        <td>
+                            <p class="td-text">hero_exp</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">INT</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">경험치</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="td-text">hero_gem</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">INT</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">재화</p>
+                        </td>
+                    </tr>
+                    <tr class="alt-row">
+                        <td>
+                            <p class="td-text">hero_max_clear_stage</p>
+                        </td>
+                        <td>
+                            <p class="td-text highlight-type">INT</p>
+                        </td>
+                        <td>
+                            <p class="td-text">-</p>
+                        </td>
+                        <td>
+                            <p class="td-text">최고 클리어 기록</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- System Decor for Hero Box to fill empty space -->
+        <div data-object="true" data-object-type="shape" style="position: absolute; left: 1000px; top: 680px; width: 800px; height: 150px; background-color: #080808; border: 1px dashed #444444; z-index: 2;"></div>
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 1020px; top: 700px; width: 760px; height: 110px; z-index: 10;">
+            <p style="margin: 0; font-family: monospace; font-size: 16px; color: #666666; line-height: 1.8;">
+                &gt; SYSTEM_MSG: Entity relation verified.<br> &gt; Checking primary key mapping... <span style="color: #39FF14;">[OK]</span><br> &gt; Allocating memory for 'hero' entity... <span style="color: #39FF14;">[OK]</span><br> &gt; Syncing with
+                master_data module...
+            </p>
+        </div>
+        <!-- Footer Note -->
+        <div data-object="true" data-object-type="textbox" style="position: absolute; left: 980px; top: 900px; width: 840px; height: 30px; z-index: 10;">
+            <p style="margin: 0; font-family: 'Paperlogy', sans-serif; font-size: 20px; color: #BFDBFE; text-align: right;">※ 전체 Data Dictionary는 별도 설계 문서로 관리</p>
+        </div>
+    </div>
+
+</body>
+<script>
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowRight") {
+            window.location.href = "14.html";
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "12.html";
+        }
+    });
+</script>
+
+</html>
