@@ -1,8 +1,5 @@
 package com.kosta.console_rpg.model.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MonsterDTO {
 	private int monsterId;			//몬스터 식별자
 	private String monsterName;		//몬스터명

@@ -1,6 +1,5 @@
 package com.kosta.console_rpg.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.kosta.console_rpg.exception.GameException;

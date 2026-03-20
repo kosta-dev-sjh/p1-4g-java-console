@@ -26,11 +26,6 @@ public class SkillService {
 	private SkillDAO skillDao = new SkillDAOImpl();
     private HeroDAO heroDao = new HeroDAOImpl();
 
-    // ===== 상수 (외부 접근 차단) =====
-    private static final int DAMAGE_INCREASE = 5;
-    private static final int MP_COST_INCREASE = 5;
-    private static final int REQUIRED_LEVEL_INCREASE = 1;
-    
 	// ======= public method =======
 	/**
      * 전체 스킬 조회
@@ -78,7 +73,6 @@ public class SkillService {
             }
 
             int currentLevel = heroSkill.getSkillLevel();   //특정스킬의 현재스킬레벨
-            int nextLevel = currentLevel + 1;   //현재 스킬 레벨 +1
 
             // 2. 최대 레벨 체크
             if (currentLevel >= heroSkill.getSkill().getSkillMaxLevel()) {

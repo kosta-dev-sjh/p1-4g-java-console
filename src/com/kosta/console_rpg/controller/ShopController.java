@@ -24,13 +24,8 @@ public class ShopController {
 		return null;
 	}
 	
-	public void buyItem(int itemId, int quantity) {
-		try {
-			shopService.buyItem(itemId, quantity);
-		} catch (GameException e) {
-			
-			e.printStackTrace();
-		}
+	public void buyItem(int itemId, int quantity) throws GameException {
+	    shopService.buyItem(itemId, quantity);
 	}
 	
 	public void sellItem(int itemId) {

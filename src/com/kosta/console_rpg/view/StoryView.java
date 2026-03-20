@@ -1,7 +1,7 @@
 package com.kosta.console_rpg.view;
 
 import com.kosta.console_rpg.session.LoginSession;
-import com.kosta.console_rpg.test.ConsoleEffectTest;
+import com.kosta.console_rpg.util.ConsoleEffectUtil;
 /**
  *  각 스테이지에 맞는 스토리 출력을 위한 view
  *
@@ -14,10 +14,10 @@ public class StoryView {
     public static void epilogue() throws Exception {
         //hero이름 세션에서 가져옴
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
-        System.out.println("\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("\n\n\n\n");
         String pre = "프롤로그\n\n";
         //한번에 출력이 아닌, 속도조절 (작성할 string, 각 문장간의 딜레이 int)
-        ConsoleEffectTest.slowPrint(pre,50);
+        ConsoleEffectUtil.slowPrint(pre,50);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("평화롭던 왕국 아르테리아에 어둠의 기운이 스며들기 시작했다.\n"));
@@ -25,7 +25,7 @@ public class StoryView {
         sb.append(String.format("평범한 마을 청년 %s — 그는 어느 아침 문 앞에 놓인 낡은 검을 집어 들었다.\n", heroName));
         sb.append(String.format("손에 쥐는 순간 기묘한 온기가 심장까지 퍼져나갔고, 그는 아무것도 묻지 않은 채 첫 걸음을 내디뎠다.....\n\n"));
         String pro = sb.toString();
-        ConsoleEffectTest.slowPrint(pro,30);
+        ConsoleEffectUtil.slowPrint(pro,30);
 
     }
 
@@ -33,7 +33,7 @@ public class StoryView {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 1 - 녹색 초원\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("왕국 동쪽 끝 초록 들판은 이름과 달리 더 이상 평화롭지 않았다.\n"));
@@ -41,14 +41,14 @@ public class StoryView {
         sb.append(String.format("%s — 초원 어귀에 서서 천천히 검을 뽑아 들었다.\n", heroName));
         sb.append(String.format("눈앞에 펼쳐진 들판 가득 번들거리는 슬라임들이 그를 향해 일제히 몸을 굴려오기 시작했다......\n\n"));
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
 
     }
     public static void stage1End() throws Exception {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 1 - 후일담\n\n";
-        ConsoleEffectTest.slowPrint(title,50);
+        ConsoleEffectUtil.slowPrint(title,50);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("슬라임의 몸체는 잘라도 다시 합쳐졌다\n"));
@@ -58,14 +58,14 @@ public class StoryView {
         sb.append(String.format("초원에 바람이 불었다.\n"));
         sb.append(String.format("처음으로 자신의 힘을 제어한 그 순간, 소년의 눈빛이 전사의 눈빛으로 바뀌었다.\n"));
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
 
     }
     public static void stage2Start() throws Exception {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 2 - 고블린 동굴\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("초원을 뒤로하고 북쪽 산맥으로 발걸음을 옮긴 %s — 어둠 속에서 타오르는 횃불 무리를 발견했다.\n", heroName));
@@ -73,7 +73,7 @@ public class StoryView {
         sb.append(String.format("%s — 검손잡이를 단단히 쥐며 어둠 속으로 한 걸음씩 나아갔다.\n", heroName));
 
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
 
     }
 
@@ -81,7 +81,7 @@ public class StoryView {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 2 - 후일담\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("동굴 입구를 지나는 순간 고블린이 나타났다.\n"));
@@ -90,7 +90,7 @@ public class StoryView {
         sb.append(String.format("그 이후 고블린동굴에서는 더 이상 괴성이 들리지 않았다. \n"));
         sb.append(String.format("어둠 속에 조용한 숨소리만 남을 뿐이었다.....\n"));
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
 
     }
 
@@ -98,7 +98,7 @@ public class StoryView {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 3 - 드래곤 레어\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("세계의 끝, 불과 용암이 흐르는 검은 산 정상.\n"));
@@ -109,7 +109,7 @@ public class StoryView {
         sb.append(String.format("오히려 한 걸음 더 나아갔다.\n"));
 
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
 
     }
 
@@ -117,7 +117,7 @@ public class StoryView {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Stage 3 - 드래곤 레어\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("수십 번의 공방이 오갔다.\n"));
@@ -129,7 +129,7 @@ public class StoryView {
         sb.append(String.format("%s — 검을 회수하고 조용히 걸어나왔다.\n", heroName));
 
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
         
         // 마지막 엔딩 호출
         end();
@@ -139,7 +139,7 @@ public class StoryView {
         String heroName = LoginSession.getInstance().getCurrentHero().getHeroName();
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
         String title = "Ending\n\n";
-        ConsoleEffectTest.slowPrint(title,30);
+        ConsoleEffectUtil.slowPrint(title,30);
         StringBuilder sb = new StringBuilder();
 
         sb.append(String.format("아르테리아에 종이 울렸다.\n"));
@@ -155,7 +155,7 @@ public class StoryView {
                 "— 아르테리아 왕국 연대기 中\n"));
 
         String story = sb.toString();
-        ConsoleEffectTest.slowPrint(story,30);
+        ConsoleEffectUtil.slowPrint(story,30);
         
     }
     

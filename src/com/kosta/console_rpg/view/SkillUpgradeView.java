@@ -11,8 +11,6 @@ import com.kosta.console_rpg.util.InputUtil;
 import java.util.List;
 
 public class SkillUpgradeView {
-
-	private static final int MP_CONSUMPTION = 5;
 	private static SkillController skillController = new SkillController();
 
 	public static void start() {
