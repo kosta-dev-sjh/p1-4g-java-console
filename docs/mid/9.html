@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 페르소나 설정</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+            --card-bg: rgba(20, 20, 20, 0.9);
+            --border-color: #444;
+            --system-msg: #888;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 80px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 영역 */
+        .header-section {
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 80px;
+        }
+
+        .page-title {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 0;
+            text-shadow: 2px 2px 0 #333;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-sub {
+            font-family: 'Press Start 2P', monospace;
+            color: var(--system-msg);
+            font-size: 14px;
+        }
+
+        /* 상단 연구 특성 요약 박스 */
+        .summary-box {
+            background-color: rgba(30, 30, 30, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--pastel-blue);
+        }
+
+        .summary-title {
+            font-family: 'Press Start 2P', monospace;
+            color: var(--pastel-blue);
+            font-size: 16px;
+            margin-right: 20px;
+            min-width: 150px;
+        }
+
+        .summary-text {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        /* 페르소나 카드 컨테이너 */
+        .persona-container {
+            display: flex;
+            gap: 40px;
+            flex: 1;
+            height: 750px; /* 고정 높이 */
+        }
+
+        /* 페르소나 카드 공통 스타일 */
+        .persona-card {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .persona-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+            transform: translateY(-10px);
+            z-index: 10;
+        }
+
+        /* 카드 헤더 (캐릭터 이미지 & 기본정보) */
+        .card-header {
+            display: flex;
+            padding: 20px;
+            background-color: rgba(50, 50, 50, 0.5);
+            border-bottom: 1px dashed var(--border-color);
+            align-items: center;
+            gap: 20px;
+        }
+
+        .character-frame {
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--text-white);
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .character-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated; /* 픽셀 아트 선명하게 */
+        }
+
+        .basic-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .persona-name {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-white);
+            font-family: 'Press Start 2P', monospace;
+            margin: 0;
+        }
+
+        .persona-role {
+            font-size: 18px;
+            color: var(--pastel-yellow);
+            font-weight: 600;
+        }
+
+        .persona-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #aaa;
+            border: 1px solid #555;
+        }
+
+        /* 카드 바디 (상세 정보) */
+        .card-body {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        
+        /* 스크롤바 스타일 */
+        .card-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .card-body::-webkit-scrollbar-track {
+            background: #222;
+        }
+        .card-body::-webkit-scrollbar-thumb {
+            background: #444;
+        }
+        .card-body:hover::-webkit-scrollbar-thumb {
+            background: var(--neon-green);
+        }
+
+        .section-box {
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: var(--pastel-blue);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .section-icon {
+            font-size: 14px;
+        }
+
+        .info-list {
+            padding-left: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .info-item {
+            font-size: 15px;
+            color: #ddd;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.4;
+        }
+
+        .info-item::before {
+            content: "•";
+            color: var(--dim-gray);
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .persona-card:hover .info-item::before {
+            color: var(--neon-green);
+        }
+
+        /* 스탯 바 스타일 */
+        .stat-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .stat-label {
+            width: 100px;
+            color: #aaa;
+        }
+
+        .stat-bar-bg {
+            flex: 1;
+            height: 10px;
+            background-color: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background-color: var(--neon-green);
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        /* 코너 장식 */
+        .pixel-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--text-white);
+            transition: background-color 0.3s;
+            z-index: 5;
+        }
+
+        .persona-card:hover .pixel-corner {
+            background-color: var(--neon-green);
+        }
+
+        .pc-tl { top: -2px; left: -2px; }
+        .pc-tr { top: -2px; right: -2px; }
+        .pc-bl { bottom: -2px; left: -2px; }
+        .pc-br { bottom: -2px; right: -2px; }
+
+        /* 카드 번호 배지 */
+        .card-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: var(--bg-black);
+            color: #666;
+            border: 1px solid var(--border-color);
+            padding: 5px 15px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            z-index: 20;
+        }
+
+        .persona-card:hover .card-badge {
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+    </style>
+</head>
+<body style="">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">페르소나 설정<span class="cursor-blink"></span></h1>
+<div class="header-sub">
+                LOG: PERSONA_ANALYSIS_MODULE
+            </div>
+</div>
+<!-- 연구 특성 요약 -->
+<div class="summary-box">
+<div class="summary-title">&gt; DESIGN_CRITERIA</div>
+<div class="summary-text">
+<p>MUD 이용자의 평균 특성(성취·탐험·커뮤니티)과 모바일 스토리 게임 이용자(서사 몰입·감정)를 반영하여 두 가지 핵심 페르소나를 도출했습니다.</p>
+</div>
+</div>
+<!-- 페르소나 카드 컨테이너 -->
+<div class="persona-container">
+<!-- 페르소나 1: 도현 -->
+<div class="persona-card" id="card1" style="opacity: 1; transform: translateY(0px);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-badge">P-01</div>
+<div class="card-header">
+<div class="character-frame">
+<img alt="도현 캐릭터" class="character-img" src="https://www.genspark.ai/api/files/s/7WC3z05O?cache_control=3600" data-height-listener-added="true">
+</div>
+<div class="basic-info">
+<h2 class="persona-name">도현</h2>
+<div class="persona-role">30대 후반 / IT 개발자</div>
+<div class="persona-tags">
+<span class="tag">#남성</span>
+<span class="tag">#하드코어</span>
+<span class="tag">#분석적</span>
+</div>
+</div>
+</div>
+<div class="card-body">
+<!-- 플레이 특성 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-gamepad section-icon"></i> 플레이 스타일</div>
+<ul class="info-list">
+<li class="info-item">경험 수준: 고급 (MUD, 파서 게임 경험 다수)</li>
+
+<li class="info-item">선호: 커뮤니티 기반 MUD, 시스템 파악</li>
+</ul>
+</div>
+<!-- 주요 동기 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-heart section-icon"></i> 주요 동기 (Needs)</div>
+<ul class="info-list">
+<li class="info-item">성취감: 복잡한 시스템 정복 및 랭킹</li>
+<li class="info-item">탐험: 숨겨진 요소 발견 및 공략 작성</li>
+
+</ul>
+</div>
+<!-- 행동 패턴 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-search section-icon"></i> 행동 패턴</div>
+<ul class="info-list">
+<li class="info-item">PC 환경에서 전용 클라이언트 사용</li>
+<li class="info-item">위키 편집 및 효율적인 공략 루트 연구</li>
+
+</ul>
+</div>
+<!-- 불만 및 요구 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-exclamation-triangle section-icon"></i> Pain Points</div>
+<ul class="info-list">
+<li class="info-item">UI/명령어 진입 장벽으로 인한 신규 유입 부족</li>
+<li class="info-item">단순 노가다성 콘텐츠 반복 지양</li>
+</ul>
+</div>
+<!-- 스탯 바 -->
+<div class="section-box" style="margin-top: auto;">
+<div class="stat-row">
+<span class="stat-label">기술 숙련도</span>
+<div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+</div>
+<div class="stat-row">
+<span class="stat-label">몰입도</span>
+<div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 페르소나 2: 서연 -->
+<div class="persona-card" id="card2" style="opacity: 1; transform: translateY(0px);">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="card-badge">P-02</div>
+<div class="card-header">
+<div class="character-frame">
+<img alt="서연 캐릭터" class="character-img" src="https://www.genspark.ai/api/files/s/1NUWaOav?cache_control=3600" data-height-listener-added="true">
+</div>
+<div class="basic-info">
+<h2 class="persona-name">서연</h2>
+<div class="persona-role">20대 초반 / 대학생</div>
+<div class="persona-tags">
+<span class="tag">#여성</span>
+<span class="tag">#캐주얼</span>
+<span class="tag">#감성적</span>
+</div>
+</div>
+</div>
+<div class="card-body">
+<!-- 플레이 특성 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-mobile-alt section-icon"></i> 플레이 스타일</div>
+<ul class="info-list">
+<li class="info-item">경험 수준: 중급 (모바일 스토리/수집형 게임)</li>
+
+<li class="info-item">선호: 서사 중심 선택지, 캐릭터 수집</li>
+</ul>
+</div>
+<!-- 주요 동기 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-heart section-icon"></i> 주요 동기 (Needs)</div>
+<ul class="info-list">
+<li class="info-item">감정 몰입: 캐릭터와의 관계성 및 스토리</li>
+<li class="info-item">스트레스 해소: 가볍게 즐기는 힐링</li>
+<li class="info-item">대리 만족: 현실과 다른 역할 수행</li>
+</ul>
+</div>
+<!-- 행동 패턴 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-search section-icon"></i> 행동 패턴</div>
+<ul class="info-list">
+<li class="info-item">모바일로 짧게 끊어서 플레이</li>
+<li class="info-item">커뮤니티는 정보 검색(눈팅) 위주</li>
+
+</ul>
+</div>
+<!-- 불만 및 요구 -->
+<div class="section-box">
+<div class="section-title"><i class="fas fa-exclamation-triangle section-icon"></i> Pain Points</div>
+<ul class="info-list">
+<li class="info-item">선택지가 결과에 반영되지 않는 일방향 서사</li>
+<li class="info-item">과도한 과금 유도(P2W)에 대한 피로감</li>
+</ul>
+</div>
+<!-- 스탯 바 -->
+<div class="section-box" style="margin-top: auto;">
+<div class="stat-row">
+<span class="stat-label">기술 숙련도</span>
+<div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 50%;"></div></div>
+</div>
+<div class="stat-row">
+<span class="stat-label">몰입도</span>
+<div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "페르소나 설정";
+            const titleElement = document.getElementById('pageTitle');
+            const card1 = document.getElementById('card1');
+            const card2 = document.getElementById('card2');
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 타이틀 완성 후 카드 등장
+                    showCards();
+                }
+            }
+
+            function showCards() {
+                // 카드 1 (도현) 등장
+                setTimeout(() => {
+                    card1.style.opacity = '1';
+                    card1.style.transform = 'translateY(0)';
+                    
+                    // 스탯 바 애니메이션 (내부)
+                    const bars = card1.querySelectorAll('.stat-bar-fill');
+                    bars.forEach(bar => {
+                        // 원래 width를 저장해두고 0에서 시작하게 하려면 추가 로직 필요하지만
+                        // CSS transition이 있으므로 DOM 로드 시점에 width가 적용되어 있으면 애니메이션 됨
+                        // 여기서는 display:none이 아니므로 이미 적용되었을 수 있음.
+                        // 확실한 효과를 위해 width를 다시 설정
+                        const targetWidth = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = targetWidth;
+                        }, 100);
+                    });
+                    
+                }, 300);
+
+                // 카드 2 (서연) 등장
+                setTimeout(() => {
+                    card2.style.opacity = '1';
+                    card2.style.transform = 'translateY(0)';
+                    
+                    // 스탯 바 애니메이션
+                    const bars = card2.querySelectorAll('.stat-bar-fill');
+                    bars.forEach(bar => {
+                        const targetWidth = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = targetWidth;
+                        }, 100);
+                    });
+
+                }, 600);
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "10.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "8.html";
+            }
+        });
+    </script>
+
+</body></html>

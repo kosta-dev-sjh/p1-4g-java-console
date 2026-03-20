@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 기능적 요구사항 &amp; 비즈니스 규칙</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.95);
+            --box-border: #444;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 50px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 2컬럼 레이아웃 컨테이너 */
+        .content-container {
+            display: flex;
+            gap: 40px;
+            flex: 1;
+            align-items: stretch;
+        }
+
+        /* 콘솔 박스 공통 스타일 */
+        .console-box {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 4px solid var(--box-border);
+            border-radius: 4px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .console-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .console-box:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 40px rgba(57, 255, 20, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .box-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px dashed var(--box-border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .box-title {
+            font-family: 'Paperlogy', sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+            color: var(--pastel-yellow);
+            margin: 0;
+            flex: 1;
+            text-shadow: 2px 2px 0 #333;
+        }
+
+        .box-icon {
+            font-size: 48px;
+            color: var(--pastel-blue);
+            transition: transform 0.3s;
+        }
+
+        .console-box:hover .box-icon {
+            color: var(--neon-green);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .req-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .req-item {
+            display: flex;
+            align-items: flex-start;
+            font-size: 24px;
+            line-height: 1.5;
+            color: #ddd;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .console-box:hover .req-item:hover {
+            background-color: rgba(57, 255, 20, 0.1);
+            border-left-color: var(--neon-green);
+            color: var(--text-white);
+            transform: translateX(10px);
+        }
+
+        .req-bullet {
+            color: var(--neon-green);
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+
+        /* 픽셀 코너 장식 */
+        .pixel-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--text-white);
+            transition: background-color 0.3s;
+        }
+
+        .console-box:hover .pixel-corner {
+            background-color: var(--neon-green);
+        }
+
+        .pc-tl { top: -4px; left: -4px; }
+        .pc-tr { top: -4px; right: -4px; }
+        .pc-bl { bottom: -4px; left: -4px; }
+        .pc-br { bottom: -4px; right: -4px; }
+
+    </style>
+</head>
+<body style="">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">기능적 요구사항 &amp; 비즈니스 규칙<span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<i class="fas fa-sitemap"></i> REQUIREMENTS &amp; RULES
+            </div>
+</div>
+<!-- 2컬럼 콘텐츠 -->
+<div class="content-container">
+<!-- 기능적 요구사항 -->
+<div class="console-box visible" id="reqBox">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="box-header">
+<h3 class="box-title">기능적 요구사항</h3>
+<i class="fas fa-cogs box-icon"></i>
+</div>
+<ul class="req-list" style="
+    overflow: hidden;
+">
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>사용자 계정 기반 로그인 및 캐릭터 생성</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>전투 시스템을 통한 몬스터와의 턴 기반 전투</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>스킬 사용 및 아이템 활용을 통한 전략적 플레이</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>전투 결과에 따른 경험치와 보상 획득</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>캐릭터 레벨업 및 능력치 성장</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>인벤토리 기반 아이템 관리 및 상점 거래</p>
+</li>
+</ul>
+</div>
+<!-- 비즈니스 규칙 -->
+<div class="console-box visible" id="ruleBox">
+<div class="pixel-corner pc-tl"></div><div class="pixel-corner pc-tr"></div>
+<div class="pixel-corner pc-bl"></div><div class="pixel-corner pc-br"></div>
+<div class="box-header">
+<h3 class="box-title">비즈니스 규칙</h3>
+<i class="fas fa-balance-scale box-icon"></i>
+</div>
+<ul class="req-list" style="
+    overflow: hidden;
+">
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>전투는 턴 기반(플레이어 ↔ 몬스터 순차 행동)</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>캐릭터 HP가 0이 되면 패배 (패널티 적용)</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>승리 시 경험치/보상 획득, 일정 경험치 도달 시 레벨 상승</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>레벨 상승 시 캐릭터 능력치 자동 증가</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>아이템은 인벤토리 귀속, 전투/상점/필드에서 사용 가능</p>
+</li>
+<li class="req-item">
+<span class="req-bullet">&gt;</span>
+<p>데이터 무결성을 위한 트랜잭션 단위 처리</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "기능적 요구사항 & 비즈니스 규칙";
+            const titleElement = document.getElementById('pageTitle');
+            const reqBox = document.getElementById('reqBox');
+            const ruleBox = document.getElementById('ruleBox');
+            
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 80);
+                } else {
+                    // 타이핑 완료 후 박스 등장
+                    showBoxes();
+                }
+            }
+
+            function showBoxes() {
+                // 왼쪽 박스 등장
+                setTimeout(() => {
+                    reqBox.classList.add('visible');
+                }, 300);
+                
+                // 오른쪽 박스 등장
+                setTimeout(() => {
+                    ruleBox.classList.add('visible');
+                }, 800);
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "15.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "13.html";
+            }
+        });
+    </script>
+
+</body></html>

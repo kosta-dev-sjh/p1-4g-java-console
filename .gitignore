@@ -19,13 +19,14 @@ replay_pid*
 # Package Files
 ############################
 
-# lib 내부 jar 허용
-lib/*
-!lib/*.jar
-
-# jar 기본 무시 후 실행용 jar 허용
+# jar 기본 무시
 *.jar
+
+# 실행용 jar 허용
 !ShellHero.jar
+
+# lib 내부 jar 허용
+!lib/*.jar
 
 *.war
 *.nar
@@ -126,4 +127,11 @@ db.properties
 # Keep executable files
 ############################
 
-!run.bat
+!/run.bat
+
+############################
+# Resources
+############################
+
+!resources/**
+!src/main/resources/**

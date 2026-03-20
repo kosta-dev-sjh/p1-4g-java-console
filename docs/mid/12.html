@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 기대효과 &amp; 시스템 관점</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --panel-bg: rgba(20, 20, 20, 0.9);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 50px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 비교 컨테이너 */
+        .compare-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 60px;
+            flex: 1;
+            padding-bottom: 40px;
+        }
+
+        /* 패널 공통 스타일 */
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--panel-bg);
+            border-width: 4px;
+            border-style: solid;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .panel-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom-width: 4px;
+            border-bottom-style: solid;
+        }
+
+        .panel-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .panel-icon {
+            font-size: 32px;
+        }
+
+        .panel-body {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 30px;
+        }
+
+        /* 사용자 관점 (왼쪽) - 노란색 */
+        .panel-user {
+            border-color: var(--pastel-yellow);
+        }
+
+        .panel-user .panel-header {
+            background-color: rgba(254, 240, 138, 0.1);
+            border-bottom-color: var(--pastel-yellow);
+            color: var(--pastel-yellow);
+        }
+
+        .panel-user:hover {
+            box-shadow: 0 0 40px rgba(254, 240, 138, 0.15);
+        }
+
+        /* 시스템 관점 (오른쪽) - 파란색 */
+        .panel-system {
+            border-color: var(--pastel-blue);
+        }
+
+        .panel-system .panel-header {
+            background-color: rgba(191, 219, 254, 0.1);
+            border-bottom-color: var(--pastel-blue);
+            color: var(--pastel-blue);
+        }
+
+        .panel-system:hover {
+            box-shadow: 0 0 40px rgba(191, 219, 254, 0.15);
+        }
+
+        /* 리스트 아이템 스타일 */
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .list-marker {
+            min-width: 24px;
+            height: 24px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .panel-user .list-marker {
+            color: var(--pastel-yellow);
+        }
+
+        .panel-system .list-marker {
+            color: var(--pastel-blue);
+        }
+
+        .list-text {
+            font-size: 24px;
+            line-height: 1.5;
+            color: #ddd;
+        }
+
+        .list-highlight {
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        /* 장식 요소 */
+        .corner-deco {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--bg-black);
+            border: 2px solid;
+            z-index: 10;
+        }
+        
+        .panel-user .corner-deco { border-color: var(--pastel-yellow); }
+        .panel-system .corner-deco { border-color: var(--pastel-blue); }
+
+        .cd-tl { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+        .cd-tr { top: -4px; right: -4px; border-left: none; border-bottom: none; }
+        .cd-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
+        .cd-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
+
+        /* VS 텍스트 */
+        .vs-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 48px;
+            font-style: italic;
+            color: var(--neon-green);
+            text-shadow: 4px 4px 0 #000;
+            z-index: 20;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .vs-text.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+    </style>
+</head>
+<body style="">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">기대효과 &amp; 시스템 관점<span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<i class="fas fa-balance-scale"></i> SYSTEM_ANALYSIS_RESULT
+            </div>
+</div>
+<!-- 비교 영역 -->
+<div class="compare-container">
+<!-- VS 중앙 텍스트 -->
+<div class="vs-text active" id="vsText">VS</div>
+<!-- 왼쪽: 사용자 관점 -->
+<div class="panel panel-user" id="panelUser" style="opacity: 1; transform: translateY(0px);">
+<div class="corner-deco cd-tl"></div>
+<div class="corner-deco cd-tr"></div>
+<div class="corner-deco cd-bl"></div>
+<div class="corner-deco cd-br"></div>
+<div class="panel-header">
+<h2 class="panel-title">USER VIEW</h2>
+<i class="fas fa-user panel-icon"></i>
+</div>
+<div class="panel-body">
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            로그인 기반으로 <span class="list-highlight">캐릭터 데이터를 관리</span>하고 이어하기가 가능
+                        </p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            전투 중 선택이 상태 변화로 반영되어 <span class="list-highlight">결과 차이를 체감</span>
+</p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            성장과 재도전 구조를 통해 <span class="list-highlight">반복 플레이 동기</span>를 제공
+                        </p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            텍스트 피드백을 통한 즉각적인 <span class="list-highlight">상호작용 경험</span>
+</p>
+</div>
+</div>
+</div>
+<!-- 오른쪽: 시스템 관점 -->
+<div class="panel panel-system" id="panelSystem" style="opacity: 1; transform: translateY(0px);">
+<div class="corner-deco cd-tl"></div>
+<div class="corner-deco cd-tr"></div>
+<div class="corner-deco cd-bl"></div>
+<div class="corner-deco cd-br"></div>
+<div class="panel-header">
+<h2 class="panel-title">SYSTEM VIEW</h2>
+<i class="fas fa-server panel-icon"></i>
+</div>
+<div class="panel-body">
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            사용자–캐릭터–인벤토리–스킬–전투 데이터가 <span class="list-highlight">명확히 분리·연결</span>
+</p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            상태 값이 <span class="list-highlight">규칙 기반으로 관리</span>되어 기능 간 충돌을 최소화
+                        </p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            저장/복원 기능을 통해 진행 상태를 <span class="list-highlight">안정적으로 유지</span>
+</p>
+</div>
+<div class="list-item" style="opacity: 1; transform: translateX(0px);">
+<div class="list-marker">&gt;</div>
+<p class="list-text">
+                            콘텐츠 확장 시에도 동일한 규칙 체계 내에서 <span class="list-highlight">구조 유지</span> 가능
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "기대효과 & 시스템 관점";
+            const titleElement = document.getElementById('pageTitle');
+            const panelUser = document.getElementById('panelUser');
+            const panelSystem = document.getElementById('panelSystem');
+            const vsText = document.getElementById('vsText');
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 타이핑 완료 후 패널 등장 시작
+                    startPanelAnimation();
+                }
+            }
+
+            function startPanelAnimation() {
+                // 2. 사용자 관점 (왼쪽) 등장
+                setTimeout(() => {
+                    panelUser.style.opacity = '1';
+                    panelUser.style.transform = 'translateY(0)';
+                    
+                    // 리스트 아이템 순차 등장
+                    animateListItems(panelUser);
+                }, 300);
+
+                // 3. VS 텍스트 등장
+                setTimeout(() => {
+                    vsText.classList.add('active');
+                }, 1000);
+
+                // 4. 시스템 관점 (오른쪽) 등장
+                setTimeout(() => {
+                    panelSystem.style.opacity = '1';
+                    panelSystem.style.transform = 'translateY(0)';
+                    
+                    // 리스트 아이템 순차 등장
+                    animateListItems(panelSystem);
+                }, 1500);
+            }
+
+            function animateListItems(panel) {
+                const items = panel.querySelectorAll('.list-item');
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateX(0)';
+                    }, index * 150 + 500); // 패널 등장 후 0.5초 뒤부터 시작
+                });
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "13.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "11.html";
+            }
+        });
+    </script>
+
+</body></html>

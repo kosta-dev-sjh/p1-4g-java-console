@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 벤치마킹 포인트</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --card-bg: rgba(20, 20, 20, 0.9);
+            --border-color: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 40px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 메인 컨텐츠 영역 */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* 상단 카드 리스트 */
+        .card-list {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            height: 320px;
+        }
+
+        .benchmark-card {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .benchmark-card:hover {
+            border-color: var(--neon-green);
+            transform: translateY(-15px);
+            box-shadow: 0 10px 20px rgba(57, 255, 20, 0.2);
+            z-index: 10;
+        }
+
+        .benchmark-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid var(--text-white);
+            border-left: 2px solid var(--text-white);
+            transition: all 0.3s;
+        }
+
+        .benchmark-card:hover::before {
+            border-color: var(--neon-green);
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-icon-box {
+            width: 100px;
+            height: 100px;
+            background-color: #222;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #555;
+            image-rendering: pixelated;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            font-size: 16px;
+            color: #aaa;
+            text-align: center;
+            line-height: 1.4;
+            display: none; /* hover 시 보여줄지 고민 */
+        }
+
+        .benchmark-card:hover .card-desc {
+            display: block;
+            color: var(--pastel-yellow);
+        }
+
+        .benchmark-card:hover .card-icon-box {
+            border-color: var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+        }
+        
+        .pixel-icon {
+            font-size: 48px;
+            color: var(--pastel-blue);
+        }
+        
+        .benchmark-card:hover .pixel-icon {
+            color: var(--neon-green);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* 하단 시연 박스 */
+        .demo-box {
+            flex: 1;
+            background-color: #000;
+            border: 4px solid var(--border-color);
+            position: relative;
+            padding: 40px;
+            font-family: 'Paperlogy', sans-serif; /* 가독성을 위해 Paperlogy 사용 */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #aaa;
+            font-size: 14px;
+            font-family: monospace;
+            justify-content: space-between;
+        }
+
+        .demo-title {
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        .demo-content {
+            margin-top: 20px;
+            font-size: 20px;
+            line-height: 1.8;
+            color: #ccc;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .command-line {
+            color: var(--text-white);
+            margin-bottom: 10px;
+        }
+
+        .command-prompt {
+            color: var(--neon-green);
+            margin-right: 10px;
+        }
+
+        .system-msg {
+            color: var(--pastel-yellow);
+        }
+
+        .chat-msg {
+            color: var(--pastel-blue);
+        }
+
+        .typing-effect::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+
+        /* 벤치마킹 포인트 라벨 */
+        .point-label {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--bg-black);
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+            font-family: monospace;
+            border: 1px solid #333;
+        }
+
+        .benchmark-card:hover .point-label {
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+    </style>
+</head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle">벤치마킹 포인트<span class="cursor-blink"></span></h1>
+<div class="header-deco">
+<i class="fas fa-search-location"></i> SYSTEM_ANALYSIS_MODE
+            </div>
+</div>
+<!-- 메인 컨텐츠 -->
+<div class="content-area">
+<!-- 5개 카드 리스트 -->
+<div class="card-list">
+<!-- 1. DikuMUD -->
+<div class="benchmark-card" id="card1" style="opacity: 1; transform: translateY(0px);">
+<div class="point-label">ORIGIN</div>
+<div class="card-icon-box">
+<i class="fas fa-book pixel-icon"></i>
+</div>
+<p class="card-title">DikuMUD</p>
+<p class="card-desc">MUD의 시초<br>오픈소스 코드베이스</p>
+</div>
+<!-- 2. 세피로니아 -->
+<div class="benchmark-card" id="card2" style="opacity: 1; transform: translateY(0px);">
+<div class="point-label">REFERENCE</div>
+<div class="card-icon-box">
+<i class="fas fa-dragon pixel-icon"></i>
+</div>
+<p class="card-title">세피로니아</p>
+<p class="card-desc">방대한 세계관<br>클래식 MUD의 정석</p>
+</div>
+<!-- 3. 해리포터 봇 -->
+<div class="benchmark-card" id="card3" style="opacity: 1; transform: translateY(0px);">
+<div class="point-label">INTERACTION</div>
+<div class="card-icon-box">
+<i class="fas fa-hat-wizard pixel-icon"></i>
+</div>
+<p class="card-title">해리포터 봇</p>
+<p class="card-desc">IP 기반<br>챗봇 상호작용</p>
+</div>
+<!-- 4. 단군의 땅 -->
+<div class="benchmark-card" id="card4" style="opacity: 1; transform: translateY(0px);">
+<div class="point-label">K-STYLE</div>
+<div class="card-icon-box">
+<i class="fas fa-mountain pixel-icon"></i>
+</div>
+<p class="card-title">단군의 땅</p>
+<p class="card-desc">한국형 MUD의 효시<br>역사적 배경 활용</p>
+</div>
+<!-- 5. 좀비 아포칼립스 -->
+<div class="benchmark-card" id="card5" style="opacity: 1; transform: translateY(0px);">
+<div class="point-label">SURVIVAL</div>
+<div class="card-icon-box">
+<i class="fas fa-biohazard pixel-icon"></i>
+</div>
+<p class="card-title">좀비 아포칼립스<br>시뮬레이터</p>
+<p class="card-desc">생존 시뮬레이션<br>선택과 결과</p>
+</div>
+</div>
+<!-- 하단 시연 박스 -->
+<div class="scroll-content-area demo-box" id="scrollContent">
+<div class="demo-header">
+<span class="demo-title">TERMINAL - GAMEPLAY SIMULATION (SEPHERONIA STYLE)</span>
+<span>STATUS: RUNNING</span>
+</div>
+<div class="demo-content" id="terminalContent" style="max-height: 336px;"><div class="command-line"><span class="system-msg">[SYSTEM]</span> 세피로니아 서버에 접속했습니다.</div><div class="command-line">당신은 '초심자의 마을' 광장에 서 있습니다.</div><div class="command-line">주변에는 많은 모험가들이 대화를 나누고 있습니다.</div><div class="command-line"><span class="command-prompt">&gt;</span> 주변보기</div><div class="command-line"><span class="system-msg">[SYSTEM]</span> 세피로니아 서버에 접속했습니다.</div><div class="command-line">당신은 '초심자의 마을' 광장에 서 있습니다.</div><div class="command-line"><span class="system-msg">[SYSTEM]</span> 세피로니아 서버에 접속했습니다.</div><div class="command-line">당신은 '초심자의 마을' 광장에 서 있습니다.</div></div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "벤치마킹 포인트";
+            const titleElement = document.getElementById('pageTitle');
+            const cards = [
+                document.getElementById('card1'),
+                document.getElementById('card2'),
+                document.getElementById('card3'),
+                document.getElementById('card4'),
+                document.getElementById('card5')
+            ];
+            const terminalContent = document.getElementById('terminalContent');
+
+            // 1. 타이틀 타이핑 애니메이션
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 2. 카드 순차 등장
+                    showCards();
+                    // 3. 터미널 시뮬레이션 시작
+                    setTimeout(startTerminalSimulation, 1000);
+                }
+            }
+
+            function showCards() {
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 150 + 300);
+                });
+            }
+
+            // 터미널 시뮬레이션 데이터
+            const logs = [
+                { type: 'system', text: "세피로니아 서버에 접속했습니다." },
+                { type: 'info', text: "당신은 '초심자의 마을' 광장에 서 있습니다." },
+                { type: 'info', text: "주변에는 많은 모험가들이 대화를 나누고 있습니다." },
+                { type: 'input', text: "주변보기" },
+                { type: 'result', text: "동쪽: 무기 상점, 서쪽: 여관, 북쪽: 사냥터 입구" },
+                { type: 'input', text: "북쪽으로 이동" },
+                { type: 'result', text: "사냥터 입구로 이동합니다..." },
+                { type: 'system', text: "[시스템] 야생의 '슬라임'이 나타났습니다!" },
+                { type: 'input', text: "공격" },
+                { type: 'combat', text: "당신은 슬라임을 공격하여 15의 데미지를 입혔습니다!" },
+                { type: 'combat', text: "슬라임이 반격합니다! (HP -5)" },
+                { type: 'input', text: "스킬 사용: 파이어볼" },
+                { type: 'combat', text: "강력한 화염이 슬라임을 덮칩니다! (치명타! 40 데미지)" },
+                { type: 'system', text: "슬라임을 처치했습니다. 경험치 10 획득." },
+                { type: 'loot', text: "아이템 획득: [끈적한 액체], [10 골드]" },
+                { type: 'input', text: "상태창" },
+                { type: 'info', text: "Lv.5 모험가 | HP: 120/150 | MP: 40/80 | Gold: 350" }
+            ];
+
+            let logIndex = 0;
+
+            function startTerminalSimulation() {
+                if (logIndex < logs.length) {
+                    const log = logs[logIndex];
+                    const p = document.createElement('div');
+                    p.className = 'command-line';
+                    
+                    let content = '';
+                    if (log.type === 'input') {
+                        content = `<span class="command-prompt">&gt;</span> ${log.text}`;
+                    } else if (log.type === 'system') {
+                        content = `<span class="system-msg">[SYSTEM]</span> ${log.text}`;
+                    } else if (log.type === 'combat') {
+                        content = `<span style="color: #ff5555;">[전투]</span> ${log.text}`;
+                    } else if (log.type === 'loot') {
+                        content = `<span style="color: #FEF08A;">[획득]</span> ${log.text}`;
+                    } else {
+                        content = log.text;
+                    }
+
+                    p.innerHTML = content;
+                    terminalContent.appendChild(p);
+                    
+                    // 자동 스크롤
+                    terminalContent.scrollTop = terminalContent.scrollHeight;
+
+                    logIndex++;
+                    
+                    // 로그 타입에 따라 딜레이 다르게 적용
+                    let delay = 800;
+                    if (log.type === 'input') delay = 1500; // 입력하는 척하는 시간
+                    
+                    setTimeout(startTerminalSimulation, delay);
+                } else {
+                    // 루프 종료 후 잠시 대기했다가 초기화 후 다시 시작 (무한 루프)
+                    setTimeout(() => {
+                        terminalContent.innerHTML = '';
+                        logIndex = 0;
+                        startTerminalSimulation();
+                    }, 3000);
+                }
+            }
+
+            // 시작
+            setTimeout(typeWriter, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "11.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "9.html";
+            }
+        });
+    </script>
+
+</body></html>

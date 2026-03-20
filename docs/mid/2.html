@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 목차</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 120px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 영역 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 60px;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 2px 2px 0 #333;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 목차 리스트 영역 */
+        .toc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .toc-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease-out;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .toc-item:hover {
+            border: 1px solid var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+            transform: translateX(10px);
+        }
+
+        .toc-item:hover .toc-number {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .toc-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--pastel-blue);
+            margin-right: 40px;
+            font-family: 'Paperlogy', sans-serif;
+            min-width: 80px;
+            transition: color 0.3s;
+        }
+
+        .toc-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .toc-main-text {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 10px;
+        }
+
+        .toc-sub-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 20px;
+            color: #aaa;
+        }
+
+        .sub-item {
+            background-color: #222;
+            padding: 5px 15px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            transition: all 0.2s;
+        }
+
+        .toc-item:hover .sub-item {
+            border-color: var(--pastel-yellow);
+            color: var(--pastel-yellow);
+        }
+
+        /* 데코레이션 */
+        .status-bar {
+            position: absolute;
+            bottom: 40px;
+            left: 120px;
+            right: 120px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            color: var(--neon-green);
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+
+        .console-deco {
+            position: absolute;
+            right: 120px;
+            top: 80px;
+            width: 200px;
+            height: 100px;
+            border: 1px solid #333;
+            padding: 10px;
+            font-size: 12px;
+            color: var(--neon-green);
+            opacity: 0.7;
+            font-family: monospace;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        /* 애니메이션 클래스 */
+        .show-element {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<div class="header">
+<h1 class="page-title" id="pageTitle"></h1>
+</div>
+<div class="console-deco">
+<p>&gt; SYSTEM CHECK...</p>
+<p>&gt; LOADING MODULES...</p>
+<p>&gt; STATUS: OK</p>
+<p class="blink-text">&gt; WAITING INPUT_</p>
+</div>
+<div class="toc-container">
+<!-- 항목 1 -->
+<div class="toc-item" id="toc1">
+<div class="toc-number">01</div>
+<div class="toc-content">
+<p class="toc-main-text">플레이어 선택</p>
+<div class="toc-sub-items">
+<p class="sub-item">&lt;1-1. 팀 명&gt;</p>
+<p class="sub-item">&lt;1-2. 팀원 소개&gt;</p>
+</div>
+</div>
+</div>
+<!-- 항목 2 -->
+<div class="toc-item" id="toc2">
+<div class="toc-number">02</div>
+<div class="toc-content">
+<p class="toc-main-text">스테이지 소개</p>
+<div class="toc-sub-items">
+<p class="sub-item">&lt;2-1. 주제 선정&gt;</p>
+<p class="sub-item">&lt;2-2. 벤치마킹&gt;</p>
+<p class="sub-item">&lt;2-3. 기획 의도&gt;</p>
+<p class="sub-item">&lt;2-4. 페르소나&gt;</p>
+<p class="sub-item">&lt;2-5. 목표&gt;</p>
+<p class="sub-item">&lt;2-6. 기대효과&gt;</p>
+<p class="sub-item">&lt;2-7. 용어집&gt;</p>
+<p class="sub-item">&lt;2-8. 요구사항 &amp; 규칙&gt;</p>
+<p class="sub-item">&lt;2-9. 플로우차트&gt;</p>
+</div>
+</div>
+</div>
+<!-- 항목 3 -->
+<div class="toc-item" id="toc3">
+<div class="toc-number">03</div>
+<div class="toc-content">
+<p class="toc-main-text">스킬 &amp; 아이템</p>
+<div class="toc-sub-items">
+<p class="sub-item">&lt;3-1. 사용 기술&gt;</p>
+<p class="sub-item">&lt;3-2. 협업 환경&gt;</p>
+</div>
+</div>
+</div>
+<!-- 항목 4 -->
+<div class="toc-item" id="toc4">
+<div class="toc-number">04</div>
+<div class="toc-content">
+<p class="toc-main-text">월드맵</p>
+<div class="toc-sub-items">
+<p class="sub-item">&lt;향후 일정&gt;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="status-bar">
+<p>TEAM 4G PRESENTATION</p>
+<p>USE ARROW KEYS TO NAVIGATE</p>
+<p>PAGE 02/21</p>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "INDEX_";
+            const titleElement = document.getElementById('pageTitle');
+            const tocItems = [
+                document.getElementById('toc1'),
+                document.getElementById('toc2'),
+                document.getElementById('toc3'),
+                document.getElementById('toc4')
+            ];
+
+            // 타이틀 타이핑 애니메이션
+            let charIndex = 0;
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            
+            function typeWriter() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // 타이핑 완료 후 목차 항목 순차 등장
+                    showTocItems();
+                }
+            }
+
+            function showTocItems() {
+                tocItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('show-element');
+                    }, index * 200 + 300); // 0.3초 딜레이 후 0.2초 간격으로 등장
+                });
+            }
+
+            // 시작
+            setTimeout(typeWriter, 300);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "3.html";
+    }
+});
+document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "1.html";
+            }
+        });
+    </script>
+</body>
+</html>

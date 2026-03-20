@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shell Hero - 사용 기술</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.95);
+            --slot-bg: #111;
+            --slot-border: #444;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 */
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--text-white);
+            text-shadow: 4px 4px 0 #333;
+            margin: 0;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.6em;
+            height: 1em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-deco {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 인벤토리 레이아웃 */
+        .inventory-container {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* 왼쪽: 장비 슬롯 그리드 */
+        .equipment-grid-panel {
+            flex: 2;
+            background-color: var(--card-bg);
+            border: 4px solid var(--border-color);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #444;
+            padding-bottom: 10px;
+        }
+
+        .panel-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--pastel-yellow);
+            margin: 0;
+        }
+
+        .capacity-info {
+            font-family: monospace;
+            color: #888;
+            font-size: 18px;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            flex: 1;
+            /* 그리드 높이 확보를 위해 */
+            min-height: 0;
+        }
+
+        /* 아이템 슬롯 */
+        .item-slot {
+            background-color: var(--slot-bg);
+            border: 2px solid var(--slot-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+            transform: scale(0.8);
+            /* 내용물 크기에 맞춰 유동적으로 */
+            padding: 10px;
+        }
+
+        .item-slot.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .item-slot:hover, .item-slot.selected {
+            border-color: var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.05);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+            z-index: 10;
+        }
+
+        .slot-icon-box {
+            /* 아이콘 박스 크기 2배 확대: 80px -> 160px */
+            width: 160px;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .slot-icon {
+            /* 아이콘 크기 2배 확대: 48px -> 96px */
+            font-size: 96px;
+            color: var(--pastel-blue);
+            transition: all 0.3s;
+        }
+
+        .item-slot:hover .slot-icon, .item-slot.selected .slot-icon {
+            color: var(--neon-green);
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px var(--neon-green));
+        }
+
+        .slot-name {
+            /* 폰트 크기 2배 확대: 18px -> 36px */
+            font-size: 36px;
+            font-weight: 700;
+            color: #ccc;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .item-slot:hover .slot-name, .item-slot.selected .slot-name {
+            color: var(--text-white);
+        }
+
+        .equipped-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--neon-green);
+            color: #000;
+            font-size: 14px; /* 배지 크기도 약간 확대 */
+            padding: 4px 8px;
+            font-weight: bold;
+            font-family: monospace;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .item-slot:hover .equipped-badge, .item-slot.selected .equipped-badge {
+            opacity: 1;
+        }
+
+        /* 오른쪽: 상세 정보 패널 */
+        .detail-panel {
+            flex: 1;
+            background-color: rgba(10, 10, 10, 0.95);
+            border: 4px solid var(--neon-green);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+
+        .detail-icon {
+            font-size: 80px;
+            color: var(--neon-green);
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));
+        }
+
+        .detail-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 0 0 10px 0;
+        }
+
+        .detail-type {
+            font-family: monospace;
+            color: var(--pastel-blue);
+            font-size: 16px;
+        }
+
+        .detail-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .stat-value {
+            color: var(--pastel-yellow);
+            font-family: monospace;
+        }
+
+        .detail-desc {
+            /* 설명 텍스트 크기 2px 증가: 20px -> 22px */
+            font-size: 22px;
+            line-height: 1.6;
+            color: #ddd;
+            margin-top: 20px;
+            border-top: 1px dashed #444;
+            padding-top: 20px;
+        }
+
+        /* 픽셀 코너 장식 */
+        .corner-pixel {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--bg-black);
+            border: 2px solid;
+            z-index: 5;
+        }
+        
+        .equipment-grid-panel .corner-pixel { border-color: var(--border-color); }
+        .detail-panel .corner-pixel { border-color: var(--neon-green); background-color: var(--neon-green); }
+
+        .cp-tl { top: -6px; left: -6px; }
+        .cp-tr { top: -6px; right: -6px; }
+        .cp-bl { bottom: -6px; left: -6px; }
+        .cp-br { bottom: -6px; right: -6px; }
+
+    </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"></h1>
+<div class="header-deco">
+<p><i class="fas fa-microchip"></i> TECH_STACK_INVENTORY</p>
+</div>
+</div>
+<!-- 인벤토리 영역 -->
+<div class="inventory-container">
+<!-- 왼쪽: 아이템 슬롯 -->
+<div class="equipment-grid-panel">
+<div class="corner-pixel cp-tl"></div><div class="corner-pixel cp-tr"></div>
+<div class="corner-pixel cp-bl"></div><div class="corner-pixel cp-br"></div>
+<div class="panel-header">
+<h2 class="panel-title">EQUIPPED SKILLS</h2>
+<span class="capacity-info">SLOTS: 6/6</span>
+</div>
+<div class="slots-grid">
+<!-- 1. Java 21 -->
+<div class="item-slot" data-id="java">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fab fa-java slot-icon"></i></div>
+<p class="slot-name">Java 21</p>
+</div>
+<!-- 2. MySQL -->
+<div class="item-slot" data-id="mysql">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fas fa-database slot-icon"></i></div>
+<p class="slot-name">MySQL</p>
+</div>
+<!-- 3. JDBC -->
+<div class="item-slot" data-id="jdbc">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fas fa-plug slot-icon"></i></div>
+<p class="slot-name">JDBC</p>
+</div>
+<!-- 4. Git & GitHub -->
+<div class="item-slot" data-id="git">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fab fa-github slot-icon"></i></div>
+<p class="slot-name">Git &amp; GitHub</p>
+</div>
+<!-- 5. Console Arch -->
+<div class="item-slot" data-id="console">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fas fa-terminal slot-icon"></i></div>
+<p class="slot-name">Console Arch</p>
+</div>
+<!-- 6. Eclipse IDE (JDK 21) -->
+<div class="item-slot" data-id="eclipse">
+<div class="equipped-badge">E</div>
+<div class="slot-icon-box"><i class="fas fa-code slot-icon"></i></div>
+<p class="slot-name">Eclipse IDE</p>
+</div>
+</div>
+</div>
+<!-- 오른쪽: 상세 정보 -->
+<div class="detail-panel">
+<div class="corner-pixel cp-tl"></div><div class="corner-pixel cp-tr"></div>
+<div class="corner-pixel cp-bl"></div><div class="corner-pixel cp-br"></div>
+<div class="detail-header">
+<i class="fas fa-info-circle detail-icon" id="detailIcon"></i>
+<h2 class="detail-title" id="detailTitle">SELECT ITEM</h2>
+<p class="detail-type" id="detailType">SYSTEM INFO</p>
+</div>
+<div class="detail-body">
+<div class="stat-row">
+<p>Proficiency</p>
+<p class="stat-value" id="detailStat1">--</p>
+</div>
+<div class="stat-row">
+<p>Version</p>
+<p class="stat-value" id="detailStat2">--</p>
+</div>
+<p class="detail-desc" id="detailDesc">
+                    왼쪽 인벤토리에서 기술 아이템을 선택하여 상세 정보를 확인하십시오.
+                </p>
+</div>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleText = "사용 기술";
+        const titleElement = document.getElementById('pageTitle');
+        const slots = document.querySelectorAll('.item-slot:not([style*="cursor: default"])');
+        
+        // 상세 정보 요소
+        const detailIcon = document.getElementById('detailIcon');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailType = document.getElementById('detailType');
+        const detailStat1 = document.getElementById('detailStat1');
+        const detailStat2 = document.getElementById('detailStat2');
+        const detailDesc = document.getElementById('detailDesc');
+
+        // 데이터
+        const techData = {
+            'java': {
+                title: 'Java 21',
+                type: 'CORE LANGUAGE',
+                icon: 'fab fa-java',
+                stat1: 'Lv. MAX',
+                stat2: 'JDK 21 LTS',
+                desc: '프로젝트의 핵심 언어입니다. Record, Switch Expression 등 최신 문법을 적극 활용하여 간결하고 안정적인 코드를 구현했습니다.'
+            },
+            'mysql': {
+                title: 'MySQL',
+                type: 'DATABASE',
+                icon: 'fas fa-database',
+                stat1: 'Lv. 8',
+                stat2: 'Ver 8.0',
+                desc: '관계형 데이터베이스 시스템입니다. 사용자 정보, 캐릭터 상태, 아이템 데이터의 영속성을 보장하고 무결성을 유지합니다.'
+            },
+            'jdbc': {
+                title: 'JDBC',
+                type: 'CONNECTIVITY',
+                icon: 'fas fa-plug',
+                stat1: 'Lv. 9',
+                stat2: 'Standard API',
+                desc: 'Java와 DB를 연결하는 핵심 인터페이스입니다. Pure JDBC를 사용하여 SQL 실행 과정을 직접 제어하고 트랜잭션을 관리합니다.'
+            },
+            'git': {
+                title: 'Git & GitHub',
+                type: 'VCS & COLLAB',
+                icon: 'fab fa-github',
+                stat1: 'Lv. 7',
+                stat2: 'Distributed',
+                desc: '형상 관리 및 협업 도구입니다. 브랜치 전략을 통해 팀원 간 코드를 병합하고, GitHub Wiki로 문서를 관리합니다.'
+            },
+            'console': {
+                title: 'Console Arch',
+                type: 'SYSTEM DESIGN',
+                icon: 'fas fa-terminal',
+                stat1: 'Lv. 10',
+                stat2: 'MVC Pattern',
+                desc: '콘솔 환경에서의 구조 설계입니다. 입출력 뷰와 비즈니스 로직을 분리하고, 객체 지향 원칙에 따라 시스템을 모듈화했습니다.'
+            },
+            'eclipse': {
+                title: 'Eclipse IDE',
+                type: 'DEVELOPMENT TOOL',
+                icon: 'fas fa-code',
+                stat1: 'Lv. 9',
+                stat2: 'JDK 21',
+                desc: 'JDK 21 기반 통합 개발 환경입니다. 코드 작성, 디버깅, 빌드 자동화를 지원하며 Java 프로젝트 개발의 핵심 도구입니다.'
+            }
+        };
+
+        // 1. 타이틀 타이핑 애니메이션
+        titleElement.innerHTML = '<span class="cursor-blink"></span>';
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < titleText.length) {
+                const currentText = titleText.substring(0, charIndex + 1);
+                titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                charIndex++;
+                setTimeout(typeWriter, 100);
+            } else {
+                // 2. 슬롯 순차 등장
+                showSlots();
+            }
+        }
+
+        function showSlots() {
+            slots.forEach((slot, index) => {
+                setTimeout(() => {
+                    slot.classList.add('active');
+                }, index * 150 + 300);
+            });
+            
+            // 첫 번째 아이템 자동 선택 효과
+            setTimeout(() => {
+                updateDetail('java');
+                slots[0].classList.add('selected');
+            }, 1200);
+        }
+
+        // 호버 이벤트
+        slots.forEach(slot => {
+            slot.addEventListener('mouseenter', () => {
+                // 기존 선택 제거
+                slots.forEach(s => s.classList.remove('selected'));
+                
+                // 새 선택 적용
+                slot.classList.add('selected');
+                const id = slot.getAttribute('data-id');
+                updateDetail(id);
+            });
+        });
+
+        function updateDetail(id) {
+            const data = techData[id];
+            if (!data) return;
+
+            // 내용 업데이트 및 애니메이션 효과
+            detailIcon.className = `${data.icon} detail-icon`;
+            detailTitle.innerText = data.title;
+            detailType.innerText = data.type;
+            detailStat1.innerText = data.stat1;
+            detailStat2.innerText = data.stat2;
+            detailDesc.innerText = data.desc;
+
+            // 텍스트 깜빡임 효과로 갱신 느낌 주기
+            detailTitle.style.opacity = '0.5';
+            setTimeout(() => detailTitle.style.opacity = '1', 100);
+        }
+
+        // 시작
+        setTimeout(typeWriter, 500);
+    });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "18.html";
+    }
+});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "16.html";
+        }
+    });
+</script>
+</body>
+</html>

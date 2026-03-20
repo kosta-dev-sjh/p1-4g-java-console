@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 프로젝트 기획 및 설계 의도</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+            --scroll-bg: rgba(20, 20, 20, 0.95);
+            --scroll-border: #444;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 영역 */
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 0;
+            text-shadow: 2px 2px 0 #333;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 2컬럼 레이아웃 */
+        .content-container {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            overflow: hidden;
+        }
+
+        /* 왼쪽 컬럼 */
+        .left-column {
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background-color: rgba(30, 30, 30, 0.6);
+            border: 2px solid var(--scroll-border);
+            padding: 25px;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: var(--neon-green);
+        }
+
+        .info-title {
+            font-size: 20px;
+            color: var(--pastel-yellow);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-family: 'Press Start 2P', monospace;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 10px;
+        }
+
+        .info-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .highlight-keyword {
+            color: var(--neon-green);
+            font-weight: 700;
+        }
+
+        /* 오른쪽 컬럼: 스크롤 텍스트 박스 */
+        .right-column {
+            width: 65%;
+            background-color: var(--scroll-bg);
+            border: 4px solid var(--text-white);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .scroll-header {
+            background-color: var(--text-white);
+            color: var(--bg-black);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scroll-content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-green) #222;
+        }
+
+        .scroll-content-area::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .scroll-content-area::-webkit-scrollbar-track {
+            background: #222;
+        }
+
+        .scroll-content-area::-webkit-scrollbar-thumb {
+            background-color: var(--neon-green);
+            border: 2px solid #222;
+        }
+
+        .narrative-text {
+            font-size: 22px;
+            line-height: 1.8;
+            color: var(--text-white);
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+        
+        .narrative-line {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        .narrative-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            color: var(--pastel-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--neon-green);
+            padding-left: 15px;
+        }
+
+        .list-item {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .list-item::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        /* SKIP 버튼 */
+        .skip-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            background-color: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+            animation: blink-border 2s infinite;
+        }
+
+        .skip-btn:hover {
+            background-color: var(--neon-green);
+            color: var(--bg-black);
+        }
+
+        @keyframes blink-border {
+            0%, 100% { border-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+            50% { border-color: transparent; box-shadow: none; }
+        }
+
+        /* 스크롤 유도 애니메이션 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 24px;
+            animation: bounce 1s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+        
+        .icon-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+        }
+        
+        .icon-large {
+            font-size: 60px;
+            color: var(--neon-green);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Open%20Sans:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google%20Sans:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Noto%20Sans%20JP:wght@400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&amp;display=swap" rel="stylesheet"></head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<!-- 헤더 -->
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"><span class="cursor-blink"></span></h1>
+<div style="font-family: 'Press Start 2P', monospace; color: #666; font-size: 14px;">LOG: SYSTEM_DESIGN_INTENT</div>
+</div>
+<!-- 메인 컨텐츠 -->
+<div class="content-container">
+<!-- 왼쪽 요약 컬럼 -->
+<div class="left-column">
+<div class="info-card">
+<h3 class="info-title"><span style="font-size: 28px;">CORE CONCEPT</span></h3>
+<p class="info-text" style="font-size: 20px;">
+                    로그인 기반&nbsp;</p><p class="info-text" style="font-size: 20px;">시스템
+                    데이터 <span class="highlight-keyword">유기적 연결</span>&nbsp;</p><p class="info-text" style="font-size: 20px;">&nbsp;단일 사용자 환경
+                </p>
+</div>
+<div class="info-card">
+<h3 class="info-title" style="font-size: 28px;">TECHNICAL GOAL</h3>
+<p class="info-text" style="font-size: 20px;">
+                    상태 값 <span class="highlight-keyword">정합성</span>&nbsp;유지&nbsp;</p><p class="info-text" style="font-size: 20px;"><span class="highlight-keyword">객체지향</span> 설계 원칙&nbsp; 데이터 중심 구조</p>
+</div>
+<div class="info-card" style="flex: 1; border-style: dashed;">
+<div class="icon-box">
+<i class="fas fa-network-wired icon-large"></i>
+<p class="info-text" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.8;">
+                        LOGIC &amp; DATA<br>
+                        CONSISTENCY
+                    </p>
+</div>
+</div>
+</div>
+<!-- 오른쪽 스크롤 텍스트 컬럼 -->
+<div class="right-column">
+<div class="scroll-header">
+<span>FILE: DESIGN_INTENT.txt</span>
+<span>[RO]</span>
+</div>
+<div class="scroll-content-area" id="scrollContent">
+<!-- JS로 텍스트 추가됨 -->
+</div>
+<div class="scroll-indicator">▼</div>
+<button class="skip-btn" id="skipBtn">SKIP &gt;&gt;</button>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleText = "프로젝트 기획 및 설계 의도";
+        const titleElement = document.getElementById('pageTitle');
+        const scrollContent = document.getElementById('scrollContent');
+        const skipBtn = document.getElementById('skipBtn');
+
+        // 1. 타이틀 타이핑 애니메이션
+        titleElement.innerHTML = '<span class="cursor-blink"></span>';
+        let charIndex = 0;
+
+        function typeTitle() {
+            if (charIndex < titleText.length) {
+                const currentText = titleText.substring(0, charIndex + 1);
+                titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                charIndex++;
+                setTimeout(typeTitle, 80);
+            } else {
+                // 타이핑 완료 후 본문 내용 출력 시작
+                setTimeout(startNarrative, 500);
+            }
+        }
+
+        // 2. 본문 내용 데이터
+        const narrativeData = [
+            { type: 'header', text: "시스템 기획 및 설계 의도" },
+            { type: 'text', text: "본 프로젝트는 로그인 기반으로 사용자 및 캐릭터 데이터를 관리하며, 전투·상점·인벤토리·스킬·저장 기능이 유기적으로 연결되는 텍스트 기반 턴제 RPG 시스템입니다." },
+            { type: 'text', text: "MUD(Multi-User Dungeon) 장르의 구조적 특징인 계정 기반 캐릭터 관리, 상태 변화 중심 시스템, 데이터 지속성 구조를 참고하였습니다." },
+            { type: 'text', text: "서버 기반 멀티플레이는 제외하고, 단일 사용자 환경에서 데이터 중심 설계와 규칙 기반 상태 관리 구조를 구현하는 데 집중했습니다." },
+            
+            { type: 'header', text: "도메인 선택 및 기술적 의도" },
+            { type: 'text', text: "텍스트 RPG는 전투, 상점, 성장 등 여러 기능이 동일한 상태 데이터(HP, MP, 경험치, 재화 등)를 공유하며, 누적 데이터의 정확성이 시스템의 핵심이 되는 구조를 가집니다." },
+            { type: 'text', text: "복잡한 데이터 흐름을 안정적으로 제어하고 논리적 일관성을 유지하는 데이터 중심 구조를 설계하고자 본 도메인을 선정했습니다." },
+            
+            { type: 'list', text: "1) 사용자–엔티티 분리 구조" },
+            { type: 'list', text: "2) 트랜잭션 단위 데이터 처리" },
+            { type: 'list', text: "3) 상태 값 정합성 유지" },
+            { type: 'list', text: "4) 지속성 관리(저장/복원)" },
+            
+            { type: 'highlight', text: "따라서 본 프로젝트는 게임이라는 형식을 활용했지만, 핵심 목적은 데이터 중심 구조와 상태 관리 로직을 객체지향 설계 원칙 기반으로 설계하고 구현하는 데 있습니다." }
+        ];
+
+        let lineIndex = 0;
+        let isSkipped = false;
+
+        function startNarrative() {
+            if (lineIndex < narrativeData.length && !isSkipped) {
+                const data = narrativeData[lineIndex];
+                const p = document.createElement('p');
+                
+                // 타입별 클래스 지정
+                if (data.type === 'header') {
+                    p.className = 'narrative-line section-header';
+                } else if (data.type === 'list') {
+                    p.className = 'narrative-line list-item narrative-text';
+                } else if (data.type === 'highlight') {
+                    p.className = 'narrative-line narrative-text';
+                    p.style.color = 'var(--neon-green)';
+                    p.style.fontWeight = '700';
+                    p.style.border = '1px solid var(--neon-green)';
+                    p.style.padding = '15px';
+                    p.style.backgroundColor = 'rgba(57, 255, 20, 0.05)';
+                    p.style.marginTop = '30px';
+                } else {
+                    p.className = 'narrative-line narrative-text';
+                }
+                
+                p.innerText = data.text;
+                scrollContent.appendChild(p);
+
+                // 애니메이션 및 스크롤 처리
+                requestAnimationFrame(() => {
+                    p.classList.add('visible');
+                    // 부드러운 스크롤
+                    scrollContent.scrollTo({
+                        top: scrollContent.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                });
+
+                lineIndex++;
+                // 다음 줄 출력 딜레이
+                const delay = data.type === 'header' ? 1000 : 600;
+                setTimeout(startNarrative, delay); 
+            }
+        }
+
+        // 3. SKIP 버튼 기능
+        skipBtn.addEventListener('click', () => {
+            if (isSkipped) return; // 이미 스킵했으면 무시
+            
+            isSkipped = true;
+            scrollContent.innerHTML = ''; // 기존 내용 초기화
+            
+            // 전체 내용 한 번에 출력
+            narrativeData.forEach(data => {
+                const p = document.createElement('p');
+                if (data.type === 'header') {
+                    p.className = 'narrative-line section-header visible';
+                } else if (data.type === 'list') {
+                    p.className = 'narrative-line list-item narrative-text visible';
+                } else if (data.type === 'highlight') {
+                    p.className = 'narrative-line narrative-text visible';
+                    p.style.color = 'var(--neon-green)';
+                    p.style.fontWeight = '700';
+                    p.style.border = '1px solid var(--neon-green)';
+                    p.style.padding = '15px';
+                    p.style.backgroundColor = 'rgba(57, 255, 20, 0.05)';
+                    p.style.marginTop = '30px';
+                } else {
+                    p.className = 'narrative-line narrative-text visible';
+                }
+                p.innerText = data.text;
+                scrollContent.appendChild(p);
+            });
+            
+            // 맨 위로 스크롤
+            scrollContent.scrollTop = 0;
+            
+            // 버튼 스타일 변경 (비활성화 느낌)
+            skipBtn.style.opacity = '0.5';
+            skipBtn.style.cursor = 'default';
+        });
+
+        // 시작
+        setTimeout(typeTitle, 500);
+    });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "9.html";
+    }
+});
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "ArrowLeft") {
+            window.location.href = "7.html";
+        }
+    });
+</script>
+
+</body></html>

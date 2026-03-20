@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shell Hero - 주제 선정 이유</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+        :root {
+            --neon-green: #39FF14;
+            --pastel-yellow: #FEF08A;
+            --pastel-blue: #BFDBFE;
+            --bg-black: #050505;
+            --text-white: #FFFFFF;
+            --dim-gray: #333333;
+            --scroll-bg: rgba(20, 20, 20, 0.9);
+            --scroll-border: #444;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-black);
+            font-family: 'Paperlogy', sans-serif;
+            color: var(--text-white);
+        }
+
+        /* 배경 패턴 (CSS Gradient 대체: SVG Data URI) */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .bg-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='1' height='4' viewBox='0 0 1 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='2' width='1' height='2' fill='%23000' opacity='0.3'/%3E%3C/svg%3E");
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container-frame {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* 헤더 영역 */
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--text-white);
+            margin: 0;
+            text-shadow: 2px 2px 0 #333;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 0.5em;
+            height: 0.9em;
+            background-color: var(--neon-green);
+            margin-left: 10px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 2컬럼 레이아웃 */
+        .content-container {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            overflow: hidden;
+        }
+
+        /* 왼쪽 컬럼: 요약 및 이미지/아이콘 */
+        .left-column {
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background-color: rgba(30, 30, 30, 0.6);
+            border: 2px solid var(--scroll-border);
+            padding: 25px;
+            border-radius: 4px;
+        }
+
+        .info-title {
+            font-size: 28px; /* 24px -> 28px */
+            color: var(--pastel-yellow);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-family: 'Press Start 2P', monospace;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 10px;
+        }
+
+        .info-text {
+            font-size: 20px; /* 18px -> 20px */
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .highlight-keyword {
+            color: var(--neon-green);
+            font-weight: 700;
+        }
+
+        /* 오른쪽 컬럼: 스크롤 가능한 텍스트 박스 */
+        .right-column {
+            width: 65%;
+            background-color: var(--scroll-bg);
+            border: 4px solid var(--text-white);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .scroll-header {
+            background-color: var(--text-white);
+            color: var(--bg-black);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scroll-content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-green) #222;
+        }
+
+        .scroll-content-area::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .scroll-content-area::-webkit-scrollbar-track {
+            background: #222;
+        }
+
+        .scroll-content-area::-webkit-scrollbar-thumb {
+            background-color: var(--neon-green);
+            border: 2px solid #222;
+        }
+
+        .narrative-text {
+            font-size: 22px;
+            line-height: 1.8;
+            color: var(--text-white);
+            white-space: pre-wrap;
+        }
+        
+        .narrative-line {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        .narrative-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            color: var(--pastel-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--neon-green);
+            padding-left: 15px;
+        }
+
+        .list-item {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .list-item::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: var(--neon-green);
+        }
+
+        /* SKIP 버튼 */
+        .skip-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            background-color: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+            animation: blink-border 2s infinite;
+        }
+
+        .skip-btn:hover {
+            background-color: var(--neon-green);
+            color: var(--bg-black);
+        }
+
+        @keyframes blink-border {
+            0%, 100% { border-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+            50% { border-color: transparent; box-shadow: none; }
+        }
+
+        /* 스크롤 유도 애니메이션 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 24px;
+            animation: bounce 1s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
+    </style>
+</head>
+<body style="" data-testim-main-word-scripts-loaded="true">
+<div class="bg-grid"></div>
+<div class="bg-scanlines"></div>
+<div class="container-frame">
+<div class="header-section">
+<h1 class="page-title" id="pageTitle"><span class="cursor-blink"></span></h1>
+<div style="font-family: 'Press Start 2P', monospace; color: #666; font-size: 14px;">LOG: PROJECT_REASONING_MODULE</div>
+</div>
+<div class="content-container">
+<!-- 왼쪽 요약 컬럼 -->
+<div class="left-column">
+<div class="info-card">
+<h3 class="info-title">TARGET AUDIENCE</h3>
+<p class="info-text">
+                        전략적 <span class="highlight-keyword">선택</span>과 <span class="highlight-keyword">상호작용</span> 중심의 플레이를 선호하는</p><p class="info-text">사용자
+                        게임 시스템 구조를 <span class="highlight-keyword">탐구</span>하는 플레이어
+                    </p>
+</div>
+<div class="info-card">
+<h3 class="info-title">CORE VALUE</h3>
+<p class="info-text">
+<span class="highlight-keyword">선택</span>과 <span class="highlight-keyword">상호작용</span> 중심의 플레이 경험
+<span class="highlight-keyword">상상력</span>을 기반으로 한&nbsp;</p><p class="info-text">텍스트 몰입 경험
+                        게임 시스템 구조를 이해하고 <span class="highlight-keyword">탐구</span>하는 재미
+                    </p>
+</div>
+<div class="info-card" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-style: dashed;">
+<div style="font-size: 60px; color: var(--neon-green); margin-bottom: 20px;">
+
+                        &gt;_
+                    </div>
+<p class="info-text" style="text-align: center;">
+                        TEXT ONLY<br>
+                        DEEP IMMERSION
+                    </p>
+</div>
+</div>
+<!-- 오른쪽 스크롤 텍스트 컬럼 -->
+<div class="right-column">
+<div class="scroll-header">
+<span>FILE: WHY_MUD_GAME.txt</span>
+<span>[RO]</span>
+</div>
+<div class="scroll-content-area" id="scrollContent">
+<!-- 텍스트 내용은 JS로 한 줄씩 추가 -->
+</div>
+<div class="scroll-indicator">▼</div>
+<button class="skip-btn" id="skipBtn">SKIP &gt;&gt;</button>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleText = "주제 선정 이유";
+            const titleElement = document.getElementById('pageTitle');
+            const scrollContent = document.getElementById('scrollContent');
+            const skipBtn = document.getElementById('skipBtn');
+
+            // 타이틀 타이핑
+            titleElement.innerHTML = '<span class="cursor-blink"></span>';
+            let charIndex = 0;
+
+            function typeTitle() {
+                if (charIndex < titleText.length) {
+                    const currentText = titleText.substring(0, charIndex + 1);
+                    titleElement.innerHTML = currentText + '<span class="cursor-blink"></span>';
+                    charIndex++;
+                    setTimeout(typeTitle, 100);
+                } else {
+                    // 타이핑 완료 후 본문 내용 출력 시작
+                    startNarrative();
+                }
+            }
+
+            // 본문 내용 데이터
+            const narrativeData = [
+                { type: 'header', text: "텍스트 기반 RPG 구조 선정 이유" },
+                { type: 'subheader', text: "1. 텍스트 기반 RPG의 구조적 특징" },
+                { type: 'text', text: "텍스트 기반 게임은 그래픽 대신 플레이어의 선택과 행동이 게임 진행에 직접 영향을 미치는 구조를 가지고 있습니다." },
+                { type: 'text', text: "이러한 구조는 플레이어가 상황을 해석하고 전략적으로 선택하는 경험을 제공하며 게임의 핵심 요소인 탐험 · 선택 · 성장 구조를 비교적 단순한 형태로 구현할 수 있습니다." },
+                { type: 'subheader', text: "2. 플레이 경험 관점" },
+                { type: 'text', text: "플레이어는 캐릭터의 성장과 탐험 과정을 통해 성취감과 목표 달성 경험을 얻습니다." },
+                { type: 'text', text: "또한 선택과 행동을 통해 게임 세계의 흐름이 변화하는 과정에서 몰입감 있는 플레이 경험을 제공합니다." },
+                { type: 'subheader', text: "3. 시스템 이해와 전략적 플레이 경험" },
+                { type: 'text', text: "텍스트 기반 게임은 그래픽 리소스가 필요하지 않기 때문에 저사양 환경에서도 실행이 가능하며 비교적 짧은 플레이 단위로 진행할 수 있어 접근성과 효율성이 높습니다." },
+                { type: 'text', text: "또한 명령어 기반 인터페이스는 플레이어가 게임 시스템의 구조를 이해하고 상황에 따라 전략적으로 선택하도록 유도하여 게임 시스템을 해석하고 공략하는 재미를 제공합니다." },
+                { type: 'subheader', text: "4. MUD 구조 참고 배경" },
+                { type: 'text', text: "텍스트 기반 RPG 중에서도 MUD 게임은 전투, 아이템, 성장, 인벤토리 등 다양한 시스템이 서로 연결되어 동작하는 구조를 가지고 있습니다." },
+                { type: 'text', text: "이러한 구조는 여러 상태 데이터가 서로 영향을 주며 게임이 진행되는 데이터 중심 시스템의 특징을 잘 보여주기 때문에 프로젝트 설계 구조를 설명하기에 적합한 형태입니다." },
+                { type: 'header', text: "왜 MUD인가?" },
+                { type: 'list', text: "1. 게임의 본질인 상호작용과 선택에 집중: 그래픽 리소스 대신 선택, 탐험, 성장에 집중하여 RPG의 본질을 순수한 형태로 구현합니다." },
+                { type: 'list', text: "2. 상상력 참여도 극대화: 텍스트는 세계를 '보여주는' 것이 아니라 '상상하게' 만듭니다. 플레이어는 단순 소비자가 아닌 공동 창작자가 됩니다." },
+                { type: 'list', text: "3. 시스템 중심 디자인 구현 용이: 구조적으로 게임 시스템 실험에 매우 적합한 장르입니다." },
+                { type: 'list', text: "4. 개발 학습 최적화: 객체 설계, 게임 루프, 상태 관리, 데이터 구조 등 게임 엔진의 핵심 구조를 직접 구현하기에 이상적입니다." }
+            ];
+
+            let lineIndex = 0;
+            let isSkipped = false;
+
+            function startNarrative() {
+                if (lineIndex < narrativeData.length && !isSkipped) {
+                    const data = narrativeData[lineIndex];
+                    const p = document.createElement('p');
+                    
+                    if (data.type === 'header') {
+                        p.className = 'narrative-line section-header';
+                        p.style.fontSize = '28px'; // Main header style
+                        p.style.color = 'var(--pastel-blue)';
+                    } else if (data.type === 'subheader') {
+                        p.className = 'narrative-line narrative-text';
+                        p.style.color = 'var(--neon-green)';
+                        p.style.fontWeight = '700';
+                        p.style.marginTop = '20px';
+                        p.style.marginBottom = '10px';
+                    } else if (data.type === 'list') {
+                        p.className = 'narrative-line list-item';
+                    } else {
+                        p.className = 'narrative-line narrative-text';
+                    }
+                    
+                    p.innerText = data.text;
+                    scrollContent.appendChild(p);
+
+                    // Reflow 후 클래스 추가하여 애니메이션 실행
+                    requestAnimationFrame(() => {
+                        p.classList.add('visible');
+                        // 자동 스크롤
+                        scrollContent.scrollTop = scrollContent.scrollHeight;
+                    });
+
+                    lineIndex++;
+                    // 다음 줄 출력 딜레이 (읽는 속도 고려)
+                    setTimeout(startNarrative, 600); 
+                }
+            }
+
+            // SKIP 버튼 기능
+            skipBtn.addEventListener('click', () => {
+                isSkipped = true;
+                scrollContent.innerHTML = ''; // 기존 내용 초기화
+                
+                // 전체 내용 한 번에 출력
+                narrativeData.forEach(data => {
+                    const p = document.createElement('p');
+                    if (data.type === 'header') {
+                        p.className = 'narrative-line section-header visible';
+                        p.style.fontSize = '28px';
+                        p.style.color = 'var(--pastel-blue)';
+                    } else if (data.type === 'subheader') {
+                        p.className = 'narrative-line narrative-text visible';
+                        p.style.color = 'var(--neon-green)';
+                        p.style.fontWeight = '700';
+                        p.style.marginTop = '20px';
+                        p.style.marginBottom = '10px';
+                    } else if (data.type === 'list') {
+                        p.className = 'narrative-line list-item visible';
+                    } else {
+                        p.className = 'narrative-line narrative-text visible';
+                    }
+                    p.innerText = data.text;
+                    scrollContent.appendChild(p);
+                });
+                
+                scrollContent.scrollTop = 0; // 맨 위로
+            });
+
+            // 시작
+            setTimeout(typeTitle, 500);
+        });
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        window.location.href = "8.html";
+    }
+});
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                window.location.href = "6.html";
+            }
+        });
+    </script>
+
+</body></html>
