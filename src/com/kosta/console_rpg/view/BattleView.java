@@ -53,20 +53,20 @@ public class BattleView {
 				switch (nowStage) {
                 case 1 -> {
                     //스테이지 클리어최대치에 따른 스토리 진입
-                    if(hero.getHeroMaxClearStage() <= 0) {
+                    if(hero.getHeroMaxClearStage() == 0) {
 						            StoryView.epilogue();
                         StoryView.stage1Start();	//스토리 시작
                     }
 
                 }
                 case 2 -> {
-                    if(hero.getHeroMaxClearStage() <= 1) {
+                    if(hero.getHeroMaxClearStage() == 1) {
                         StoryView.stage2Start();
                     }
 
                 }
                 case 3 -> {
-                    if(hero.getHeroMaxClearStage() <= 2) {
+                    if(hero.getHeroMaxClearStage() == 2) {
                         StoryView.stage3Start();
                     }
 
@@ -102,6 +102,8 @@ public class BattleView {
 			}
 
 			nowTurn = 1;
+			String ready = ConsoleEffectUtil.YELLOW + "\n\n>>> 전투에 진입합니다 <<<\n\n" + ConsoleEffectUtil.RESET;
+			ConsoleEffectUtil.slowPrint(ready,80);
 			battleLoop();
 
 			} catch (GameException e) {
@@ -190,6 +192,8 @@ public class BattleView {
 				System.out.println("[3] 스킬");
 				System.out.println("[4] 아이템");
 				System.out.println("[5] 전투 포기");
+				System.out.println();
+				System.out.println("선택 ▶ ");
 
 				int menu = InputUtil.inputInt();
 
@@ -460,7 +464,6 @@ public class BattleView {
 			default -> System.out.println("   종료");
 		}
 
-		System.out.println("└──────────────────────────────────────────┘");
 	}
 
 	/**
@@ -474,7 +477,8 @@ public class BattleView {
 		List<RewardResult> results = battleController.reward(monster);
 
 		if (results != null) {
-			System.out.println("보상 및 성장 정보가 반영되었습니다.\n자세한 정보는 캐릭터 정보에서 확인해주세요.");
+			System.out.println("   보상 및 성장 정보가 반영되었습니다.\n   자세한 정보는 캐릭터 정보에서 확인해주세요.");
+			System.out.println("└──────────────────────────────────────────┘");
 			 if (results.contains(RewardResult.FIRST_CLEAR)) {
 		            try {
 		                StoryView.printStageEndStory(monster.getMonsterStage());
@@ -484,6 +488,7 @@ public class BattleView {
 		        }
 		} else {
 			System.out.println("   보상 처리 실패");
+			System.out.println("└──────────────────────────────────────────┘");
 		}
 	}
 
@@ -510,8 +515,10 @@ public class BattleView {
 
 		if (penaltyResult) {
 			System.out.println("   경험치와 젬이 일부 감소했습니다.");
+			System.out.println("└──────────────────────────────────────────┘");
 		} else {
 			System.out.println("   패널티 적용 실패");
+			System.out.println("└──────────────────────────────────────────┘");
 		}
 	}
 }
