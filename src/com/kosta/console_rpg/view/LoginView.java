@@ -38,7 +38,9 @@ public class LoginView {
 
         userController.register(registerUser);
 
-        System.out.println("회원가입 완료\n");
+        if(LoginSession.getInstance().getCurrentUser() != null) {
+            System.out.println("회원가입 완료\n");
+        }
         System.out.println("──────────────────────────────────────────\n\n");
     }
 
