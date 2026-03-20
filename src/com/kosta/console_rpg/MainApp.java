@@ -54,7 +54,7 @@ public class MainApp {
                     switch (menu) {
                         case 1 -> register();
                         case 2 -> login();
-                        case 0 -> {
+                        case 3 -> {
                             System.out.println("종료합니다.");
                             return;
                         }

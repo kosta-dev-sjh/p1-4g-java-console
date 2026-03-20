@@ -16,6 +16,7 @@ import com.kosta.console_rpg.model.enums.BattleResult;
 import com.kosta.console_rpg.model.enums.RewardResult;
 import com.kosta.console_rpg.session.LoginSession;
 import com.kosta.console_rpg.util.ConsoleEffectUtil;
+import com.kosta.console_rpg.util.ConsoleUtils;
 import com.kosta.console_rpg.util.InputUtil;
 
 /**
@@ -123,7 +124,7 @@ public class BattleView {
 		while (true) {
 			StringBuilder s = new StringBuilder();
 			s.append(ConsoleEffectUtil.GREEN);
-			s.append("____________________________┌ Battle ┐_______________________________");
+			ConsoleUtils.printTitleBar("BATTLE");
 			s.append(ConsoleEffectUtil.RESET);
 			System.out.println(s);
 			System.out.println("\n현재 턴 : " + nowTurn);
