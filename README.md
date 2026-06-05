@@ -11,6 +11,8 @@ Shell Hero는 MUD와 텍스트 RPG의 구조를 참고하여 만든 Java 콘솔 
 - [최종 발표 자료](./docs/final/1.html)
 - [GitHub Wiki](https://github.com/kosta-dev-sjh/p1-4g-java-console/wiki)
 
+![Shell Hero 시작 화면](./docs/assets/shell-hero-start.png)
+
 ---
 
 ## 프로젝트 목표
